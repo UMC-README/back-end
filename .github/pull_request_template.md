@@ -1,12 +1,4 @@
----
-name: pull request template
-about: 기본 PR 템플릿입니다.
-title: ex) [feat] 로그인 기능 구현 완료
-labels: ""
-assignees: ""
----
-
-## 🚩 관련 이슈
+# 🚩 관련 이슈
 
 > ex) [FEAT] 로그인 구현 #1
 
