@@ -53,4 +53,10 @@ export const status = {
     code: "COMMON006",
     message: "잘못된 파일 형식입니다.",
   },
+  EMPTY_TOKEN: {
+    status: StatusCodes.UNAUTHORIZED,
+    isSuccess: false,
+    code: "USER000",
+    message: "사용자 인증에 실패했습니다.",
+  },
 };
