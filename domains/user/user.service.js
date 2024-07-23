@@ -25,9 +25,9 @@ export const signupUser = async (userInfo) => {
 };
 
 export const loginUser = async (email, password) => {
-  const user = await fintUserByEmail(email);
+  const userData = await fintUserByEmail(email);
 
-  if (!user) {
+  if (!userData) {
     throw new Error("등록되지 않은 이메일 입니다.");
   }
 
@@ -38,7 +38,7 @@ export const loginUser = async (email, password) => {
     .digest("hex");
 
   if (hashedPassword === user.password) {
-    return { userId: user.id };
+    return { userId: userData.id };
   } else {
     throw new Error("비밀번호가 일치하지 않습니다.");
   }
