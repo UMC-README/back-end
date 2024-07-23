@@ -12,4 +12,5 @@ export const status = {
   METHOD_NOT_ALLOWED: { status: StatusCodes.METHOD_NOT_ALLOWED, isSuccess: false, code: "COMMON003", message: "지원하지 않는 Http Method 입니다." },
   FORBIDDEN: { status: StatusCodes.FORBIDDEN, isSuccess: false, code: "COMMON004", message: "금지된 요청입니다." },
   NOT_FOUND: { status: StatusCodes.NOT_FOUND, isSuccess: false, code: "COMMON005", message: "요청한 페이지를 찾을 수 없습니다." },
+  WRONG_EXTENSION: { status: StatusCodes.BAD_REQUEST, isSuccess: false, code: "COMMON006", message: "잘못된 파일 형식입니다." },
 };
