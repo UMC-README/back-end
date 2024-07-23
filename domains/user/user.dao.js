@@ -2,7 +2,7 @@ import { pool } from "../../config/db.config.js";
 import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
 
-import { getUserById, userSignUpSQL } from "./user.sql.js";
+import { getUserByEmail, getUserById, userSignUpSQL } from "./user.sql.js";
 
 export const insertUser = async (data) => {
   try {
@@ -23,7 +23,7 @@ export const insertUser = async (data) => {
   }
 };
 
-export const findUser = async (userId) => {
+export const findUserById = async (userId) => {
   try {
     const conn = await pool.getConnection();
     const [user] = await conn.query(getUserById, [userId]);
@@ -36,7 +36,25 @@ export const findUser = async (userId) => {
     conn.release();
     return user[0];
   } catch (error) {
-    console.log("유저 찾기 에러", error);
+    console.log("아이디로 유저 찾기 에러", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const findUserByEmail = async (email) => {
+  try {
+    const conn = await pool.getConnection();
+    const [user] = await conn.query(getUserByEmail, [email]);
+
+    if (user.length == 0) {
+      conn.release();
+      return -1;
+    }
+
+    conn.release();
+    return user[0];
+  } catch (error) {
+    console.log("이메일로 유저 찾기 에러", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };
