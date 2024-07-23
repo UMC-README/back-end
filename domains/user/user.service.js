@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import { findUser, insertUser } from "./user.dao.js";
+import { findUser, fintUserByEmail, insertUser } from "./user.dao.js";
 
 export const signupUser = async (userInfo) => {
   const { name, nickname, email, password } = userInfo;
@@ -22,4 +22,24 @@ export const signupUser = async (userInfo) => {
   return {
     userId: userData.id,
   };
+};
+
+export const loginUser = async (email, password) => {
+  const user = await fintUserByEmail(email);
+
+  if (!user) {
+    throw new Error("등록되지 않은 이메일 입니다.");
+  }
+
+  // 입력된 비밀번호 해싱
+  const hashedPassword = crypto
+    .createHash("sha256")
+    .update(password)
+    .digest("hex");
+
+  if (hashedPassword === user.password) {
+    return { userId: user.id };
+  } else {
+    throw new Error("비밀번호가 일치하지 않습니다.");
+  }
 };
