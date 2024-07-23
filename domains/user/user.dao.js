@@ -23,7 +23,7 @@ export const insertUser = async (data) => {
   }
 };
 
-export const findUser = async (userId) => {
+export const findUserById = async (userId) => {
   try {
     const conn = await pool.getConnection();
     const [user] = await conn.query(getUserById, [userId]);
@@ -41,7 +41,7 @@ export const findUser = async (userId) => {
   }
 };
 
-export const fintUserByEmail = async (email) => {
+export const findUserByEmail = async (email) => {
   try {
     const conn = await pool.getConnection();
     const [user] = await conn.query(getUserByEmail, [email]);
