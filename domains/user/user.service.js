@@ -5,10 +5,7 @@ export const signupUser = async (userInfo) => {
   const { name, nickname, email, password } = userInfo;
 
   // 비밀번호 해싱
-  const hashedPassword = crypto
-    .createHash("sha256")
-    .update(password)
-    .digest("hex");
+  const hashedPassword = crypto.createHash("sha256").update(password).digest("hex");
 
   const signupUserData = await insertUser({
     name: name,
@@ -32,10 +29,7 @@ export const loginUser = async (email, password) => {
   }
 
   // 입력된 비밀번호 해싱
-  const hashedPassword = crypto
-    .createHash("sha256")
-    .update(password)
-    .digest("hex");
+  const hashedPassword = crypto.createHash("sha256").update(password).digest("hex");
 
   if (hashedPassword === userData.password) {
     return { userId: userData.id };

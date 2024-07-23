@@ -24,9 +24,7 @@ app.use("/api-docs", SwaggerUi.serve, SwaggerUi.setup(swaggerSpec));
 app.use((err, req, res, next) => {
   res.locals.message = err.message;
   res.locals.error = process.env.NODE_ENV !== "production" ? err : {};
-  res
-    .status(err.data.status || status.INTERNAL_SERVER_ERROR)
-    .send(response(err.data));
+  res.status(err.data.status || status.INTERNAL_SERVER_ERROR).send(response(err.data));
 });
 
 app.listen(app.get("port"), () => {
