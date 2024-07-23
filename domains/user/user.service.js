@@ -2,15 +2,13 @@ import { findUserById, findUserByEmail, insertUser } from "./user.dao.js";
 import { passwordHashing } from "../../utils/passwordHash.js";
 
 export const signupUser = async (userInfo) => {
-  const { name, nickname, email, password } = userInfo;
+  const { password, ...restUserInfo } = userInfo;
 
   // 비밀번호 해싱
   const hashedPassword = passwordHashing(password);
 
   const signupUserData = await insertUser({
-    name: name,
-    nickname: nickname,
-    email: email,
+    ...restUserInfo,
     password: hashedPassword,
   });
 
