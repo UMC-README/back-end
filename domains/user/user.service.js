@@ -37,7 +37,7 @@ export const loginUser = async (email, password) => {
     .update(password)
     .digest("hex");
 
-  if (hashedPassword === user.password) {
+  if (hashedPassword === userData.password) {
     return { userId: userData.id };
   } else {
     throw new Error("비밀번호가 일치하지 않습니다.");
