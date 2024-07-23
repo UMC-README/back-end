@@ -47,4 +47,10 @@ export const status = {
     code: "COMMON005",
     message: "요청한 페이지를 찾을 수 없습니다.",
   },
+  WRONG_EXTENSION: {
+    status: StatusCodes.BAD_REQUEST,
+    isSuccess: false,
+    code: "COMMON006",
+    message: "잘못된 파일 형식입니다.",
+  },
 };
