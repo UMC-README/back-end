@@ -36,7 +36,25 @@ export const findUser = async (userId) => {
     conn.release();
     return user[0];
   } catch (error) {
-    console.log("유저 찾기 에러", error);
+    console.log("아이디로 유저 찾기 에러", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const fintUserByEmail = async (email) => {
+  try {
+    const conn = await pool.getConnection();
+    const [user] = await conn.query(getUserByEmail, [email]);
+
+    if (user.length == 0) {
+      conn.release();
+      return -1;
+    }
+
+    conn.release();
+    return user[0];
+  } catch (error) {
+    console.log("이메일로 유저 찾기 에러", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };
