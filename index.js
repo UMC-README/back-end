@@ -6,7 +6,7 @@ import cors from "cors";
 import { swaggerSpec } from "./swagger/swagger.config.js";
 import { status } from "./config/response.status.js";
 import { response } from "./config/response.js";
-import { userRouter } from "./domains/user/user.route.js";
+import { userRouter } from "./routes/user.route.js";
 
 dotenv.config();
 
