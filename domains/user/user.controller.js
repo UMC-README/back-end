@@ -41,6 +41,7 @@ export const getMyProfile = async (req, res, next) => {
     next(error);
   }
 };
+let verificationCode = {};
 
 export const getUserFixedPost = async (req, res, next) => {
   try {
@@ -62,6 +63,7 @@ export const userCreateCode = async (req, res, next) => {
 
     const { email } = req.body;
     const { to, code } = sendCodeEmail(email);
+    verificationCode[to] = code;
     res.status(200).json(response(status.SUCCESS, "이메일 코드 생성 완료"));
   } catch (error) {
     next(error);
