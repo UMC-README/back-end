@@ -3,13 +3,11 @@ import { passwordHashing } from "../../utils/passwordHash.js";
 import { generateJWTToken } from "../../utils/generateToken.js";
 
 export const signupUser = async (userInfo) => {
-  const { password, ...restUserInfo } = userInfo;
-
   // 비밀번호 해싱
   const hashedPassword = passwordHashing(password);
 
   const signupUserData = await insertUser({
-    ...restUserInfo,
+    ...userInfo,
     password: hashedPassword,
   });
 
