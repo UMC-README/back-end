@@ -1,7 +1,7 @@
 import { response } from "../../config/response.js";
 import { status } from "../../config/response.status.js";
 
-import { getUserProfile, loginUser, signupUser } from "./user.service.js";
+import { getUserProfile, loginUser, signupUser, getMyFixedPost } from "./user.service.js";
 
 export const userSignUp = async (req, res, next) => {
   try {
@@ -35,6 +35,19 @@ export const getMyProfile = async (req, res, next) => {
     const userId = req.user.userId;
 
     const result = await getUserProfile(userId);
+    res.status(200).json(response(status.SUCCESS, result));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getFixedPost = async (req, res, next) => {
+  try {
+    console.log("고정된 게시글 조회");
+
+    const userId = req.user.userId;
+
+    const result = await getMyFixedPost(userId);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);

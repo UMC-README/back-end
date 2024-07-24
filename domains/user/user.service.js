@@ -1,4 +1,4 @@
-import { findUserById, findUserByEmail, insertUser } from "./user.dao.js";
+import { findUserById, findUserByEmail, insertUser, findFixedPost } from "./user.dao.js";
 import { passwordHashing } from "../../utils/passwordHash.js";
 import { generateJWTToken } from "../../utils/generateToken.js";
 
@@ -50,5 +50,25 @@ export const getUserProfile = async (userId) => {
     nickname: userData.nickname,
     email: userData.email,
     profile_image: userData.profile_image,
+  };
+};
+
+export const getMyFixedPost = async (userId) => {
+  const userData = await findUserById(userId);
+
+  if (!userData) {
+    throw new Error("사용자를 찾을 수 없습니다.");
+  }
+
+  const fixedPostData = await findFixedPost(userData.userId);
+
+  if (!fixedPostData) {
+    return null;
+  }
+
+  return {
+    title: fixedPostData.title,
+    start_date: fixedPostData.start_date,
+    end_date: fixedPostData.end_date,
   };
 };
