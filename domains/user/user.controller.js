@@ -2,7 +2,7 @@ import { response } from "../../config/response.js";
 import { status } from "../../config/response.status.js";
 import { sendCodeEmail } from "../../utils/email.js";
 
-import { loginUser, signupUser } from "./user.service.js";
+import { getUserProfile, loginUser, signupUser } from "./user.service.js";
 
 export const userSignUp = async (req, res, next) => {
   try {
@@ -23,6 +23,19 @@ export const userLogin = async (req, res, next) => {
 
     const { email, password } = req.body;
     const result = await loginUser(email, password);
+    res.status(200).json(response(status.SUCCESS, result));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getMyProfile = async (req, res, next) => {
+  try {
+    console.log("내 프로필 조회");
+
+    const userId = req.user.userId;
+
+    const result = await getUserProfile(userId);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
