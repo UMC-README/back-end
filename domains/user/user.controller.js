@@ -29,6 +29,8 @@ export const userLogin = async (req, res, next) => {
   }
 };
 
+let verificationCode = {};
+
 export const userCreateCode = async (req, res, next) => {
   try {
     console.log("이메일 코드 생성 요청");
@@ -36,6 +38,7 @@ export const userCreateCode = async (req, res, next) => {
 
     const { email } = req.body;
     const { to, code } = sendCodeEmail(email);
+    verificationCode[to] = code;
     res.status(200).json(response(status.SUCCESS, "이메일 코드 생성 완료"));
   } catch (error) {
     next(error);
