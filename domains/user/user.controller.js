@@ -107,7 +107,7 @@ export const uploadImage = async (req, res, next) => {
   }
 };
 
-export const getCreateRoom = async (req, res, next) => {
+export const getUserCreateRoom = async (req, res, next) => {
   try {
     console.log("내가 생성한 공지방 조회");
 
