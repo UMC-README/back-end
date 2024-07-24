@@ -5,6 +5,7 @@ import {
   getFixedPost,
   userConfirmCode,
   userCreateCode,
+  getUserFixedPost,
   getMyProfile,
   userLogin,
   userSignUp,
@@ -23,4 +24,4 @@ userRouter.post("/create-code", expressAsyncHandler(userCreateCode));
 
 userRouter.post("/confirm-code", expressAsyncHandler(userConfirmCode));
 
-userRouter.get("/fixed", tokenAuth, expressAsyncHandler(getFixedPost));
+userRouter.get("/fixed", tokenAuth, expressAsyncHandler(getUserFixedPost));
