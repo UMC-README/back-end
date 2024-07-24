@@ -10,7 +10,7 @@ export const userSignUp = async (req, res, next) => {
     console.log("body: ", req.body);
 
     const result = await signupUser(req.body);
-    res.status(status.SUCCESS).json(response(status.SUCCESS, result));
+    res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
   }
@@ -23,7 +23,7 @@ export const userLogin = async (req, res, next) => {
 
     const { email, password } = req.body;
     const result = await loginUser(email, password);
-    res.status(status.SUCCESS).json(response(status.SUCCESS, result));
+    res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
   }
@@ -36,7 +36,7 @@ export const getMyProfile = async (req, res, next) => {
     const userId = req.user.userId;
 
     const result = await getUserProfile(userId);
-    res.status(status.SUCCESS).json(response(status.SUCCESS, result));
+    res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
   }
@@ -49,7 +49,7 @@ export const getUserFixedPost = async (req, res, next) => {
     const userId = req.user.userId;
 
     const result = await getMyFixedPost(userId);
-    res.status(status.SUCCESS).json(response(status.SUCCESS, result));
+    res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
   }
@@ -66,7 +66,7 @@ export const userCreateCode = async (req, res, next) => {
     const { to, code } = sendCodeEmail(email);
     verificationCode[to] = code;
 
-    res.status(status.SUCCESS).json(response(status.SUCCESS, "이메일을 확인해주세요."));
+    res.status(200).json(response(status.SUCCESS, "이메일을 확인해주세요."));
   } catch (error) {
     next(error);
   }
@@ -81,12 +81,21 @@ export const userConfirmCode = async (req, res, next) => {
     const verify = verificationCode[email];
 
     if (verify === code) {
-      res.status(status.SUCCESS).json(response(status.SUCCESS, { verified: true }));
+      res.status(200).json(response(status.SUCCESS, { verified: true }));
       delete verificationCode[email];
     } else {
-      res.status(status.BAD_REQUEST).json(response(status.WRONG_CODE, { verified: false }));
+      res.status(400).json(response(status.WRONG_CODE, { verified: false }));
     }
-    res.status(status.SUCCESS).json(response(status.SUCCESS, "이메일 코드 생성 완료"));
+    res.status(200).json(response(status.SUCCESS, "이메일 코드 생성 완료"));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const uploadImage = async (req, res, next) => {
+  try {
+    console.log("file", req.file);
+    res.status(200).json(response(status.SUCCESS, { image: req.file.location }));
   } catch (error) {
     next(error);
   }

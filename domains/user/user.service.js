@@ -4,7 +4,7 @@ import { generateJWTToken } from "../../utils/generateToken.js";
 
 export const signupUser = async (userInfo) => {
   // 비밀번호 해싱
-  const hashedPassword = passwordHashing(password);
+  const hashedPassword = passwordHashing(userInfo.password);
 
   const signupUserData = await insertUser({
     ...userInfo,
