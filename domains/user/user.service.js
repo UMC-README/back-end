@@ -46,11 +46,7 @@ export const getUserProfile = async (userId) => {
     throw new Error("사용자를 찾을 수 없습니다.");
   }
 
-  return {
-    nickname: userData.nickname,
-    email: userData.email,
-    profile_image: userData.profile_image,
-  };
+  return userData;
 };
 
 export const getMyFixedPost = async (userId) => {
@@ -66,9 +62,5 @@ export const getMyFixedPost = async (userId) => {
     return null;
   }
 
-  return {
-    title: fixedPostData.title,
-    start_date: fixedPostData.start_date,
-    end_date: fixedPostData.end_date,
-  };
+  return fixedPostData;
 };
