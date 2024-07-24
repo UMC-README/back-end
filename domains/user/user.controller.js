@@ -1,5 +1,6 @@
 import { response } from "../../config/response.js";
 import { status } from "../../config/response.status.js";
+import { sendCodeEmail } from "../../utils/email.js";
 
 import { getUserProfile, loginUser, signupUser, getMyFixedPost } from "./user.service.js";
 
@@ -49,6 +50,19 @@ export const getUserFixedPost = async (req, res, next) => {
 
     const result = await getMyFixedPost(userId);
     res.status(200).json(response(status.SUCCESS, result));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const userCreateCode = async (req, res, next) => {
+  try {
+    console.log("이메일 코드 생성 요청");
+    console.log("body: ", req.body);
+
+    const { email } = req.body;
+    const { to, code } = sendCodeEmail(email);
+    res.status(200).json(response(status.SUCCESS, "이메일 코드 생성 완료"));
   } catch (error) {
     next(error);
   }
