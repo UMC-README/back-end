@@ -41,3 +41,14 @@ export const loginUser = async (email, password) => {
     throw new Error("비밀번호가 일치하지 않습니다.");
   }
 };
+
+export const getUserProfile = async (userId) => {
+  const userData = await findUserById(userId);
+
+  return {
+    userId: userData.id,
+    name: userData.name,
+    nickname: userData.nickname,
+    email: userData.email,
+  };
+};
