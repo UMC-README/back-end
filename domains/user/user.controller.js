@@ -91,3 +91,16 @@ export const userConfirmCode = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getFixedPost = async (req, res, next) => {
+  try {
+    console.log("고정된 게시글 조회");
+
+    const userId = req.user.userId;
+
+    const result = await getMyFixedPost(userId);
+    res.status(200).json(response(status.SUCCESS, result));
+  } catch (error) {
+    next(error);
+  }
+};
