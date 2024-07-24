@@ -49,7 +49,7 @@ export const getUserFixedPost = async (req, res, next) => {
     const userId = req.user.userId;
 
     const result = await getMyFixedPost(userId);
-    res.status(200).json(response(status.SUCCESS, result));
+    res.status(status.SUCCESS).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
   }
@@ -86,7 +86,7 @@ export const userConfirmCode = async (req, res, next) => {
     } else {
       res.status(status.BAD_REQUEST).json(response(status.WRONG_CODE, { verified: false }));
     }
-    res.status(200).json(response(status.SUCCESS, "이메일 코드 생성 완료"));
+    res.status(status.SUCCESS).json(response(status.SUCCESS, "이메일 코드 생성 완료"));
   } catch (error) {
     next(error);
   }
