@@ -2,10 +2,9 @@ import express from "express";
 import expressAsyncHandler from "express-async-handler";
 
 import {
-  getFixedPost,
+  getUserFixedPost,
   userConfirmCode,
   userCreateCode,
-  getUserFixedPost,
   getMyProfile,
   userLogin,
   userSignUp,
