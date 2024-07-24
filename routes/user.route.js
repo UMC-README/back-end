@@ -11,8 +11,6 @@ import {
 } from "../domains/user/user.controller.js";
 import { tokenAuth } from "../middleware/token.auth.js";
 
-import { tokenAuth } from "../middleware/token.auth.js";
-
 export const userRouter = express.Router();
 
 userRouter.post("/signup", expressAsyncHandler(userSignUp));
@@ -24,5 +22,3 @@ userRouter.get("/", tokenAuth, expressAsyncHandler(getMyProfile));
 userRouter.post("/create-code", expressAsyncHandler(userCreateCode));
 
 userRouter.post("/confirm-code", expressAsyncHandler(userConfirmCode));
-
-userRouter.get("/", tokenAuth, expressAsyncHandler(getMyProfile));
