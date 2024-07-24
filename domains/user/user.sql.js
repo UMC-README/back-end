@@ -20,3 +20,11 @@ export const getFixedPost = `
   JOIN post p ON u.fixed_post_id = p.id
   WHERE u.id = ?
 `;
+
+// 개설한 공지방 찾기
+export const getCreateRoom = `
+  SELECT r.*
+  FROM user u
+  JOIN room r ON u.id = r.admin_id
+  WHERE u.id = ?
+`;

@@ -1,4 +1,10 @@
-import { insertUser, findUserById, findUserByEmail, findFixedPostByUserId } from "./user.dao.js";
+import {
+  insertUser,
+  findUserById,
+  findUserByEmail,
+  findFixedPostByUserId,
+  findCreateRoomByUserId,
+} from "./user.dao.js";
 import { passwordHashing } from "../../utils/passwordHash.js";
 import { generateJWTToken } from "../../utils/generateToken.js";
 
@@ -63,4 +69,20 @@ export const getMyFixedPost = async (userId) => {
   }
 
   return fixedPostData;
+};
+
+export const getMyCreateRoom = async (userId) => {
+  const userData = await findUserById(userId);
+
+  if (!userData) {
+    throw new Error("사용자를 찾을 수 없습니다.");
+  }
+
+  const createRoomsData = await findCreateRoomByUserId(userData.userId);
+
+  if (!createRoomsData) {
+    return null;
+  }
+
+  return createRoomsData;
 };
