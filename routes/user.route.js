@@ -27,5 +27,3 @@ userRouter.get("/fixed", tokenAuth, expressAsyncHandler(getUserFixedPost));
 userRouter.post("/create-code", expressAsyncHandler(userCreateCode));
 
 userRouter.post("/confirm-code", expressAsyncHandler(userConfirmCode));
-
-userRouter.get("/", tokenAuth, expressAsyncHandler(getMyProfile));

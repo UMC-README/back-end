@@ -42,8 +42,6 @@ export const getMyProfile = async (req, res, next) => {
   }
 };
 
-const verificationCode = {};
-
 export const getUserFixedPost = async (req, res, next) => {
   try {
     console.log("고정된 게시글 조회");
@@ -56,6 +54,8 @@ export const getUserFixedPost = async (req, res, next) => {
     next(error);
   }
 };
+
+const verificationCode = {};
 
 export const userCreateCode = async (req, res, next) => {
   try {
@@ -86,6 +86,7 @@ export const userConfirmCode = async (req, res, next) => {
     } else {
       res.status(400).json(response(status.WRONG_CODE, { verified: false }));
     }
+    res.status(200).json(response(status.SUCCESS, "이메일 코드 생성 완료"));
   } catch (error) {
     next(error);
   }
