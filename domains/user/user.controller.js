@@ -41,7 +41,8 @@ export const getMyProfile = async (req, res, next) => {
     next(error);
   }
 };
-let verificationCode = {};
+
+const verificationCode = {};
 
 export const userCreateCode = async (req, res, next) => {
   try {
@@ -51,7 +52,27 @@ export const userCreateCode = async (req, res, next) => {
     const { email } = req.body;
     const { to, code } = sendCodeEmail(email);
     verificationCode[to] = code;
-    res.status(200).json(response(status.SUCCESS, "이메일 코드 생성 완료"));
+
+    res.status(200).json(response(status.SUCCESS, "이메일을 확인해주세요."));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const userConfirmCode = async (req, res, next) => {
+  try {
+    console.log("코드 인증 요청");
+    console.log("body: ", req.body);
+
+    const { email, code } = req.body;
+    const verify = verificationCode[email];
+
+    if (verify === code) {
+      res.status(200).json(response(status.SUCCESS, { verified: true }));
+      delete verificationCode[email];
+    } else {
+      res.status(400).json(response(status.WRONG_CODE, { verified: false }));
+    }
   } catch (error) {
     next(error);
   }

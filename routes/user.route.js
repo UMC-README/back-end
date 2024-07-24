@@ -2,6 +2,7 @@ import express from "express";
 import expressAsyncHandler from "express-async-handler";
 
 import {
+  userConfirmCode,
   userCreateCode,
   getMyProfile,
   userLogin,
@@ -18,3 +19,5 @@ userRouter.post("/login", expressAsyncHandler(userLogin));
 userRouter.get("/", tokenAuth, expressAsyncHandler(getMyProfile));
 
 userRouter.post("/create-code", expressAsyncHandler(userCreateCode));
+
+userRouter.post("/confirm-code", expressAsyncHandler(userConfirmCode));
