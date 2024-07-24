@@ -3,6 +3,7 @@ import expressAsyncHandler from "express-async-handler";
 
 import {
   getUserFixedPost,
+  userConfirmCode,
   userCreateCode,
   getMyProfile,
   userLogin,
@@ -21,3 +22,5 @@ userRouter.get("/", tokenAuth, expressAsyncHandler(getMyProfile));
 userRouter.get("/fixed", tokenAuth, expressAsyncHandler(getUserFixedPost));
 
 userRouter.post("/create-code", expressAsyncHandler(userCreateCode));
+
+userRouter.post("/confirm-code", expressAsyncHandler(userConfirmCode));
