@@ -41,7 +41,7 @@ export const getMyProfile = async (req, res, next) => {
   }
 };
 
-export const getFixedPost = async (req, res, next) => {
+export const getUserFixedPost = async (req, res, next) => {
   try {
     console.log("고정된 게시글 조회");
 

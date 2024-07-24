@@ -2,7 +2,7 @@ import express from "express";
 import expressAsyncHandler from "express-async-handler";
 
 import {
-  getFixedPost,
+  getUserFixedPost,
   getMyProfile,
   userLogin,
   userSignUp,
@@ -17,4 +17,4 @@ userRouter.post("/login", expressAsyncHandler(userLogin));
 
 userRouter.get("/", tokenAuth, expressAsyncHandler(getMyProfile));
 
-userRouter.get("/fixed", tokenAuth, expressAsyncHandler(getFixedPost));
+userRouter.get("/fixed", tokenAuth, expressAsyncHandler(getUserFixedPost));

@@ -59,7 +59,7 @@ export const findUserByEmail = async (email) => {
   }
 };
 
-export const findFixedPost = async (userId) => {
+export const findFixedPostByUserId = async (userId) => {
   try {
     const conn = await pool.getConnection();
     const [post] = await conn.query(getFixedPost, [userId]);
