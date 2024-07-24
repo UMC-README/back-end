@@ -59,4 +59,10 @@ export const status = {
     code: "USER000",
     message: "사용자 인증에 실패했습니다.",
   },
+  WRONG_CODE: {
+    status: StatusCodes.BAD_REQUEST,
+    isSuccess: false,
+    code: "USER001",
+    message: "잘못된 인증코드 입니다.",
+  },
 };
