@@ -8,10 +8,7 @@ import {
   getMyProfile,
   userLogin,
   userSignUp,
-  getMyProfile,
 } from "../domains/user/user.controller.js";
-import { tokenAuth } from "../middleware/token.auth.js";
-
 import { tokenAuth } from "../middleware/token.auth.js";
 
 export const userRouter = express.Router();
