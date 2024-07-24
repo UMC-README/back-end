@@ -1,12 +1,3 @@
-openapi: 3.0.3
-servers:
-  - url: http://localhost:8000/
-components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
 paths:
   /user/s3/upload:
     post:

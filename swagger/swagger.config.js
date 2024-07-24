@@ -11,6 +11,12 @@ export const swaggerSpec = {
     version: "1.0.0",
     description: "READ.ME API 입니다.",
   },
+  servers: [
+    {
+      url: "http://localhost:8000",
+      description: "Development server",
+    },
+  ],
   paths: {
     ...userSwagger.paths,
   },
