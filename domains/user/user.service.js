@@ -49,9 +49,8 @@ export const getUserProfile = async (userId) => {
   }
 
   return {
-    userId: userData.id,
-    name: userData.name,
     nickname: userData.nickname,
     email: userData.email,
+    profile_image: userData.profile_image,
   };
 };
