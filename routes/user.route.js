@@ -2,12 +2,12 @@ import express from "express";
 import expressAsyncHandler from "express-async-handler";
 
 import {
+  getUserFixedPost,
   userConfirmCode,
   userCreateCode,
   getMyProfile,
   userLogin,
   userSignUp,
-  getMyProfile,
 } from "../domains/user/user.controller.js";
 import { tokenAuth } from "../middleware/token.auth.js";
 
@@ -22,3 +22,5 @@ userRouter.get("/", tokenAuth, expressAsyncHandler(getMyProfile));
 userRouter.post("/create-code", expressAsyncHandler(userCreateCode));
 
 userRouter.post("/confirm-code", expressAsyncHandler(userConfirmCode));
+
+userRouter.get("/fixed", tokenAuth, expressAsyncHandler(getUserFixedPost));

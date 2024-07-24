@@ -12,3 +12,11 @@ export const getUserById = `
 export const getUserByEmail = `
   SELECT * FROM user WHERE email = ?
 `;
+
+// 고정된 공지 찾기
+export const getFixedPost = `
+  SELECT p.*
+  FROM user u
+  JOIN post p ON u.fixed_post_id = p.id
+  WHERE u.id = ?
+`;
