@@ -77,3 +77,16 @@ export const userConfirmCode = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getMyProfile = async (req, res, next) => {
+  try {
+    console.log("내 프로필 조회");
+
+    const userId = req.user.id;
+
+    const result = await getUserProfile(userId);
+    res.status(200).json(response(status.SUCCESS, result));
+  } catch (error) {
+    next(error);
+  }
+};
