@@ -1,0 +1,85 @@
+paths:
+  /user/s3/upload:
+    post:
+      tags:
+        - user
+      summary: S3에 이미지 업로드
+      description: S3에 이미지를 업로드하고 url을 반환합니다.
+      operationId: S3
+      consumes:
+        - multipart/form-data
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+              properties:
+                file:
+                  type: file
+                  description: 이미지 파일
+      responses:
+        "200":
+          description: 이미지 업로드 성공!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "이미지 업로드 성공"
+                  result:
+                    type: string
+                    example: "https://s3.~"
+        "401":
+          description: 잘못된 요청
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 401
+                  isSuccess:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: USER000
+                  message:
+                    type: string
+                    example: 사용자 인증에 실패했습니다
+        "500":
+          description: 서버 에러
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 500
+                  isSuccess:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: COMMON000
+                  message:
+                    type: string
+                    example: 서버 에러, 관리자에게 문의 바랍니다.
