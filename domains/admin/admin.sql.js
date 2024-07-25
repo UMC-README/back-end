@@ -1,10 +1,14 @@
-import { getUserProfile } from "./admin.dao.js";
+// 개설한 공지방 찾기
+export const getProfileByUserId = `
+  SELECT ur.nickname, ur.profile_image, ur.penalty_count
+  FROM \`user-room\` ur
+  JOIN user u ON u.id = ur.user_id
+  WHERE u.id = ?
+`;
 
-export const getProfileUser = async (userId) => {
-  try {
-    console.log("유저 프로필 정보를 가져옵니다.");
-    return await getUserProfile(userId);
-  } catch (error) {
-    throw error;
-  }
-};
+export const createRooms = ` 
+  SELECT r.*
+  FROM user u
+  JOIN room r ON u.id = r.admin_id
+  WHERE u.id = ?
+`;
