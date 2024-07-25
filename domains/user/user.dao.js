@@ -2,7 +2,13 @@ import { pool } from "../../config/db.config.js";
 import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
 
-import { getFixedPost, getUserByEmail, getUserById, userSignUpSQL } from "./user.sql.js";
+import {
+  userSignUpSQL,
+  getUserById,
+  getUserByEmail,
+  getFixedPost,
+  getCreateRoom,
+} from "./user.sql.js";
 
 export const insertUser = async (data) => {
   try {
@@ -73,6 +79,24 @@ export const findFixedPostByUserId = async (userId) => {
     return post[0];
   } catch (error) {
     console.log("고정된 게시글 찾기 에러", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const findCreateRoomByUserId = async (userId) => {
+  try {
+    const conn = await pool.getConnection();
+    const [rooms] = await conn.query(getCreateRoom, [userId]);
+
+    if (rooms.length == 0) {
+      conn.release();
+      return null;
+    }
+
+    conn.release();
+    return rooms;
+  } catch (error) {
+    console.log("내가 생성한 공지방 찾기 에러", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };

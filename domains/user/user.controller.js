@@ -2,7 +2,13 @@ import { response } from "../../config/response.js";
 import { status } from "../../config/response.status.js";
 import { sendCodeEmail } from "../../utils/email.js";
 
-import { getUserProfile, loginUser, signupUser, getMyFixedPost } from "./user.service.js";
+import {
+  getUserProfile,
+  loginUser,
+  signupUser,
+  getMyFixedPost,
+  getMyCreateRoom,
+} from "./user.service.js";
 
 export const userSignUp = async (req, res, next) => {
   try {
@@ -96,6 +102,19 @@ export const uploadImage = async (req, res, next) => {
   try {
     console.log("file", req.file);
     res.status(200).json(response(status.SUCCESS, { image: req.file.location }));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getUserCreateRoom = async (req, res, next) => {
+  try {
+    console.log("내가 생성한 공지방 조회");
+
+    const userId = req.user.userId;
+
+    const result = await getMyCreateRoom(userId);
+    res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
   }
