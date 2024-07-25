@@ -35,4 +35,4 @@ userRouter.post(
   expressAsyncHandler(uploadImage)
 );
 
-userRouter.get("/createRoom", tokenAuth, expressAsyncHandler(getUserCreateRoom));
+userRouter.get("/create-room", tokenAuth, expressAsyncHandler(getUserCreateRoom));
