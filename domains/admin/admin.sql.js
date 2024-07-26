@@ -11,5 +11,5 @@ export const createRoomsByUser = `
   SELECT r.admin_nickname, r.room_name, r.room_password, r.max_penalty
   FROM room r
   JOIN user u ON u.id = r.user_id
-  WHERE u.id = ? AND r.status = 'EXIST'  <- 이거 넣어주는게 맞겠지? status
+  WHERE u.id = ? AND r.status = 'EXIST'   
 `;
