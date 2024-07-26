@@ -1,0 +1,89 @@
+paths:
+  /admin/profile/{user_id}:
+    post:
+      tags:
+        - admin
+      summary: User 프로필 조회
+      description: 특정 User의 프로필을 조회합니다. 
+      operationId: 
+      consumes:
+        - 
+      security:
+        - bearerAuth: []
+      requestBody:
+        required:
+        content:
+          multipart/form-data:
+            schema:
+              type: 
+              required:
+                - 
+              properties:
+                file:
+                  type: 
+                  description:
+      responses:
+        "200":
+          description: 프로필 조회 성공!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "프로필 조회 성공"
+                  result:
+                    type: string
+                    example: "박민음"
+                    type : string 
+                    example : "www.s3.~~~"
+                    type : penalty_count 
+                    example : 0
+        "400":
+          description: 잘못된 요청
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 401
+                  isSuccess:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: USER000
+                  message:
+                    type: string
+                    example: 사용자 인증에 실패했습니다
+        "500":
+          description: 서버 에러
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 500
+                  isSuccess:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: COMMON000
+                  message:
+                    type: string
+                    example: 서버 에러, 관리자에게 문의 바랍니다.

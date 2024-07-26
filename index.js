@@ -6,6 +6,8 @@ import cors from "cors";
 import { swaggerSpec } from "./swagger/swagger.config.js";
 import { status } from "./config/response.status.js";
 import { response } from "./config/response.js";
+import { userRouter } from "./routes/user.route.js";
+import { roomRouter } from "./routes/room.route.js";
 
 dotenv.config();
 
@@ -14,8 +16,8 @@ const app = express();
 app.set("port", process.env.PORT || 8000); // 서버 포트 지정
 
 app.use(express.static("public")); // 정적 파일 접근
-app.use(express.json()); // request의 본문을 json으로 해석할 수 있도록 함 (JSON 형태의 요청 body를 파싱하기 위함)
-app.use(express.urlencoded({ extended: false })); // 단순 객체 문자열 형태로 본문 데이터 해석
+app.use(express.json({ limit: "50mb" })); // 요청 본문 크기를 50MB로 설정
+app.use(express.urlencoded({ extended: true, limit: "50mb" })); // 요청 본문 크기를 50MB로 설정
 app.use(cors()); // cors 방식 허용
 
 app.use("/api-docs", SwaggerUi.serve, SwaggerUi.setup(swaggerSpec));
@@ -33,3 +35,6 @@ app.listen(app.get("port"), () => {
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
+
+app.use("/user", userRouter);
+app.use("/room", roomRouter);
