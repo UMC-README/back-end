@@ -8,10 +8,11 @@ export const fixPost = async (req, res, next) => {
     console.log("고정 공지글 등록");
 
     const userId = req.user.userId;
-    console.log("body: ", req.body);
+    const postId = req.body.postId;
+    console.log("postId: ", postId);
     console.log("userId: ", userId);
 
-    const result = await postFix(req.body, userId);
+    const result = await postFix(postId, userId);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);

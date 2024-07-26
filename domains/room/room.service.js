@@ -1,9 +1,9 @@
 import { deleteFixPostDao, fixPostDao } from "./room.dao.js";
 
-export const postFix = async (body, userId) => {
+export const postFix = async (postId, userId) => {
   const fixPostData = await fixPostDao({
-    postId: body.postId,
-    userId: userId,
+    postId,
+    userId,
   });
 
   if (fixPostData == -1) {
