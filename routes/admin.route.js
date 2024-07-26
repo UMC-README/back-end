@@ -1,8 +1,9 @@
 import express from "express";
 import expressAsyncHandler from "express-async-handler";
 import { tokenAuth } from "../middleware/token.auth.js";
-import { userProfile } from "../domains/admin/admin.controller.js";
+import { createRoomsController, userProfile } from "../domains/admin/admin.controller.js";
 
 export const adminRouter = express.Router();
 
+adminRouter.post("/rooms", tokenAuth, expressAsyncHandler(createRoomsController));
 adminRouter.get("/profile/:user_id", tokenAuth, expressAsyncHandler(userProfile));

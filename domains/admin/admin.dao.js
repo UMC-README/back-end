@@ -1,7 +1,26 @@
 import { pool } from "../../config/db.config.js";
 import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
-import { getProfileByUserId } from "./admin.sql.js";
+import { createRoomsSQL, getProfileByUserId } from "./admin.sql.js";
+
+export const createRoomsDao = async (data) => {
+  try {
+    const conn = await pool.getConnection();
+    const result = await conn.query(createRoomsSQL, [
+      data.admin_id,
+      data.admin_nickname,
+      data.room_name,
+      data.room_password,
+      data.room_image,
+      data.room_invite_url,
+      data.max_penalty,
+    ]);
+    return result;
+  } catch (error) {
+    console.error("공지방 생성하기 에러");
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
 
 export const getUserProfile = async (userId) => {
   try {
