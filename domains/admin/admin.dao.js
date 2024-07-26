@@ -1,12 +1,12 @@
 import { pool } from "../../config/db.config.js";
 import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
-import { createRoomsByUser, getProfileByUserId } from "./admin.sql.js";
+import { createRoomsByUserId, getProfileByUserId } from "./admin.sql.js";
 
 export const createRoomsDao = async (userId) => {
   try {
     const conn = await pool.getConnection();
-    const [rows] = await conn.query(createRoomsByUser, [userId]);
+    const [rows] = await conn.query(createRoomsByUserId, [userId]);
 
     if (rows.length === 0) {
       throw new BaseError(404, "User not found");

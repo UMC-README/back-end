@@ -1,4 +1,13 @@
-import { getUserProfile } from "./admin.dao.js";
+import { createRoomsDao, getUserProfile } from "./admin.dao.js";
+
+export const createRoomsService = async (userId) => {
+  try {
+    console.log("유저 ID를 가져옵니다.");
+    return await createRoomsDao(userId);
+  } catch (error) {
+    throw error;
+  }
+};
 
 export const getProfileUser = async (userId) => {
   try {

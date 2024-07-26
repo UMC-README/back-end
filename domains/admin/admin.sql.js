@@ -1,5 +1,5 @@
 // 공지방 생성
-export const createRoomsByUser = ` 
+export const createRoomsByUserId = ` 
   SELECT r.admin_nickname, r.room_name, r.room_password, r.max_penalty
   FROM room r
   JOIN user u ON u.id = r.user_id
