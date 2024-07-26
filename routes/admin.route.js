@@ -5,5 +5,5 @@ import { createRoomsController, userProfile } from "../domains/admin/admin.contr
 
 export const adminRouter = express.Router();
 
-adminRouter.post("/rooms", expressAsyncHandler(createRoomsController));
+adminRouter.post("/rooms", tokenAuth, expressAsyncHandler(createRoomsController));
 adminRouter.get("/profile/:user_id", tokenAuth, expressAsyncHandler(userProfile));

@@ -1,6 +1,6 @@
 // 공지방 생성
 export const createRoomsSQL = `
-  INSERT INTO room (admin_id, admin_nickname, room_name, room_password, room_image, max_penalty, room_invite_url)
+  INSERT INTO room (admin_id, admin_nickname, room_name, room_password, room_image, room_invite_url, max_penalty)
   VALUES (?, ?, ?, ?, ?, ?, ?) 
 `;
 
