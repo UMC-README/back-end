@@ -1,8 +1,16 @@
 import path from "path";
 import YAML from "yamljs";
 import { cwd } from "process";
+import dotenv from "dotenv";
+
+dotenv.config();
+process.env.NODE_ENV =
+  process.env.NODE_ENV && process.env.NODE_ENV.trim().toLowerCase() === "production"
+    ? "production"
+    : "development";
 
 const userSwagger = YAML.load(path.join(cwd(), "/swagger/user.swagger.yaml"));
+const isDevMode = process.env.NODE_ENV === "development";
 
 export const swaggerSpec = {
   openapi: "3.0.3",
@@ -13,8 +21,7 @@ export const swaggerSpec = {
   },
   servers: [
     {
-      url: "http://localhost:8000",
-      description: "Development server",
+      url: isDevMode ? process.env.DEVELOPMENT_SERVER_URL : process.env.PRODUCTION_SERVER_URL,
     },
   ],
   paths: {
