@@ -8,7 +8,7 @@ import { status } from "./config/response.status.js";
 import { response } from "./config/response.js";
 import { userRouter } from "./routes/user.route.js";
 import { roomRouter } from "./routes/room.route.js";
-import { adminRouter } from "./routes/adomin.route.js";
+import { adminRouter } from "./routes/admin.route.js";
 
 dotenv.config();
 
