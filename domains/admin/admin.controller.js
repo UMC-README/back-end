@@ -29,18 +29,7 @@ export const createRoomsController = async (req, res, next) => {
       return res.status(400).json({ error: "모든 필수 필드를 입력하세요." });
     }
 
-    // 데이터베이스 쿼리 실행
-    const result = await createRoomsService({
-      admin_id,
-      admin_nickname,
-      room_name,
-      room_password,
-      room_image,
-      room_invite_url,
-      max_penalty,
-    });
-
-    res.status(200).json(response(status.SUCCESS, result));
+    res.status(200).json(response(status.SUCCESS, req.body));
   } catch (error) {
     next(error);
   }
