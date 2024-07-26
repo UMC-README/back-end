@@ -6,7 +6,6 @@ import { createRoomsSQL, getProfileByUserId } from "./admin.sql.js";
 export const createRoomsDao = async (data) => {
   try {
     const conn = await pool.getConnection();
-    console.log(data);
     const result = await conn.query(createRoomsSQL, [
       data.admin_id,
       data.admin_nickname,
@@ -16,7 +15,6 @@ export const createRoomsDao = async (data) => {
       data.room_invite_url,
       data.max_penalty,
     ]);
-    console.log("2");
     return result;
   } catch (error) {
     console.error("공지방 생성하기 에러");

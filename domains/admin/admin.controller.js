@@ -1,5 +1,4 @@
 // admin.controller.js
-
 import { status } from "../../config/response.status.js";
 import { response } from "../../config/response.js";
 import { createRoomsService, getProfileUser } from "./admin.service.js";
@@ -40,18 +39,6 @@ export const createRoomsController = async (req, res, next) => {
       room_invite_url,
       max_penalty,
     });
-
-    // 응답 객체 구성
-    const response = {
-      // id: result.insertId,
-      admin_id,
-      admin_nickname,
-      room_name,
-      room_password,
-      room_image,
-      room_invite_url,
-      max_penalty,
-    };
 
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
