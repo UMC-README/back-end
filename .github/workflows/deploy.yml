@@ -35,4 +35,4 @@ jobs:
               sudo apt install -y npm
             fi
             npm ci
-            npm start
+            npm start &
