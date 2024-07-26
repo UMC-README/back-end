@@ -8,9 +8,10 @@ process.env.NODE_ENV =
   process.env.NODE_ENV && process.env.NODE_ENV.trim().toLowerCase() === "production"
     ? "production"
     : "development";
+const isDevMode = process.env.NODE_ENV === "development";
 
 const userSwagger = YAML.load(path.join(cwd(), "/swagger/user.swagger.yaml"));
-const isDevMode = process.env.NODE_ENV === "development";
+const roomSwagger = YAML.load(path.join(cwd(), "/swagger/room.swagger.yaml"));
 
 export const swaggerSpec = {
   openapi: "3.0.3",
@@ -26,6 +27,7 @@ export const swaggerSpec = {
   ],
   paths: {
     ...userSwagger.paths,
+    ...roomSwagger.paths,
   },
   components: {
     securitySchemes: {
@@ -37,6 +39,7 @@ export const swaggerSpec = {
     },
     schemas: {
       ...userSwagger.components?.schemas,
+      ...roomSwagger.components?.schemas,
     },
   },
   security: [

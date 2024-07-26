@@ -7,6 +7,7 @@ import { swaggerSpec } from "./swagger/swagger.config.js";
 import { status } from "./config/response.status.js";
 import { response } from "./config/response.js";
 import { userRouter } from "./routes/user.route.js";
+import { roomRouter } from "./routes/room.route.js";
 
 dotenv.config();
 
@@ -36,3 +37,4 @@ app.get("/", (req, res) => {
 });
 
 app.use("/user", userRouter);
+app.use("/room", roomRouter);
