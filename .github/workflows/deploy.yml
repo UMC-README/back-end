@@ -35,4 +35,4 @@ jobs:
               sudo apt install -y npm
             fi
             npm ci
-            npm start &
+            pm2 start npm --name "back-end" -- start
