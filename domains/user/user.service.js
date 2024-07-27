@@ -40,7 +40,11 @@ export const loginUser = async (email, password) => {
 
   if (hashedPassword === userData.password) {
     const tokenInfo = generateJWTToken(userData.id);
-    return { userId: userData.id, accessToken: tokenInfo };
+
+    return {
+      userId: userData.id,
+      accessToken: tokenInfo,
+    };
   } else {
     throw new Error("비밀번호가 일치하지 않습니다.");
   }
@@ -69,7 +73,12 @@ export const getMyFixedPost = async (userId) => {
     return null;
   }
 
-  return fixedPostData;
+  return {
+    post_id: fixedPostData.id,
+    title: fixedPostData.title,
+    start_date: fixedPostData.start_date,
+    end_date: fixedPostData.end_date,
+  };
 };
 
 export const getMyCreateRoom = async (userId) => {
@@ -101,5 +110,5 @@ export const getMyJoinRoom = async (userId) => {
     return null;
   }
 
-  return joinRoomsData;
+  return {};
 };
