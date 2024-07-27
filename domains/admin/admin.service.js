@@ -1,4 +1,4 @@
-import { createRoomsDao, updateRoomsDao, getUserProfile } from "./admin.dao.js";
+import { getUserByIdDao, createRoomsDao, updateRoomsDao, getUserProfile } from "./admin.dao.js";
 
 export const createRoomsService = async (data) => {
   try {
@@ -11,13 +11,13 @@ export const createRoomsService = async (data) => {
 };
 
 export const updateRoomsService = async (userId, roomData) => {
-  const userData = await findUserById(userId);
+  const userData = await getUserByIdDao(userId);
   if (!userData) throw new Error("사용자를 찾을 수 없습니다.");
 
-  const updateRoomsData = await updateRoomsDao(roomData); // roomData를 그대로 전달
+  const updateRoomsData = await updateRoomsDao(roomData);
 
   if (updateRoomsData.affectedRows === 0) {
-    throw new Error("공지방 업데이트에 실패. 방 ID를 확인하세요.");
+    throw new Error("공지방 수정에 실패. 방 ID를 확인하세요.");
   }
   return updateRoomsData;
 };

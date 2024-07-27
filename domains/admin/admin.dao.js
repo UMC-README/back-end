@@ -1,7 +1,13 @@
 import { pool } from "../../config/db.config.js";
 import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
-import { createRoomsSQL, updateRoomsSQL, getProfileByUserId } from "./admin.sql.js";
+import { getUserByIdSQL, createRoomsSQL, updateRoomsSQL, getProfileByUserId } from "./admin.sql.js";
+
+export const getUserByIdDao = async (userId) => {
+  const conn = await pool.getConnection();
+  const result = await conn.query(getUserByIdSQL, [userId]);
+  return result[0];
+};
 
 export const createRoomsDao = async (data) => {
   try {
