@@ -194,6 +194,52 @@ paths:
                         type: string
                         description: JWT 토큰
 
+  /user/create-room:
+    get:
+      tags:
+        - user
+      summary: 내가 생성한 공지방 조회
+      description: 내가 생성한 공지방 조회
+      operationId: create-room
+      consumes:
+        - application/json
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: 내가 생성한 공지방 조회 성공!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "내가 생성한 공지방 조회 성공"
+                  result:
+                    type: object
+                    properties:
+                      roomId:
+                        type: number
+                        description: 공지방 ID
+                      roomImage:
+                        type: string
+                        description: 공지방 사진
+                      roomName:
+                        type: string
+                        description: 공지방 이름
+                      nickname:
+                        type: string
+                        description: 본인 닉네임
 
   /user/join-room:
     get:
@@ -231,7 +277,7 @@ paths:
                     properties:
                       roomId:
                         type: number
-                      description: 공지방 ID
+                        description: 공지방 ID
                       roomImage:
                         type: string
                         description: 공지방 사진
