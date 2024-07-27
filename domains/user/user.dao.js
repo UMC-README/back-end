@@ -8,6 +8,7 @@ import {
   getUserByEmail,
   getFixedPost,
   getCreateRoom,
+  getJoinRoom,
 } from "./user.sql.js";
 
 export const insertUser = async (data) => {
@@ -97,6 +98,24 @@ export const findCreateRoomByUserId = async (userId) => {
     return rooms;
   } catch (error) {
     console.log("내가 생성한 공지방 찾기 에러", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const findJoinRoomByUserId = async (userId) => {
+  try {
+    const conn = await pool.getConnection();
+    const [rooms] = await conn.query(getJoinRoom, [userId]);
+
+    if (rooms.length == 0) {
+      conn.release();
+      return null;
+    }
+
+    conn.release();
+    return rooms;
+  } catch (error) {
+    console.log("내가 입장한 공지방 찾기 에러", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };
