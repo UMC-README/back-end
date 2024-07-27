@@ -41,7 +41,7 @@ export const updateRoomsController = async (req, res, next) => {
     const roomData = req.body;
 
     const result = await updateRoomsService(userId, roomData);
-    res.status(200).json(response(status.SUCCESS, result));
+    res.status(200).json(response(status.SUCCESS, "공지방 수정 성공"));
   } catch (error) {
     next(error);
   }
