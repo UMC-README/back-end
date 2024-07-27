@@ -5,6 +5,7 @@ import { status } from "../../config/response.status.js";
 import {
   changeFixedPostSQL,
   getPostById,
+  getRoomById,
   getPostDetailsByRoomId,
   getPostDetailsByRoomIdAtFirst,
 } from "./room.sql.js";
@@ -60,13 +61,21 @@ export const deleteFixPostDao = async (data) => {
   }
 };
 
-export const getAllPostInRoomDao = async (cursorId, size, roomId) => {
+export const getAllPostInRoomDao = async (roomId, userId, cursorId, size) => {
   try {
     const conn = await pool.getConnection();
+
+    const [room] = await conn.query(getRoomById, roomId);
+
+    if (room.length == 0) {
+      conn.release();
+      return -1;
+    }
 
     if (cursorId == "undefined" || typeof cursorId == "undefined" || cursorId == null) {
       const [posts] = await pool.query(getPostDetailsByRoomIdAtFirst, [
         parseInt(roomId),
+        parseInt(userId),
         parseInt(size),
       ]);
       conn.release();
@@ -74,6 +83,7 @@ export const getAllPostInRoomDao = async (cursorId, size, roomId) => {
     } else {
       const [posts] = await pool.query(getPostDetailsByRoomId, [
         parseInt(roomId),
+        parseInt(userId),
         parseInt(cursorId),
         parseInt(size),
       ]);
