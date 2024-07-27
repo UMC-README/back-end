@@ -21,6 +21,14 @@ export const getFixedPost = `
   WHERE u.id = ?
 `;
 
+// 개설한 공지방 개수 구하기
+export const getCreateRoomCount = `
+  SELECT COUNT(*) as count
+  FROM user u
+  JOIN room r ON u.id = r.admin_id
+  WHERE u.id = ?
+`;
+
 // 개설한 공지방 찾기
 export const getCreateRoom = `
   SELECT r.*
@@ -28,6 +36,15 @@ export const getCreateRoom = `
   JOIN room r ON u.id = r.admin_id
   WHERE u.id = ?
   LIMIT ? OFFSET ?
+`;
+
+// 입장한 공지방 개수 구하기
+export const getJoinRoomCount = `
+  SELECT COUNT(*) as count
+  FROM \`user-room\` ur
+  JOIN user u ON u.id = ur.user_id
+  JOIN room r ON r.id = ur.room_id
+  WHERE u.id = ?
 `;
 
 // 입장한 공지방 찾기
