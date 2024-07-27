@@ -193,6 +193,103 @@ paths:
                       accessToken:
                         type: string
                         description: JWT 토큰
+  
+  /user:
+    get:
+      tags:
+        - user
+      summary: 내 프로필 조회 (메인)
+      description: 내 프로필 조회 (메인)
+      operationId: user
+      consumes:
+        - application/json
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: 내 프로필 조회 성공!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "내 프로필 조회 성공"
+                  result:
+                    type: object
+                    properties:
+                      userId:
+                        type: number
+                        description: 유저 ID
+                      name:
+                        type: string
+                        description: 유저 이름
+                      nickname:
+                        type: string
+                        description: 유저 닉네임
+                      email:
+                        type: string
+                        description: 유저 이메일
+                      profileImage:
+                        type: string
+                        description: 유저 프로필 사진
+  
+  /user/fixed:
+    get:
+      tags:
+        - user
+      summary: 고정된 공지글 조회
+      description: 고정된 공지글 조회
+      operationId: fixed
+      consumes:
+        - application/json
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: 고정된 공지글 조회 성공!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "고정된 공지글 조회 성공"
+                  result:
+                    type: object
+                    properties:
+                      postId:
+                        type: number
+                        description: 공지글 ID
+                      title:
+                        type: string
+                        description: 공지글 제목
+                      startDate:
+                        type: string
+                        description: 시작일
+                      endDate:
+                        type: string
+                        description: 마감일
 
   /user/create-room:
     get:
