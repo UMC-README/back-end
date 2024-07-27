@@ -194,7 +194,8 @@ paths:
                         type: string
                         description: JWT 토큰
 
-/user/join-room:
+
+  /user/join-room:
     get:
       tags:
         - user
