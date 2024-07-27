@@ -21,6 +21,14 @@ export const getFixedPost = `
   WHERE u.id = ?
 `;
 
+// 내 공지방 찾기
+export const getRoom = `
+  SELECT ur.*
+  FROM \`user-room\` ur
+  JOIN user u ON u.id = ur.user_id
+  WHERE u.id = ?
+`;
+
 // 개설한 공지방 개수 구하기
 export const getCreateRoomCount = `
   SELECT COUNT(*) as count
