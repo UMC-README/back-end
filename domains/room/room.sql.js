@@ -8,35 +8,44 @@ export const getPostById = `
   SELECT * FROM post WHERE id = ?
 `;
 
-//공지방 내 포스트 정보 가져오기 (커서 존재)
+// ID 값으로 공지방 찾기
+export const getRoomById = `
+  SELECT * FROM room WHERE id = ?
+`;
+
+//공지방 내 포스트 정보, 나의 제출상태 가져오기 (커서 존재)
 export const getPostDetailsByRoomId = `
-  SELECT p.type, p.title, p.content, p.start_date, p.end_date, p.comment_count
-  FROM post p
-  WHERE p.room_id = ? AND p.id < ?
+  SELECT p.id, p.type, p.title, p.content, pi.URL, p.start_date, p.end_date, p.comment_count, s.submit_state FROM post p
+  JOIN user u ON p.room_id = ? AND u.id = ?
+  LEFT JOIN submit s ON s.post_id = p.id AND s.user_id = u.id
+  LEFT JOIN (
+    SELECT pi.post_id, pi.URL
+    FROM \`post-image\` pi
+    JOIN (
+      SELECT post_id, MIN(id) AS min_id
+      FROM \`post-image\`
+      GROUP BY post_id
+    ) min_pi ON pi.id = min_pi.min_id
+  ) pi ON pi.post_id = p.id
+  WHERE p.state = 'EXIST' AND p.id < ?
   ORDER BY p.id DESC LIMIT ?
 `;
 
-//공지방 내 포스트 정보 가져오기 (커서 없는 초기값)
+//공지방 내 포스트 정보, 나의 제출상태 가져오기 (커서 없는 초기값)
 export const getPostDetailsByRoomIdAtFirst = `
-  SELECT p.type, p.title, p.content, p.start_date, p.end_date, p.comment_count
-  FROM post p
-  WHERE p.room_id = ? AND p.state = 'EXIST'
-  ORDER BY p.id DESC LIMIT ?
-`;
-
-//공지방 내 나의 제출상태 가져오기 (커서 존재)
-export const getSubmitStatesByRoomId = `
-  SELECT s.submit_state
-  FROM submit s, post p, user u
-  WHERE p.state = 'EXIST' AND p.room_id = ? AND p.id < ? AND u.id = ? AND s.post_id = p.id AND s.user_id = u.id
-  ORDER BY p.id DESC LIMIT ?
-`;
-
-//공지방 내 나의 제출상태 가져오기 (커서 없는 초기값)
-export const getSubmitStatesByRoomIdAtFirst = `
-  SELECT s.submit_state
-  FROM submit s, post p, user u
-  WHERE p.state = 'EXIST' AND p.room_id = ? AND u.id = ? AND s.post_id = p.id AND s.user_id = u.id
+  SELECT p.id, p.type, p.title, p.content, pi.URL, p.start_date, p.end_date, p.comment_count, s.submit_state FROM post p
+  JOIN user u ON p.room_id = ? AND u.id = ?
+  LEFT JOIN submit s ON s.post_id = p.id AND s.user_id = u.id
+  LEFT JOIN (
+    SELECT pi.post_id, pi.URL
+    FROM \`post-image\` pi
+    JOIN (
+      SELECT post_id, MIN(id) AS min_id
+      FROM \`post-image\`
+      GROUP BY post_id
+    ) min_pi ON pi.id = min_pi.min_id
+  ) pi ON pi.post_id = p.id
+  WHERE p.state = 'EXIST'
   ORDER BY p.id DESC LIMIT ?
 `;
 
