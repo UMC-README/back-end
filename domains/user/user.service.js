@@ -9,22 +9,20 @@ import {
 import { passwordHashing } from "../../utils/passwordHash.js";
 import { generateJWTToken } from "../../utils/generateToken.js";
 
-export const signupUser = async (userInfo) => {
+export const signupUser = async (userInfo, token) => {
   // 비밀번호 해싱
-  const hashedPassword = passwordHashing(userInfo.password);
+  const hashedPassword = passwordHashing(userInfo.password.toString());
 
-  const signupUserData = await insertUser({
+  const userId = await insertUser({
     ...userInfo,
     password: hashedPassword,
   });
 
-  const userData = await findUserById(signupUserData);
-
-  const tokenInfo = generateJWTToken(userData.id);
+  const accessToken = generateJWTToken(userId);
 
   return {
-    userId: userData.id,
-    accessToken: tokenInfo,
+    userId,
+    accessToken: token ?? accessToken,
   };
 };
 
@@ -48,6 +46,15 @@ export const loginUser = async (email, password) => {
   } else {
     throw new Error("비밀번호가 일치하지 않습니다.");
   }
+};
+
+export const kakaoLoginUser = async (email) => {
+  const userData = await findUserByEmail(email);
+
+  if (!userData) {
+    return false;
+  }
+  return true;
 };
 
 export const getUserProfile = async (userId) => {
