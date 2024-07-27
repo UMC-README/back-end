@@ -110,5 +110,10 @@ export const getMyJoinRoom = async (userId) => {
     return null;
   }
 
-  return {};
+  return {
+    roomId: joinRoomsData.room_id,
+    roomName: joinRoomsData.room_name,
+    roomImage: joinRoomsData.room_image,
+    nickname: joinRoomsData.nickname,
+  };
 };
