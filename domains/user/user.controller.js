@@ -8,6 +8,7 @@ import {
   signupUser,
   getMyFixedPost,
   getMyCreateRoom,
+  getMyJoinRoom,
 } from "./user.service.js";
 
 export const userSignUp = async (req, res, next) => {
@@ -114,6 +115,19 @@ export const getUserCreateRoom = async (req, res, next) => {
     const userId = req.user.userId;
 
     const result = await getMyCreateRoom(userId);
+    res.status(200).json(response(status.SUCCESS, result));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getUserJoinRoom = async (req, res, next) => {
+  try {
+    console.log("내가 입장한 공지방 조회");
+
+    const userId = req.user.userId;
+
+    const result = await getMyJoinRoom(userId);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
