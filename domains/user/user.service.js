@@ -88,13 +88,13 @@ export const getMyCreateRoom = async (userId, page, pageSize) => {
     throw new Error("사용자를 찾을 수 없습니다.");
   }
 
-  const createRoomsData = await findCreateRoomByUserId(userData.userId, page, pageSize);
+  const { rooms, isNext } = await findCreateRoomByUserId(userData.userId, page, pageSize);
 
-  if (!createRoomsData) {
-    return null;
+  if (!rooms) {
+    return { rooms: null, isNext: false };
   }
 
-  return createRoomsData;
+  return { rooms, isNext };
 };
 
 export const getMyJoinRoom = async (userId, page, pageSize) => {
@@ -104,16 +104,11 @@ export const getMyJoinRoom = async (userId, page, pageSize) => {
     throw new Error("사용자를 찾을 수 없습니다.");
   }
 
-  const joinRoomsData = await findJoinRoomByUserId(userData.userId, page, pageSize);
+  const { rooms, isNext } = await findJoinRoomByUserId(userData.userId, page, pageSize);
 
-  if (!joinRoomsData) {
-    return null;
+  if (!rooms) {
+    return { rooms: null, isNext: false };
   }
 
-  return {
-    roomId: joinRoomsData.room_id,
-    roomName: joinRoomsData.room_name,
-    roomImage: joinRoomsData.room_image,
-    nickname: joinRoomsData.nickname,
-  };
+  return { rooms, isNext };
 };
