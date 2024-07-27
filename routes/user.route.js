@@ -10,6 +10,7 @@ import {
   userSignUp,
   uploadImage,
   getUserCreateRoom,
+  getUserJoinRoom,
 } from "../domains/user/user.controller.js";
 import { tokenAuth } from "../middleware/token.auth.js";
 import { imageUploader } from "../middleware/image.uploader.js";
@@ -36,3 +37,5 @@ userRouter.post(
 );
 
 userRouter.get("/create-room", tokenAuth, expressAsyncHandler(getUserCreateRoom));
+
+userRouter.get("/join-room", tokenAuth, expressAsyncHandler(getUserJoinRoom));
