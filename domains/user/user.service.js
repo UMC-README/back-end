@@ -74,10 +74,10 @@ export const getMyFixedPost = async (userId) => {
   }
 
   return {
-    post_id: fixedPostData.id,
+    postId: fixedPostData.id,
     title: fixedPostData.title,
-    start_date: fixedPostData.start_date,
-    end_date: fixedPostData.end_date,
+    startDate: fixedPostData.start_date,
+    endDate: fixedPostData.end_date,
   };
 };
 
