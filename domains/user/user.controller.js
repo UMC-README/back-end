@@ -113,8 +113,10 @@ export const getUserCreateRoom = async (req, res, next) => {
     console.log("내가 생성한 공지방 조회");
 
     const userId = req.user.userId;
+    const page = parseInt(req.query.page, 10) || 1;
+    const pageSize = parseInt(req.query.pageSize, 10) || 6;
 
-    const result = await getMyCreateRoom(userId);
+    const result = await getMyCreateRoom(userId, page, pageSize);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
@@ -126,8 +128,10 @@ export const getUserJoinRoom = async (req, res, next) => {
     console.log("내가 입장한 공지방 조회");
 
     const userId = req.user.userId;
+    const page = parseInt(req.query.page, 10) || 1;
+    const pageSize = parseInt(req.query.pageSize, 10) || 6;
 
-    const result = await getMyJoinRoom(userId);
+    const result = await getMyJoinRoom(userId, page, pageSize);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);

@@ -17,6 +17,13 @@ import { imageUploader } from "../middleware/image.uploader.js";
 
 export const userRouter = express.Router();
 
+userRouter.post(
+  "/s3/upload",
+  tokenAuth,
+  imageUploader.single("file"),
+  expressAsyncHandler(uploadImage)
+);
+
 userRouter.post("/signup", expressAsyncHandler(userSignUp));
 
 userRouter.post("/login", expressAsyncHandler(userLogin));
@@ -28,13 +35,6 @@ userRouter.post("/create-code", expressAsyncHandler(userCreateCode));
 userRouter.post("/confirm-code", expressAsyncHandler(userConfirmCode));
 
 userRouter.get("/fixed", tokenAuth, expressAsyncHandler(getUserFixedPost));
-
-userRouter.post(
-  "/s3/upload",
-  tokenAuth,
-  imageUploader.single("file"),
-  expressAsyncHandler(uploadImage)
-);
 
 userRouter.get("/create-room", tokenAuth, expressAsyncHandler(getUserCreateRoom));
 
