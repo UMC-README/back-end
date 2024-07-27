@@ -83,3 +83,113 @@ paths:
                   message:
                     type: string
                     example: 서버 에러, 관리자에게 문의 바랍니다.
+
+  /user/signup:
+    post:
+      tags:
+        - user
+      summary: 회원가입
+      description: 회원가입
+      operationId: signup
+      consumes:
+        - application/json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 이름
+                nickname:
+                  type: string
+                  description: 닉네임
+                email:
+                  type: string
+                  description: 이메일
+                password:
+                  type: string
+                  description: 비밀번호
+      responses:
+        "200":
+          description: 회원가입 성공!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "회원가입 성공"
+                  result:
+                    type: object
+                    properties:
+                      userId:
+                        type: number
+                        description: 유저 ID
+                      accessToken:
+                        type: string
+                        description: JWT 토큰
+
+  /user/login:
+    post:
+      tags:
+        - user
+      summary: 로그인
+      description: 로그인
+      operationId: login
+      consumes:
+        - application/json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: 이메일
+                password:
+                  type: string
+                  description: 비밀번호
+      responses:
+        "200":
+          description: 회원가입 성공!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "회원가입 성공"
+                  result:
+                    type: object
+                    properties:
+                      userId:
+                        type: number
+                        description: 유저 ID
+                      accessToken:
+                        type: string
+                        description: JWT 토큰
