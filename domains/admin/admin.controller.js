@@ -1,7 +1,7 @@
 // admin.controller.js
 import { status } from "../../config/response.status.js";
 import { response } from "../../config/response.js";
-import { createRoomsService, getProfileUser } from "./admin.service.js";
+import { createRoomsService, updateRoomsService, getProfileUser } from "./admin.service.js";
 
 export const createRoomsController = async (req, res, next) => {
   try {
@@ -30,6 +30,18 @@ export const createRoomsController = async (req, res, next) => {
     }
 
     res.status(200).json(response(status.SUCCESS, req.body));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateRoomsController = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const roomData = req.body;
+
+    const result = await updateRoomsService(userId, roomData);
+    res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
   }
