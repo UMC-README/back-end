@@ -1,4 +1,5 @@
-import { deleteFixPostDao, fixPostDao } from "./room.dao.js";
+import { deleteFixPostDao, fixPostDao, getAllPostInRoomDao } from "./room.dao.js";
+import { allPostInRoomDTO } from "./room.dto.js";
 
 export const postFix = async (postId, userId) => {
   const fixPostData = await fixPostDao({
@@ -27,4 +28,24 @@ export const deletePostFix = async (userId) => {
   }
 
   return fixPostData;
+};
+
+export const getAllPostInRoom = async (roomId, query) => {
+  const { postId, size = 10 } = query;
+
+  const roomData = await getAllPostInRoomDao({
+    postId,
+    size,
+    roomId,
+  });
+
+  if (fixPostData == -1) {
+    throw new Error("사용자를 찾을 수 없습니다.");
+  }
+
+  if (fixPostData == -2) {
+    throw new Error("공지글을 찾을 수 없습니다.");
+  }
+
+  return allPostInRoomDTO(roomData);
 };
