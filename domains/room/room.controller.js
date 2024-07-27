@@ -37,11 +37,13 @@ export const getAllPost = async (req, res, next) => {
   try {
     console.log("공지방 내 모든 공지글 조회");
 
-    const roomId = req.params;
+    const roomId = req.params.roomId;
+    const userId = req.user.userId;
 
     console.log("roomId: ", roomId);
+    console.log("userId: ", userId);
 
-    const result = await getAllPostInRoom(roomId, req.query);
+    const result = await getAllPostInRoom(roomId, userId, req.query);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
