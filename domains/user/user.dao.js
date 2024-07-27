@@ -11,6 +11,7 @@ import {
   getJoinRoom,
   getCreateRoomCount,
   getJoinRoomCount,
+  getRoom,
 } from "./user.sql.js";
 
 export const insertUser = async (data) => {
@@ -82,6 +83,24 @@ export const findFixedPostByUserId = async (userId) => {
     return post[0];
   } catch (error) {
     console.log("고정된 게시글 찾기 에러", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const findRoomByUserId = async (userId) => {
+  try {
+    const conn = await pool.getConnection();
+    const [rooms] = await conn.query(getRoom, [userId]);
+
+    if (rooms.length == 0) {
+      conn.release();
+      return null;
+    }
+
+    conn.release();
+    return rooms;
+  } catch (error) {
+    console.log("내 공지방 찾기 에러", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };
