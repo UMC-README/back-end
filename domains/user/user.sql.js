@@ -28,3 +28,11 @@ export const getCreateRoom = `
   JOIN room r ON u.id = r.admin_id
   WHERE u.id = ?
 `;
+
+// 입장한 공지방 찾기
+export const getJoinRoom = `
+  SELECT ur.*
+  FROM \`user-room\` ur
+  JOIN user u ON u.id = ur.user_id
+  WHERE u.id = ?
+`;
