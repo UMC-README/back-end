@@ -83,6 +83,98 @@ paths:
                   message:
                     type: string
                     example: 서버 에러, 관리자에게 문의 바랍니다.
+  
+  /user/create-code:
+    post:
+      tags:
+        - user
+      summary: 이메일 인증코드 생성
+      description: 이메일 인증코드 생성
+      operationId: create-code
+      consumes:
+        - application/json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: 인증할 이메일 주소
+      responses:
+        "200":
+          description: 이메일 인증코드 생성 성공!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "회원가입 성공"
+                  result:
+                    type: string
+                    example: "이메일을 확인해주세요."
+  
+  /user/confirm-code:
+    post:
+      tags:
+        - user
+      summary: 이메일 인증코드 확인
+      description: 이메일 인증코드 확인
+      operationId: confirm-code
+      consumes:
+        - application/json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: 인증한 이메일 주소
+                code:
+                  type: string
+                  description: 인증 코드
+      responses:
+        "200":
+          description: 이메일 인증코드 인증 성공!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "회원가입 성공"
+                  result:
+                    type: object
+                    properties:
+                      verified:
+                        type: boolean
+                        example: true
 
   /user/signup:
     post:
