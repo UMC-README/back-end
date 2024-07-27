@@ -141,7 +141,6 @@ paths:
                       accessToken:
                         type: string
                         description: JWT 토큰
-
   /user/login:
     post:
       tags:
@@ -164,35 +163,35 @@ paths:
                 password:
                   type: string
                   description: 비밀번호
-      responses:
-        "200":
-          description: 회원가입 성공!
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: integer
-                    example: 200
-                  isSuccess:
-                    type: boolean
-                    example: true
-                  code:
-                    type: integer
-                    example: 200
-                  message:
-                    type: string
-                    example: "회원가입 성공"
-                  result:
-                    type: object
-                    properties:
-                      userId:
-                        type: number
-                        description: 유저 ID
-                      accessToken:
-                        type: string
-                        description: JWT 토큰
+        responses:
+          "200":
+            description: 회원가입 성공!
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    status:
+                      type: integer
+                      example: 200
+                    isSuccess:
+                      type: boolean
+                      example: true
+                    code:
+                      type: integer
+                      example: 200
+                    message:
+                      type: string
+                      example: "회원가입 성공"
+                    result:
+                      type: object
+                      properties:
+                        userId:
+                          type: number
+                          description: 유저 ID
+                        accessToken:
+                          type: string
+                          description: JWT 토큰
 
   /user/join-room:
     get:
@@ -230,7 +229,7 @@ paths:
                     properties:
                       roomId:
                         type: number
-                        description: 공지방 ID
+                      description: 공지방 ID
                       roomImage:
                         type: string
                         description: 공지방 사진
