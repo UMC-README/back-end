@@ -9,6 +9,8 @@ import {
   getFixedPost,
   getCreateRoom,
   getJoinRoom,
+  getCreateRoomCount,
+  getJoinRoomCount,
 } from "./user.sql.js";
 
 export const insertUser = async (data) => {
@@ -88,7 +90,11 @@ export const findCreateRoomByUserId = async (userId, page, pageSize) => {
   try {
     const conn = await pool.getConnection();
     const offset = (page - 1) * pageSize;
+
+    const [[{ count }]] = await conn.query(getCreateRoomCount, [userId]);
     const [rooms] = await conn.query(getCreateRoom, [userId, pageSize, offset]);
+
+    const isNext = offset + pageSize < count;
 
     if (rooms.length == 0) {
       conn.release();
@@ -96,7 +102,7 @@ export const findCreateRoomByUserId = async (userId, page, pageSize) => {
     }
 
     conn.release();
-    return rooms;
+    return { rooms, isNext };
   } catch (error) {
     console.log("내가 생성한 공지방 찾기 에러", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
@@ -107,15 +113,14 @@ export const findJoinRoomByUserId = async (userId, page, pageSize) => {
   try {
     const conn = await pool.getConnection();
     const offset = (page - 1) * pageSize;
+
+    const [[{ count }]] = await conn.query(getJoinRoomCount, [userId]);
     const [rooms] = await conn.query(getJoinRoom, [userId, pageSize, offset]);
 
-    if (rooms.length == 0) {
-      conn.release();
-      return null;
-    }
+    const isNext = offset + pageSize < count;
 
     conn.release();
-    return rooms;
+    return { rooms, isNext };
   } catch (error) {
     console.log("내가 입장한 공지방 찾기 에러", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
