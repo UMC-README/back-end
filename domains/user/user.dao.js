@@ -37,7 +37,7 @@ export const findUserById = async (userId) => {
 
     if (user.length == 0) {
       conn.release();
-      return -1;
+      return null;
     }
 
     conn.release();
@@ -84,10 +84,11 @@ export const findFixedPostByUserId = async (userId) => {
   }
 };
 
-export const findCreateRoomByUserId = async (userId) => {
+export const findCreateRoomByUserId = async (userId, page, pageSize) => {
   try {
     const conn = await pool.getConnection();
-    const [rooms] = await conn.query(getCreateRoom, [userId]);
+    const offset = (page - 1) * pageSize;
+    const [rooms] = await conn.query(getCreateRoom, [userId, pageSize, offset]);
 
     if (rooms.length == 0) {
       conn.release();
@@ -102,10 +103,11 @@ export const findCreateRoomByUserId = async (userId) => {
   }
 };
 
-export const findJoinRoomByUserId = async (userId) => {
+export const findJoinRoomByUserId = async (userId, page, pageSize) => {
   try {
     const conn = await pool.getConnection();
-    const [rooms] = await conn.query(getJoinRoom, [userId]);
+    const offset = (page - 1) * pageSize;
+    const [rooms] = await conn.query(getJoinRoom, [userId, pageSize, offset]);
 
     if (rooms.length == 0) {
       conn.release();
