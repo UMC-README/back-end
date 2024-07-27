@@ -1,6 +1,7 @@
 import { response } from "../../config/response.js";
 import { status } from "../../config/response.status.js";
 import { sendCodeEmail } from "../../utils/email.js";
+import { getKakaoToken, getKakaoUser } from "../../utils/kakao.js";
 
 import {
   getUserProfile,
@@ -9,6 +10,7 @@ import {
   getMyFixedPost,
   getMyCreateRoom,
   getMyJoinRoom,
+  kakaoLoginUser,
 } from "./user.service.js";
 
 export const userSignUp = async (req, res, next) => {
@@ -33,6 +35,36 @@ export const userLogin = async (req, res, next) => {
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
+  }
+};
+
+export const userKakaoLogin = async (req, res) => {
+  try {
+    const { code } = req.query;
+
+    const { access_token: accessToken } = await getKakaoToken(code);
+
+    const userResponse = await getKakaoUser(accessToken);
+    if (userResponse.code === -401) {
+      res.status(401).json(response(status.UNAUTHORIZED, { message: "유효하지 않은 토큰입니다." }));
+    }
+
+    const userExist = await kakaoLoginUser(userResponse.kakao_account.email);
+
+    if (!userExist) {
+      await signupUser(
+        {
+          nickname: userResponse.kakao_account.profile.nickname,
+          name: userResponse.kakao_account.name,
+          email: userResponse.kakao_account.email,
+          password: userResponse.id,
+        },
+        accessToken
+      );
+    }
+    res.status(200).json(response(status.SUCCESS, { accessToken }));
+  } catch (err) {
+    console.log(err);
   }
 };
 
