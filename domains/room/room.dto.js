@@ -3,19 +3,31 @@ export const allPostInRoomDTO = (data) => {
 
   for (let i = 0; i < data.length; i++) {
     posts.push({
-      post_type: data[i].type,
-      post_title: data[i].title,
-      post_body: data[i].content,
-      post_image: data[i].URL,
-      submit_state: data[i].submit_state,
-      comment_count: data[i].comment_count,
-      start_date: formatDate(data[i].start_date),
-      end_date: formatDate(data[i].end_date),
+      postId: data[i].id,
+      postType: data[i].type,
+      postTitle: data[i].title,
+      postBody: data[i].content,
+      postImage: data[i].URL,
+      startDate: formatDate(data[i].start_date),
+      endDate: formatDate(data[i].end_date),
+      commentCount: data[i].comment_count,
+      submitState: formatSubmitState(data[i].submit_state),
     });
   }
   return { postData: posts, cursorId: data[data.length - 1].id };
 };
 
+const formatSubmitState = (data) => {
+  if (data == null) {
+    return "notComplete";
+  } else return data;
+};
+
 const formatDate = (date) => {
-  return new Intl.DateTimeFormat("kr").format(new Date(date)).replaceAll(" ", "").slice(0, -1);
+  const options = {
+    dateStyle: "short",
+    timeStyle: "short",
+    hour12: false,
+  };
+  return new Intl.DateTimeFormat("ko", options).format(new Date(date));
 };
