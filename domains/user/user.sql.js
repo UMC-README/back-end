@@ -31,8 +31,9 @@ export const getCreateRoom = `
 
 // 입장한 공지방 찾기
 export const getJoinRoom = `
-  SELECT ur.*
+  SELECT ur.nickname, r.room_name, r.room_image
   FROM \`user-room\` ur
   JOIN user u ON u.id = ur.user_id
+  JOIN room r ON r.id = ur.room_id
   WHERE u.id = ?
 `;
