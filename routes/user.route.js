@@ -11,6 +11,7 @@ import {
   uploadImage,
   getUserCreateRoom,
   getUserJoinRoom,
+  userKakaoLogin,
 } from "../domains/user/user.controller.js";
 import { tokenAuth } from "../middleware/token.auth.js";
 import { imageUploader } from "../middleware/image.uploader.js";
@@ -20,6 +21,8 @@ export const userRouter = express.Router();
 userRouter.post("/signup", expressAsyncHandler(userSignUp));
 
 userRouter.post("/login", expressAsyncHandler(userLogin));
+
+userRouter.post("/login/kakao", expressAsyncHandler(userKakaoLogin));
 
 userRouter.get("/", tokenAuth, expressAsyncHandler(getMyProfile));
 
