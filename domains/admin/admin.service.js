@@ -10,10 +10,7 @@ export const createRoomsService = async (data) => {
   }
 };
 
-export const updateRoomsService = async (userId, roomData) => {
-  const userData = await getUserByIdDao(userId);
-  if (!userData) throw new Error("사용자를 찾을 수 없습니다.");
-
+export const updateRoomsService = async (roomData) => {
   const updateRoomsData = await updateRoomsDao(roomData);
 
   if (updateRoomsData.affectedRows === 0) {
