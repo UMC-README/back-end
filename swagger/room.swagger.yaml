@@ -52,7 +52,7 @@ paths:
                     type: string
                     example: 고정 공지글 삭제 성공
 
-  room/{roomId}/all:
+  /room/{roomId}/all:
     get:
       tags:
         - room
@@ -78,7 +78,7 @@ paths:
                 type: number
         - name: paging
           in: query
-          required: true
+          required: false
           schema:
             properties:
               size:
@@ -99,7 +99,7 @@ paths:
                     example: 200
                   message:
                     type: string
-                    example: success!
+                    example: "success!"
                   result:
                     type: array
                     example: {
@@ -113,7 +113,7 @@ paths:
                           "startDate": "24. 7. 27. 19:05",
                           "endDate": "24. 7. 27. 19:05",
                           "commentCount": 1,
-                          "submitState": "notComplete",
+                          "submitState": "NOT_COMPLETE",
                         },
                         {
                           "postId": 2,
@@ -124,7 +124,7 @@ paths:
                           "startDate": "24. 7. 27. 19:01",
                           "endDate": "24. 7. 27. 19:01",
                           "commentCount": 0,
-                          "submitState": "notComplete",
+                          "submitState": "NOT_COMPLETE",
                         },
                         {
                           "postId": 1,
@@ -135,8 +135,67 @@ paths:
                           "startDate": "24. 7. 25. 04:24",
                           "endDate": "24. 7. 25. 05:24",
                           "commentCount": 5,
-                          "submitState": "complete",
+                          "submitState": "COMPLETE",
                         }
                     ],
                     "cursorId": 1,
+                    }
+
+  /room/{roomId}/notChecked:
+    get:
+      tags:
+        - room
+      summary: 공지방 내 완료하지 않은 공지글 조회
+      description: 공지방 입장시 완료하지 않은 공지글 조회, 최신순으로 최대 3개까지
+      operationId: getnotCheckedPostsinRoom
+      consumes:
+        - application/json  
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: roomId
+          in: path
+          schema:
+            type: number
+          required: true
+      responses:
+        "200":
+          description: 완료하지 않은 공지글 조회 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: number
+                    example: 200
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: array
+                    example: {
+                      "posts": [
+                        {
+                            "roomName": "README",
+                            "postId": 6,
+                            "postTitle": "test6",
+                            "updatedAtBefore": "1분 전",
+                        },
+                        {
+                            "roomName": "README",
+                            "postId": 4,
+                            "postTitle": "test4",
+                            "updatedAtBefore": "2개월 전",
+                        },
+                        {
+                            "roomName": "README",
+                            "postId": 3,
+                            "postTitle": "test3",
+                            "updatedAtBefore": "4년 전",
+                        }
+                      ]
                     }
