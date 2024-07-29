@@ -52,7 +52,7 @@ export const updateRoomsController = async (req, res, next) => {
 
 export const deleteRoomsController = async (req, res, next) => {
   try {
-    const roomId = req.body.id;
+    const { roomId } = req.body;
     const result = await deleteRoomsService(roomId);
 
     res.status(200).json(response(status.SUCCESS, result));

@@ -55,7 +55,7 @@ export const updateRoomsDao = async (roomData) => {
 export const deleteRoomsDao = async (roomId) => {
   try {
     const conn = await pool.getConnection();
-    const result = await conn.query(deleteRoomsSQL, [roomId]);
+    const result = await conn.query(deleteRoomsSQL, roomId);
     return result;
   } catch (error) {
     console.error("공지방 삭제하기 에러:", error);
