@@ -6,6 +6,8 @@ import {
   createRoomsSQL,
   updateRoomsSQL,
   deleteRoomsSQL,
+  createPostSQL,
+  createPostImgSQL,
   getProfileByUserId,
 } from "./admin.sql.js";
 
@@ -59,6 +61,42 @@ export const deleteRoomsDao = async (roomId) => {
     return result;
   } catch (error) {
     console.error("공지방 삭제하기 에러:", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const createPostDao = async ({ postData, imgURLs }) => {
+  const conn = await pool.getConnection();
+  try {
+    await conn.beginTransaction(); // 트랜잭션 시작
+    const [postResult] = await conn.query(createPostSQL, [
+      postData.room_id,
+      postData.title,
+      postData.content,
+      postData.type,
+      postData.start_date,
+      postData.end_date,
+      postData.question,
+      postData.unread_count,
+      postData.user_id,
+    ]);
+
+    const result = postResult.insertId; // 생성된 공지글의 ID
+    imgURLs.forEach((url) => {
+      // 각 URL에 대해 별도로 쿼리 실행
+      conn.query(createPostImgSQL, [url, result], (error) => {
+        if (error) {
+          throw error;
+        }
+      });
+    });
+
+    await conn.commit(); // 트랜잭션 커밋(DB 반영)
+
+    return result;
+  } catch (error) {
+    await conn.rollback(); // 오류 발생 시 롤백
+    console.error("공지글 생성 에러:", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };

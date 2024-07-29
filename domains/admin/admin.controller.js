@@ -5,6 +5,7 @@ import {
   createRoomsService,
   updateRoomsService,
   deleteRoomsService,
+  createPostService,
   getProfileUser,
 } from "./admin.service.js";
 
@@ -55,6 +56,15 @@ export const deleteRoomsController = async (req, res, next) => {
     const { roomId } = req.body;
     const result = await deleteRoomsService(roomId);
 
+    res.status(200).json(response(status.SUCCESS, result));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const createPostController = async (req, res, next) => {
+  try {
+    const result = await createPostService(req.body);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);

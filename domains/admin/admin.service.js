@@ -3,6 +3,7 @@ import {
   createRoomsDao,
   deleteRoomsDao,
   updateRoomsDao,
+  createPostDao,
   getUserProfile,
 } from "./admin.dao.js";
 
@@ -31,11 +32,20 @@ export const deleteRoomsService = async (roomId) => {
     throw new Error("삭제할 방의 ID가 필요합니다.");
   }
   const deleteRoomsData = await deleteRoomsDao(roomId);
-  console.log(deleteRoomsDao);
   if (deleteRoomsData.affectedRows === 0) {
     throw new Error("해당 ID의 공지방이 존재하지 않거나 이미 삭제되었습니다.");
   }
   return deleteRoomsData;
+};
+
+export const createPostService = async (body) => {
+  try {
+    const postId = await createPostDao(body);
+    return postId; // 생성된 공지글 ID 반환
+  } catch (error) {
+    console.error("공지글 생성하기 에러:", error);
+    throw error;
+  }
 };
 
 export const getProfileUser = async (userId) => {
