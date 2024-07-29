@@ -65,7 +65,7 @@ export const getNotCheckedPost = async (req, res, next) => {
     console.log("roomId: ", roomId);
     console.log("userId: ", userId);
 
-    const result = await getNotCheckedPostInRoom(roomId, userId, req.query);
+    const result = await getNotCheckedPostInRoom(roomId, userId);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
