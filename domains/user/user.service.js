@@ -75,6 +75,18 @@ export const getUserProfile = async (userId) => {
   };
 };
 
+export const verifyUserPassword = async (userId, password) => {
+  const userData = await findUserById(userId);
+
+  if (!userData) {
+    throw new Error("사용자를 찾을 수 없습니다.");
+  }
+
+  const hashedPassword = passwordHashing(password);
+
+  return hashedPassword === userData.password;
+};
+
 export const updateBasicProfile = async (userId, name, nickname, profileImage) => {
   const user = await findUserById(userId);
 
