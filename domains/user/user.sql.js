@@ -13,6 +13,12 @@ export const getUserByEmail = `
   SELECT * FROM user WHERE email = ?
 `;
 
+export const updateUserProfile = `
+  UPDATE user
+  SET name = ?, nickname = ?, profile_image = ?
+  WHERE id = ?
+`;
+
 // 고정된 공지 찾기
 export const getFixedPost = `
   SELECT p.*
