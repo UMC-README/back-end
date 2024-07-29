@@ -12,6 +12,7 @@ import {
   getCreateRoomCount,
   getJoinRoomCount,
   getRoom,
+  updateUserProfile,
 } from "./user.sql.js";
 
 export const insertUser = async (data) => {
@@ -65,6 +66,20 @@ export const findUserByEmail = async (email) => {
     return user[0];
   } catch (error) {
     console.log("이메일로 유저 찾기 에러", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const updateUserProfileById = async (userId, name, nickname, profileImage) => {
+  try {
+    const conn = await pool.getConnection();
+    await conn.query(updateUserProfile, [name, nickname, profileImage, userId]);
+
+    conn.release();
+
+    return true;
+  } catch (error) {
+    console.log("프로필 업데이트 에러", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };
