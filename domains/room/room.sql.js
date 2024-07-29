@@ -49,6 +49,16 @@ export const getPostDetailsByRoomIdAtFirst = `
   ORDER BY p.id DESC LIMIT ?
 `;
 
+//공지방 내 미확인 공지 가져오기 (최신순 3개까지)
+export const getMyNotCheckedPostInRoom = `
+  SELECT p.id, r.room_name, p.title, TIMESTAMPDIFF(second, p.updated_at, CURRENT_TIMESTAMP) as updatedAtBeforeSec FROM post p
+  JOIN user u ON p.room_id = ? AND u.id = ?
+  JOIN room r ON r.id = p.room_id
+  LEFT JOIN submit s ON s.post_id = p.id AND s.user_id = u.id
+  WHERE p.state = 'EXIST' AND (s.submit_state IS NULL OR s.submit_state = 'NOT_COMPLETE' OR s.submit_state = 'REJECT')
+  ORDER BY updatedAtBeforeSec ASC LIMIT 3
+`;
+
 //공지글별 댓글 개수 업데이트
 export const updateCommentCountByPostId = `
   UPDATE post p
