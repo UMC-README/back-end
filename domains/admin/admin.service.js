@@ -31,6 +31,7 @@ export const deleteRoomsService = async (roomId) => {
     throw new Error("삭제할 방의 ID가 필요합니다.");
   }
   const deleteRoomsData = await deleteRoomsDao(roomId);
+  console.log(deleteRoomsDao);
   if (deleteRoomsData.affectedRows === 0) {
     throw new Error("해당 ID의 공지방이 존재하지 않거나 이미 삭제되었습니다.");
   }

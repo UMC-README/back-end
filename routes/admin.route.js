@@ -12,5 +12,5 @@ export const adminRouter = express.Router();
 
 adminRouter.post("/rooms", tokenAuth, expressAsyncHandler(createRoomsController));
 adminRouter.patch("/rooms/:room_id", tokenAuth, expressAsyncHandler(updateRoomsController));
-adminRouter.delete("/rooms", tokenAuth, expressAsyncHandler(deleteRoomsController));
+adminRouter.patch("/rooms", tokenAuth, expressAsyncHandler(deleteRoomsController));
 adminRouter.get("/profile/:user_id", tokenAuth, expressAsyncHandler(userProfile));

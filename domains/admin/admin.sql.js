@@ -15,7 +15,7 @@ export const updateRoomsSQL = `
 
 // 공지방 삭제
 export const deleteRoomsSQL = `
-    DELETE  FROM room WHERE id = ?;
+    UPDATE room SET updated_at = NOW(), state = 'deleted' WHERE id = ?;
 `;
 
 // 유저 프로필 조회
