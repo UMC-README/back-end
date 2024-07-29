@@ -33,18 +33,16 @@ const formatDate = (date) => {
 };
 
 export const notCheckedPostInRoomDTO = (data) => {
-  const posts = [];
   const length = 3;
 
-  for (let i = 0; i < length; i++) {
-    posts.push({
-      roomName: data[i].room_name,
-      postId: data[i].id,
-      postTitle: data[i].title,
-      updatedAtBefore: elapsedTime(data[i].updatedAtBeforeSec),
-    });
-  }
-  return { postData: posts };
+  const posts = data.map((post) => ({
+    roomName: post.room_name,
+    postId: post.id,
+    postTitle: post.title,
+    updatedAtBefore: elapsedTime(post.updatedAtBeforeSec),
+  }));
+
+  return { posts };
 };
 
 const elapsedTime = (data) => {
