@@ -65,7 +65,7 @@ export const deleteRoomsDao = async (roomId) => {
   }
 };
 
-export const createPostDao = async (postData, imgURL) => {
+export const createPostDao = async (postData, imgURLs) => {
   const conn = await pool.getConnection();
   try {
     await conn.beginTransaction(); // 트랜잭션 시작
@@ -82,7 +82,16 @@ export const createPostDao = async (postData, imgURL) => {
     ]);
 
     const result = postResult.insertId; // 생성된 공지글의 ID
-    await conn.query(createPostImgSQL, [imgURL, result]);
+    const params = [];
+    imgURLs.forEach((url) => {
+      // 각 URL에 대해 별도로 쿼리 실행
+      conn.query(createPostImgSQL, [url, result], (error) => {
+        if (error) {
+          throw error;
+        }
+      });
+    });
+
     await conn.commit(); // 트랜잭션 커밋(DB 반영)
 
     return result;
