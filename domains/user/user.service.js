@@ -6,6 +6,7 @@ import {
   findCreateRoomByUserId,
   findJoinRoomByUserId,
   findRoomByUserId,
+  updateUserProfileById,
 } from "./user.dao.js";
 import { passwordHashing } from "../../utils/passwordHash.js";
 import { generateJWTToken } from "../../utils/generateToken.js";
@@ -83,12 +84,7 @@ export const updateBasicProfile = async (userId, name, nickname, profileImage) =
 
   await updateUserProfileById(userId, name, nickname, profileImage);
 
-  return {
-    userId,
-    name,
-    nickname,
-    profileImage,
-  };
+  return true;
 };
 
 export const getMyFixedPost = async (userId) => {
