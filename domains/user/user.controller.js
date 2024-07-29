@@ -185,9 +185,9 @@ export const getUserPassword = async (req, res, next) => {
     const isTrue = await verifyUserPassword(userId, password);
 
     if (isTrue) {
-      res.status(200).json(response(status.SUCCESS, { verified: true }));
+      res.status(200).json(response(status.SUCCESS, { isTrue: true }));
     } else {
-      res.status(400).json(response(status.WRONG_PASSWORD, { verified: false }));
+      res.status(400).json(response(status.WRONG_PASSWORD, { isTrue: false }));
     }
   } catch (error) {
     next(error);
