@@ -154,6 +154,19 @@ export const getUserRoomProfiles = async (req, res, next) => {
   }
 };
 
+export const updateUserBasicProfile = async (req, res, next) => {
+  try {
+    console.log("내 기본 프로필 수정");
+
+    const userId = req.user.userId;
+
+    const result = await getMyRoomProfiles(userId);
+    res.status(200).json(response(status.SUCCESS, result));
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const getUserCreateRoom = async (req, res, next) => {
   try {
     console.log("내가 생성한 공지방 조회");
