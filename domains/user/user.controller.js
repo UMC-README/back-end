@@ -169,7 +169,7 @@ export const updateUserBasicProfile = async (req, res, next) => {
     if (isSuccess) {
       res.status(200).json(response(status.SUCCESS, { isSuccess: true }));
     } else {
-      res.status(404).json(response(status.BAD_REQUEST, { isSuccess: false }));
+      res.status(400).json(response(status.BAD_REQUEST, { isSuccess: false }));
     }
   } catch (error) {
     next(error);
@@ -188,7 +188,7 @@ export const updateUserPassword = async (req, res, next) => {
     if (isSuccess) {
       res.status(200).json(response(status.SUCCESS, { isSuccess: true }));
     } else {
-      res.status(404).json(response(status.BAD_REQUEST, { isSuccess: false }));
+      res.status(400).json(response(status.BAD_REQUEST, { isSuccess: false }));
     }
   } catch (error) {
     next(error);
