@@ -82,7 +82,6 @@ export const createPostDao = async (postData, imgURLs) => {
     ]);
 
     const result = postResult.insertId; // 생성된 공지글의 ID
-    const params = [];
     imgURLs.forEach((url) => {
       // 각 URL에 대해 별도로 쿼리 실행
       conn.query(createPostImgSQL, [url, result], (error) => {
