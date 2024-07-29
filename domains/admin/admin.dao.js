@@ -1,7 +1,13 @@
 import { pool } from "../../config/db.config.js";
 import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
-import { createRoomsSQL, getProfileByUserId } from "./admin.sql.js";
+import { getUserByIdSQL, createRoomsSQL, updateRoomsSQL, getProfileByUserId } from "./admin.sql.js";
+
+export const getUserByIdDao = async (userId) => {
+  const conn = await pool.getConnection();
+  const result = await conn.query(getUserByIdSQL, [userId]);
+  return result[0];
+};
 
 export const createRoomsDao = async (data) => {
   try {
@@ -18,6 +24,24 @@ export const createRoomsDao = async (data) => {
     return result;
   } catch (error) {
     console.error("공지방 생성하기 에러");
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const updateRoomsDao = async (roomData) => {
+  try {
+    const conn = await pool.getConnection();
+    const result = await conn.query(updateRoomsSQL, [
+      roomData.admin_nickname,
+      roomData.room_name,
+      roomData.room_password,
+      roomData.room_image,
+      roomData.max_penalty,
+      roomData.id,
+    ]);
+    return result;
+  } catch (error) {
+    console.error("공지방 수정하기 에러:", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };
