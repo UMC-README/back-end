@@ -15,6 +15,7 @@ import {
   getUserRoomProfiles,
   updateUserBasicProfile,
   getUserPassword,
+  updateUserPassword,
 } from "../domains/user/user.controller.js";
 import { tokenAuth } from "../middleware/token.auth.js";
 import { imageUploader } from "../middleware/image.uploader.js";
@@ -51,3 +52,5 @@ userRouter.get("/profile", tokenAuth, expressAsyncHandler(getUserRoomProfiles));
 userRouter.patch("/profile", tokenAuth, expressAsyncHandler(updateUserBasicProfile));
 
 userRouter.post("/password", tokenAuth, expressAsyncHandler(getUserPassword));
+
+userRouter.patch("/password", tokenAuth, expressAsyncHandler(updateUserPassword));
