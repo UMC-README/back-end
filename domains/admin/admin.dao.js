@@ -65,7 +65,7 @@ export const deleteRoomsDao = async (roomId) => {
   }
 };
 
-export const createPostDao = async (postData, imgURLs) => {
+export const createPostDao = async ({ postData, imgURLs }) => {
   const conn = await pool.getConnection();
   try {
     await conn.beginTransaction(); // 트랜잭션 시작

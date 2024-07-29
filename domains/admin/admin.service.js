@@ -38,9 +38,9 @@ export const deleteRoomsService = async (roomId) => {
   return deleteRoomsData;
 };
 
-export const createPostService = async (postData, imgURLs) => {
+export const createPostService = async (body) => {
   try {
-    const postId = await createPostDao(postData, imgURLs);
+    const postId = await createPostDao(body);
     return postId; // 생성된 공지글 ID 반환
   } catch (error) {
     console.error("공지글 생성하기 에러:", error);
