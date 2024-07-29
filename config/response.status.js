@@ -65,4 +65,10 @@ export const status = {
     code: "USER001",
     message: "잘못된 인증코드 입니다.",
   },
+  WRONG_PASSWORD: {
+    status: StatusCodes.BAD_REQUEST,
+    isSuccess: false,
+    code: "PW001",
+    message: "잘못된 비밀번호 입니다.",
+  },
 };

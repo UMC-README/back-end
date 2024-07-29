@@ -13,6 +13,7 @@ import {
   getJoinRoomCount,
   getRoom,
   updateUserProfile,
+  updateUserPassword,
 } from "./user.sql.js";
 
 export const insertUser = async (data) => {
@@ -80,6 +81,20 @@ export const updateUserProfileById = async (userId, name, nickname, profileImage
     return true;
   } catch (error) {
     console.log("프로필 업데이트 에러", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const updateUserPasswordById = async (userId, password) => {
+  try {
+    const conn = await pool.getConnection();
+    await conn.query(updateUserPassword, [password, userId]);
+
+    conn.release();
+
+    return true;
+  } catch (error) {
+    console.log("비밀번호 업데이트 에러", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };

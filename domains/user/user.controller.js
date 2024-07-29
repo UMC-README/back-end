@@ -13,6 +13,8 @@ import {
   kakaoLoginUser,
   getMyRoomProfiles,
   updateBasicProfile,
+  verifyUserPassword,
+  updatePassword,
 } from "./user.service.js";
 
 export const userSignUp = async (req, res, next) => {
@@ -167,7 +169,45 @@ export const updateUserBasicProfile = async (req, res, next) => {
     if (isSuccess) {
       res.status(200).json(response(status.SUCCESS, { isSuccess: true }));
     } else {
-      res.status(404).json(response(status.FAIL, { isSuccess: false }));
+      res.status(400).json(response(status.BAD_REQUEST, { isSuccess: false }));
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateUserPassword = async (req, res, next) => {
+  try {
+    console.log("내 비밀번호 수정");
+
+    const userId = req.user.userId;
+    const { password } = req.body;
+
+    const isSuccess = await updatePassword(userId, password);
+
+    if (isSuccess) {
+      res.status(200).json(response(status.SUCCESS, { isSuccess: true }));
+    } else {
+      res.status(400).json(response(status.BAD_REQUEST, { isSuccess: false }));
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getUserPassword = async (req, res, next) => {
+  try {
+    console.log("내 비밀번호 확인");
+
+    const userId = req.user.userId;
+    const { password } = req.body;
+
+    const isTrue = await verifyUserPassword(userId, password);
+
+    if (isTrue) {
+      res.status(200).json(response(status.SUCCESS, { isTrue: true }));
+    } else {
+      res.status(400).json(response(status.WRONG_PASSWORD, { isTrue: false }));
     }
   } catch (error) {
     next(error);

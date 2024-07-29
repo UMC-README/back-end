@@ -7,6 +7,7 @@ import {
   findJoinRoomByUserId,
   findRoomByUserId,
   updateUserProfileById,
+  updateUserPasswordById,
 } from "./user.dao.js";
 import { passwordHashing } from "../../utils/passwordHash.js";
 import { generateJWTToken } from "../../utils/generateToken.js";
@@ -73,6 +74,32 @@ export const getUserProfile = async (userId) => {
     email: userData.email,
     profileImage: userData.profile_image,
   };
+};
+
+export const verifyUserPassword = async (userId, password) => {
+  const userData = await findUserById(userId);
+
+  if (!userData) {
+    throw new Error("사용자를 찾을 수 없습니다.");
+  }
+
+  const hashedPassword = passwordHashing(password);
+
+  return hashedPassword === userData.password;
+};
+
+export const updatePassword = async (userId, password) => {
+  const userData = await findUserById(userId);
+
+  if (!userData) {
+    throw new Error("사용자를 찾을 수 없습니다.");
+  }
+
+  const hashedPassword = passwordHashing(password);
+
+  await updateUserPasswordById(userId, hashedPassword);
+
+  return true;
 };
 
 export const updateBasicProfile = async (userId, name, nickname, profileImage) => {

@@ -19,6 +19,12 @@ export const updateUserProfile = `
   WHERE id = ?
 `;
 
+export const updateUserPassword = `
+  UPDATE user
+  SET password = ?
+  WHERE id = ?
+`;
+
 // 고정된 공지 찾기
 export const getFixedPost = `
   SELECT p.*
