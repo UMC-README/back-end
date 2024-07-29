@@ -28,16 +28,6 @@ export const createPostImgSQL = `
   INSERT INTO post-image (URL) VALUES(?);  
 `;
 
-// 공지글 생성
-export const createPostSQL = `
-  INSERT INTO post (room_id, title, content, type, start_date, end_date, question, unread_count, user_id)
-  VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);  
-`;
-// 공지글 생성(이미지)
-export const createPostImgSQL = `
-  INSERT INTO post-image (URL) VALUES(?);  
-`;
-
 // 유저 프로필 조회
 export const getProfileByUserId = `
   SELECT ur.nickname, ur.profile_image, ur.penalty_count
