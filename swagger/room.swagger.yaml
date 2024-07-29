@@ -78,7 +78,7 @@ paths:
                 type: number
         - name: paging
           in: query
-          required: true
+          required: false
           schema:
             properties:
               size:
