@@ -12,6 +12,7 @@ import {
   getMyJoinRoom,
   kakaoLoginUser,
   getMyRoomProfiles,
+  updateBasicProfile,
 } from "./user.service.js";
 
 export const userSignUp = async (req, res, next) => {
@@ -149,6 +150,25 @@ export const getUserRoomProfiles = async (req, res, next) => {
 
     const result = await getMyRoomProfiles(userId);
     res.status(200).json(response(status.SUCCESS, result));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateUserBasicProfile = async (req, res, next) => {
+  try {
+    console.log("내 기본 프로필 수정");
+
+    const userId = req.user.userId;
+    const { name, nickname, profileImage } = req.body;
+
+    const isSuccess = await updateBasicProfile(userId, name, nickname, profileImage);
+
+    if (isSuccess) {
+      res.status(200).json(response(status.SUCCESS, { isSuccess: true }));
+    } else {
+      res.status(404).json(response(status.FAIL, { isSuccess: false }));
+    }
   } catch (error) {
     next(error);
   }

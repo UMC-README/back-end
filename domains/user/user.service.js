@@ -6,6 +6,7 @@ import {
   findCreateRoomByUserId,
   findJoinRoomByUserId,
   findRoomByUserId,
+  updateUserProfileById,
 } from "./user.dao.js";
 import { passwordHashing } from "../../utils/passwordHash.js";
 import { generateJWTToken } from "../../utils/generateToken.js";
@@ -72,6 +73,18 @@ export const getUserProfile = async (userId) => {
     email: userData.email,
     profileImage: userData.profile_image,
   };
+};
+
+export const updateBasicProfile = async (userId, name, nickname, profileImage) => {
+  const user = await findUserById(userId);
+
+  if (!user) {
+    throw new Error("사용자를 찾을 수 없습니다.");
+  }
+
+  await updateUserProfileById(userId, name, nickname, profileImage);
+
+  return true;
 };
 
 export const getMyFixedPost = async (userId) => {

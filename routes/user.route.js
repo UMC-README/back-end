@@ -13,6 +13,7 @@ import {
   getUserJoinRoom,
   userKakaoLogin,
   getUserRoomProfiles,
+  updateUserBasicProfile,
 } from "../domains/user/user.controller.js";
 import { tokenAuth } from "../middleware/token.auth.js";
 import { imageUploader } from "../middleware/image.uploader.js";
@@ -45,3 +46,5 @@ userRouter.get("/create-room", tokenAuth, expressAsyncHandler(getUserCreateRoom)
 userRouter.get("/join-room", tokenAuth, expressAsyncHandler(getUserJoinRoom));
 
 userRouter.get("/profile", tokenAuth, expressAsyncHandler(getUserRoomProfiles));
+
+userRouter.patch("/profile", tokenAuth, expressAsyncHandler(updateUserBasicProfile));
