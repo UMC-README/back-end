@@ -159,8 +159,9 @@ export const updateUserBasicProfile = async (req, res, next) => {
     console.log("내 기본 프로필 수정");
 
     const userId = req.user.userId;
+    const { name, nickname, profileImage } = req.body;
 
-    const result = await getMyRoomProfiles(userId);
+    const result = await getMyRoomProfiles(userId, name, nickname, profileImage);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
