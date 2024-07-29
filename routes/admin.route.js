@@ -5,6 +5,7 @@ import {
   createRoomsController,
   updateRoomsController,
   deleteRoomsController,
+  createPostController,
   userProfile,
 } from "../domains/admin/admin.controller.js";
 
