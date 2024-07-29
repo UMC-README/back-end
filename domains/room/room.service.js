@@ -1,5 +1,10 @@
-import { deleteFixPostDao, fixPostDao, getAllPostInRoomDao } from "./room.dao.js";
-import { allPostInRoomDTO } from "./room.dto.js";
+import {
+  deleteFixPostDao,
+  fixPostDao,
+  getAllPostInRoomDao,
+  getNotCheckedPostInRoomDao,
+} from "./room.dao.js";
+import { allPostInRoomDTO, notCheckedPostInRoomDTO } from "./room.dto.js";
 
 export const postFix = async (postId, userId) => {
   const fixPostData = await fixPostDao({
@@ -40,4 +45,14 @@ export const getAllPostInRoom = async (roomId, userId, query) => {
   }
 
   return allPostInRoomDTO(roomData);
+};
+
+export const getNotCheckedPostInRoom = async (roomId, userId) => {
+  const roomData = await getNotCheckedPostInRoomDao(roomId, userId);
+
+  if (getNotCheckedPostInRoomDao == -1) {
+    throw new Error("공지방을 찾을 수 없습니다.");
+  }
+
+  return notCheckedPostInRoomDTO(roomData);
 };
