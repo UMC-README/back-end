@@ -1,4 +1,10 @@
-import { getUserByIdDao, createRoomsDao, updateRoomsDao, getUserProfile } from "./admin.dao.js";
+import {
+  getUserByIdDao,
+  createRoomsDao,
+  deleteRoomsDao,
+  updateRoomsDao,
+  getUserProfile,
+} from "./admin.dao.js";
 
 export const createRoomsService = async (data) => {
   try {
@@ -17,6 +23,18 @@ export const updateRoomsService = async (roomData) => {
     throw new Error("공지방 수정에 실패. 방 ID를 확인하세요.");
   }
   return updateRoomsData;
+};
+
+export const deleteRoomsService = async (roomId) => {
+  // 방의 ID가 제공되었는지 확인
+  if (!roomId) {
+    throw new Error("삭제할 방의 ID가 필요합니다.");
+  }
+  const deleteRoomsData = await deleteRoomsDao(roomId);
+  if (deleteRoomsData.affectedRows === 0) {
+    throw new Error("해당 ID의 공지방이 존재하지 않거나 이미 삭제되었습니다.");
+  }
+  return deleteRoomsData;
 };
 
 export const getProfileUser = async (userId) => {

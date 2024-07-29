@@ -13,6 +13,11 @@ export const updateRoomsSQL = `
    WHERE id = ?;
 `;
 
+// 공지방 삭제
+export const deleteRoomsSQL = `
+    DELETE  FROM room WHERE id = ?;
+`;
+
 // 유저 프로필 조회
 export const getProfileByUserId = `
   SELECT ur.nickname, ur.profile_image, ur.penalty_count

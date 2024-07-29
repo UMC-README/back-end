@@ -1,7 +1,13 @@
 import { pool } from "../../config/db.config.js";
 import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
-import { getUserByIdSQL, createRoomsSQL, updateRoomsSQL, getProfileByUserId } from "./admin.sql.js";
+import {
+  getUserByIdSQL,
+  createRoomsSQL,
+  updateRoomsSQL,
+  deleteRoomsSQL,
+  getProfileByUserId,
+} from "./admin.sql.js";
 
 export const getUserByIdDao = async (userId) => {
   const conn = await pool.getConnection();
@@ -42,6 +48,17 @@ export const updateRoomsDao = async (roomData) => {
     return result;
   } catch (error) {
     console.error("공지방 수정하기 에러:", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const deleteRoomsDao = async (roomId) => {
+  try {
+    const conn = await pool.getConnection();
+    const result = await conn.query(deleteRoomsSQL, roomId);
+    return result;
+  } catch (error) {
+    console.error("공지방 삭제하기 에러:", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };
