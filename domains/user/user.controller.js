@@ -11,6 +11,7 @@ import {
   getMyCreateRoom,
   getMyJoinRoom,
   kakaoLoginUser,
+  getMyRoomProfiles,
 } from "./user.service.js";
 
 export const userSignUp = async (req, res, next) => {
@@ -135,6 +136,19 @@ export const uploadImage = async (req, res, next) => {
   try {
     console.log("file", req.file);
     res.status(200).json(response(status.SUCCESS, { image: req.file.location }));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getUserRoomProfiles = async (req, res, next) => {
+  try {
+    console.log("내 프로필 전체 조회");
+
+    const userId = req.user.userId;
+
+    const result = await getMyRoomProfiles(userId);
+    res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
   }

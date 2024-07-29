@@ -5,6 +5,7 @@ import {
   findFixedPostByUserId,
   findCreateRoomByUserId,
   findJoinRoomByUserId,
+  findRoomByUserId,
 } from "./user.dao.js";
 import { passwordHashing } from "../../utils/passwordHash.js";
 import { generateJWTToken } from "../../utils/generateToken.js";
@@ -91,6 +92,31 @@ export const getMyFixedPost = async (userId) => {
     title: fixedPostData.title,
     startDate: fixedPostData.start_date,
     endDate: fixedPostData.end_date,
+  };
+};
+
+export const getMyRoomProfiles = async (userId) => {
+  const userData = await findUserById(userId);
+
+  if (!userData) {
+    throw new Error("사용자를 찾을 수 없습니다.");
+  }
+
+  const rooms = await findRoomByUserId(userData.userId);
+
+  if (!rooms) {
+    return {
+      nickname: userData.nickname,
+      email: userData.email,
+      profileImage: userData.profile_image,
+    };
+  }
+
+  return {
+    nickname: userData.nickname,
+    email: userData.email,
+    profileImage: userData.profile_image,
+    profiles: [rooms],
   };
 };
 
