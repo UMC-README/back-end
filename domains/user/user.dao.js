@@ -9,6 +9,11 @@ import {
   getFixedPost,
   getCreateRoom,
   getJoinRoom,
+  getCreateRoomCount,
+  getJoinRoomCount,
+  getRoom,
+  updateUserProfile,
+  updateUserPassword,
 } from "./user.sql.js";
 
 export const insertUser = async (data) => {
@@ -37,7 +42,7 @@ export const findUserById = async (userId) => {
 
     if (user.length == 0) {
       conn.release();
-      return -1;
+      return null;
     }
 
     conn.release();
@@ -66,6 +71,34 @@ export const findUserByEmail = async (email) => {
   }
 };
 
+export const updateUserProfileById = async (userId, name, nickname, profileImage) => {
+  try {
+    const conn = await pool.getConnection();
+    await conn.query(updateUserProfile, [name, nickname, profileImage, userId]);
+
+    conn.release();
+
+    return true;
+  } catch (error) {
+    console.log("프로필 업데이트 에러", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const updateUserPasswordById = async (userId, password) => {
+  try {
+    const conn = await pool.getConnection();
+    await conn.query(updateUserPassword, [password, userId]);
+
+    conn.release();
+
+    return true;
+  } catch (error) {
+    console.log("비밀번호 업데이트 에러", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
 export const findFixedPostByUserId = async (userId) => {
   try {
     const conn = await pool.getConnection();
@@ -84,10 +117,10 @@ export const findFixedPostByUserId = async (userId) => {
   }
 };
 
-export const findCreateRoomByUserId = async (userId) => {
+export const findRoomByUserId = async (userId) => {
   try {
     const conn = await pool.getConnection();
-    const [rooms] = await conn.query(getCreateRoom, [userId]);
+    const [rooms] = await conn.query(getRoom, [userId]);
 
     if (rooms.length == 0) {
       conn.release();
@@ -97,15 +130,20 @@ export const findCreateRoomByUserId = async (userId) => {
     conn.release();
     return rooms;
   } catch (error) {
-    console.log("내가 생성한 공지방 찾기 에러", error);
+    console.log("내 공지방 찾기 에러", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };
 
-export const findJoinRoomByUserId = async (userId) => {
+export const findCreateRoomByUserId = async (userId, page, pageSize) => {
   try {
     const conn = await pool.getConnection();
-    const [rooms] = await conn.query(getJoinRoom, [userId]);
+    const offset = (page - 1) * pageSize;
+
+    const [[{ count }]] = await conn.query(getCreateRoomCount, [userId]);
+    const [rooms] = await conn.query(getCreateRoom, [userId, pageSize, offset]);
+
+    const isNext = offset + pageSize < count;
 
     if (rooms.length == 0) {
       conn.release();
@@ -113,7 +151,25 @@ export const findJoinRoomByUserId = async (userId) => {
     }
 
     conn.release();
-    return rooms;
+    return { rooms, isNext };
+  } catch (error) {
+    console.log("내가 생성한 공지방 찾기 에러", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const findJoinRoomByUserId = async (userId, page, pageSize) => {
+  try {
+    const conn = await pool.getConnection();
+    const offset = (page - 1) * pageSize;
+
+    const [[{ count }]] = await conn.query(getJoinRoomCount, [userId]);
+    const [rooms] = await conn.query(getJoinRoom, [userId, pageSize, offset]);
+
+    const isNext = offset + pageSize < count;
+
+    conn.release();
+    return { rooms, isNext };
   } catch (error) {
     console.log("내가 입장한 공지방 찾기 에러", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);

@@ -5,26 +5,27 @@ import {
   findFixedPostByUserId,
   findCreateRoomByUserId,
   findJoinRoomByUserId,
+  findRoomByUserId,
+  updateUserProfileById,
+  updateUserPasswordById,
 } from "./user.dao.js";
 import { passwordHashing } from "../../utils/passwordHash.js";
 import { generateJWTToken } from "../../utils/generateToken.js";
 
-export const signupUser = async (userInfo) => {
+export const signupUser = async (userInfo, token) => {
   // 비밀번호 해싱
-  const hashedPassword = passwordHashing(userInfo.password);
+  const hashedPassword = passwordHashing(userInfo.password.toString());
 
-  const signupUserData = await insertUser({
+  const userId = await insertUser({
     ...userInfo,
     password: hashedPassword,
   });
 
-  const userData = await findUserById(signupUserData);
-
-  const tokenInfo = generateJWTToken(userData.id);
+  const accessToken = generateJWTToken(userId);
 
   return {
-    userId: userData.id,
-    accessToken: tokenInfo,
+    userId,
+    accessToken: token ?? accessToken,
   };
 };
 
@@ -50,6 +51,15 @@ export const loginUser = async (email, password) => {
   }
 };
 
+export const kakaoLoginUser = async (email) => {
+  const userData = await findUserByEmail(email);
+
+  if (!userData) {
+    return false;
+  }
+  return true;
+};
+
 export const getUserProfile = async (userId) => {
   const userData = await findUserById(userId);
 
@@ -57,7 +67,51 @@ export const getUserProfile = async (userId) => {
     throw new Error("사용자를 찾을 수 없습니다.");
   }
 
-  return userData;
+  return {
+    userId: userData.id,
+    name: userData.name,
+    nickname: userData.nickname,
+    email: userData.email,
+    profileImage: userData.profile_image,
+  };
+};
+
+export const verifyUserPassword = async (userId, password) => {
+  const userData = await findUserById(userId);
+
+  if (!userData) {
+    throw new Error("사용자를 찾을 수 없습니다.");
+  }
+
+  const hashedPassword = passwordHashing(password);
+
+  return hashedPassword === userData.password;
+};
+
+export const updatePassword = async (userId, password) => {
+  const userData = await findUserById(userId);
+
+  if (!userData) {
+    throw new Error("사용자를 찾을 수 없습니다.");
+  }
+
+  const hashedPassword = passwordHashing(password);
+
+  await updateUserPasswordById(userId, hashedPassword);
+
+  return true;
+};
+
+export const updateBasicProfile = async (userId, name, nickname, profileImage) => {
+  const user = await findUserById(userId);
+
+  if (!user) {
+    throw new Error("사용자를 찾을 수 없습니다.");
+  }
+
+  await updateUserProfileById(userId, name, nickname, profileImage);
+
+  return true;
 };
 
 export const getMyFixedPost = async (userId) => {
@@ -81,39 +135,59 @@ export const getMyFixedPost = async (userId) => {
   };
 };
 
-export const getMyCreateRoom = async (userId) => {
+export const getMyRoomProfiles = async (userId) => {
   const userData = await findUserById(userId);
 
   if (!userData) {
     throw new Error("사용자를 찾을 수 없습니다.");
   }
 
-  const createRoomsData = await findCreateRoomByUserId(userData.userId);
+  const rooms = await findRoomByUserId(userData.userId);
 
-  if (!createRoomsData) {
-    return null;
-  }
-
-  return createRoomsData;
-};
-
-export const getMyJoinRoom = async (userId) => {
-  const userData = await findUserById(userId);
-
-  if (!userData) {
-    throw new Error("사용자를 찾을 수 없습니다.");
-  }
-
-  const joinRoomsData = await findJoinRoomByUserId(userData.userId);
-
-  if (!joinRoomsData) {
-    return null;
+  if (!rooms) {
+    return {
+      nickname: userData.nickname,
+      email: userData.email,
+      profileImage: userData.profile_image,
+    };
   }
 
   return {
-    roomId: joinRoomsData.room_id,
-    roomName: joinRoomsData.room_name,
-    roomImage: joinRoomsData.room_image,
-    nickname: joinRoomsData.nickname,
+    nickname: userData.nickname,
+    email: userData.email,
+    profileImage: userData.profile_image,
+    profiles: [rooms],
   };
+};
+
+export const getMyCreateRoom = async (userId, page, pageSize) => {
+  const userData = await findUserById(userId);
+
+  if (!userData) {
+    throw new Error("사용자를 찾을 수 없습니다.");
+  }
+
+  const { rooms, isNext } = await findCreateRoomByUserId(userData.userId, page, pageSize);
+
+  if (!rooms) {
+    return { rooms: null, isNext: false };
+  }
+
+  return { rooms, isNext };
+};
+
+export const getMyJoinRoom = async (userId, page, pageSize) => {
+  const userData = await findUserById(userId);
+
+  if (!userData) {
+    throw new Error("사용자를 찾을 수 없습니다.");
+  }
+
+  const { rooms, isNext } = await findJoinRoomByUserId(userData.userId, page, pageSize);
+
+  if (!rooms) {
+    return { rooms: null, isNext: false };
+  }
+
+  return { rooms, isNext };
 };
