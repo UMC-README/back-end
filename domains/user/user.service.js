@@ -105,10 +105,19 @@ export const getMyRoomProfiles = async (userId) => {
   const rooms = await findRoomByUserId(userData.userId);
 
   if (!rooms) {
-    return null;
+    return {
+      nickname: userData.nickname,
+      email: userData.email,
+      profileImage: userData.profile_image,
+    };
   }
 
-  return rooms;
+  return {
+    nickname: userData.nickname,
+    email: userData.email,
+    profileImage: userData.profile_image,
+    profiles: [rooms],
+  };
 };
 
 export const getMyCreateRoom = async (userId, page, pageSize) => {

@@ -44,4 +44,4 @@ userRouter.get("/create-room", tokenAuth, expressAsyncHandler(getUserCreateRoom)
 
 userRouter.get("/join-room", tokenAuth, expressAsyncHandler(getUserJoinRoom));
 
-userRouter.get("/user/profile", tokenAuth, expressAsyncHandler(getUserRoomProfiles));
+userRouter.get("/profile", tokenAuth, expressAsyncHandler(getUserRoomProfiles));

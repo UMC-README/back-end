@@ -23,9 +23,10 @@ export const getFixedPost = `
 
 // 내 공지방 찾기
 export const getRoom = `
-  SELECT ur.*
-  FROM \`user-room\` ur
+  SELECT ur.*, r.room_name
+  FROM \`user-room\` ur 
   JOIN user u ON u.id = ur.user_id
+  JOIN room r ON r.id = ur.room_id
   WHERE u.id = ?
 `;
 
