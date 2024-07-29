@@ -18,14 +18,13 @@ export const deleteRoomsSQL = `
     UPDATE room SET updated_at = NOW(), state = 'deleted' WHERE id = ?;
 `;
 
-// 공지글 생성
+// 공지글 생성 & 공지방 이미지
 export const createPostSQL = `
   INSERT INTO post (room_id, title, content, type, start_date, end_date, question, unread_count, user_id)
   VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);  
 `;
-// 공지글 생성(이미지)
 export const createPostImgSQL = `
-  INSERT INTO post-image (URL) VALUES(?);  
+  INSERT INTO \`post-image\` (URL, post_id) VALUES(?,?);  
 `;
 
 // 유저 프로필 조회
