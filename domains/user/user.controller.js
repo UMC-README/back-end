@@ -14,6 +14,7 @@ import {
   getMyRoomProfiles,
   updateBasicProfile,
   verifyUserPassword,
+  updatePassword,
 } from "./user.service.js";
 
 export const userSignUp = async (req, res, next) => {
@@ -164,6 +165,25 @@ export const updateUserBasicProfile = async (req, res, next) => {
     const { name, nickname, profileImage } = req.body;
 
     const isSuccess = await updateBasicProfile(userId, name, nickname, profileImage);
+
+    if (isSuccess) {
+      res.status(200).json(response(status.SUCCESS, { isSuccess: true }));
+    } else {
+      res.status(404).json(response(status.BAD_REQUEST, { isSuccess: false }));
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateUserPassword = async (req, res, next) => {
+  try {
+    console.log("내 비밀번호 수정");
+
+    const userId = req.user.userId;
+    const { password } = req.body;
+
+    const isSuccess = await updatePassword(userId, password);
 
     if (isSuccess) {
       res.status(200).json(response(status.SUCCESS, { isSuccess: true }));
