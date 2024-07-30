@@ -14,7 +14,7 @@ export const allPostInRoomDTO = (data) => {
       submitState: formatSubmitState(data[i].submit_state),
     });
   }
-  return { postData: posts, cursorId: data[data.length - 1].id };
+  return { data: posts, cursorId: data[data.length - 1].id };
 };
 
 const formatSubmitState = (data) => {
@@ -66,17 +66,18 @@ const elapsedTime = (data) => {
 };
 
 export const detailedPostDTO = (data) => {
-  const post = data.map((result) => ({
+  const post = data.post.map((result) => ({
     postId: result.id,
     postType: result.type,
     postTitle: result.title,
     postBody: result.content,
-    postImages: result.URLs,
     startDate: formatDate(result.start_date),
     endDate: formatDate(result.end_date),
     commentCount: result.comment_count,
     submitState: formatSubmitState(result.submit_state),
   }));
 
-  return { post };
+  const imageURLs = data.postImages.map((result) => result.URL);
+
+  return { post, imageURLs };
 };
