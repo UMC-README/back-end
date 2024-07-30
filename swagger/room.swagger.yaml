@@ -243,7 +243,6 @@ paths:
                             "postType": "Quiz",
                             "postTitle": "TEST",
                             "postBody": "TESTCONTENT",
-                            "postImages": "url11.com, url12.com",
                             "startDate": "24. 7. 25. 04:24",
                             "endDate": "24. 7. 25. 05:24",
                             "commentCount": 5,
