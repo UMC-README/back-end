@@ -13,7 +13,7 @@ export const getRoomById = `
   SELECT * FROM room WHERE id = ?
 `;
 
-//공지방 내 포스트 정보, 나의 제출상태 가져오기 (커서 존재)
+//공지방 내 공지글 정보, 나의 제출상태 가져오기 (커서 존재)
 export const getPostDetailsByRoomId = `
   SELECT p.id, p.type, p.title, p.content, pi.URL, p.start_date, p.end_date, p.comment_count, s.submit_state FROM post p
   JOIN user u ON p.room_id = ? AND u.id = ?
@@ -31,7 +31,7 @@ export const getPostDetailsByRoomId = `
   ORDER BY p.id DESC LIMIT ?
 `;
 
-//공지방 내 포스트 정보, 나의 제출상태 가져오기 (커서 없는 초기값)
+//공지방 내 공지글 정보, 나의 제출상태 가져오기 (커서 없는 초기값)
 export const getPostDetailsByRoomIdAtFirst = `
   SELECT p.id, p.type, p.title, p.content, pi.URL, p.start_date, p.end_date, p.comment_count, s.submit_state FROM post p
   JOIN user u ON p.room_id = ? AND u.id = ?
@@ -49,7 +49,7 @@ export const getPostDetailsByRoomIdAtFirst = `
   ORDER BY p.id DESC LIMIT ?
 `;
 
-//공지방 내 미확인 공지 가져오기 (최신순 3개까지)
+//공지방 내 미확인 공지글 가져오기 (최신순 3개까지)
 export const getMyNotCheckedPostInRoom = `
   SELECT p.id, r.room_name, p.title, TIMESTAMPDIFF(second, p.updated_at, CURRENT_TIMESTAMP) as updatedAtBeforeSec FROM post p
   JOIN user u ON p.room_id = ? AND u.id = ?
@@ -64,4 +64,14 @@ export const updateCommentCountByPostId = `
   UPDATE post p
   SET p.comment_count = (SELECT COUNT(*) FROM comment c WHERE c.state = 'EXIST' AND c.post_id = p.id)
   WHERE p.id = ?
+`;
+
+//개별 공지글 정보 가져오기
+export const getDetailedPostSQL = `
+  SELECT p.id, p.type, p.title, p.content, GROUP_CONCAT(pi.URL SEPARATOR ', ') AS URLs, p.start_date, p.end_date, p.comment_count, s.submit_state FROM post p
+  JOIN user u ON u.id = ?
+  LEFT JOIN \`post-image\` pi ON pi.post_id = p.id AND pi.state = 'EXIST'
+  LEFT JOIN submit s ON s.post_id = p.id AND s.user_id = u.id
+  WHERE p.id = ? AND p.state = 'EXIST'
+  GROUP BY p.id, p.type, p.title, p.content, p.start_date, p.end_date, p.comment_count, s.submit_state
 `;
