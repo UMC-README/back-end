@@ -249,5 +249,9 @@ paths:
                             "commentCount": 5,
                             "submitState": "complete",
                         }
-                      ] 
+                      ],
+                      "imageURLs": [
+                        "url11.com",
+                        "url12.com",
+                      ]
                     }
