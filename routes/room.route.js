@@ -7,6 +7,7 @@ import {
   getAllPost,
   getNotCheckedPost,
   getDetailedPost,
+  getComments,
 } from "../domains/room/room.controller.js";
 
 import { tokenAuth } from "../middleware/token.auth.js";
@@ -18,3 +19,4 @@ roomRouter.delete("/fixPost", tokenAuth, expressAsyncHandler(deleteFixPost));
 roomRouter.get("/:roomId/all", tokenAuth, expressAsyncHandler(getAllPost));
 roomRouter.get("/:roomId/notChecked", tokenAuth, expressAsyncHandler(getNotCheckedPost));
 roomRouter.get("/post/:postId", tokenAuth, expressAsyncHandler(getDetailedPost));
+roomRouter.get("/post/:postId/comment", tokenAuth, expressAsyncHandler(getComments));
