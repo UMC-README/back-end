@@ -10,6 +10,7 @@ import {
   getPostDetailsByRoomIdAtFirst,
   getMyNotCheckedPostInRoom,
   getDetailedPostSQL,
+  getPostImagesByPostId,
 } from "./room.sql.js";
 import { getUserById } from "../user/user.sql.js";
 
@@ -130,8 +131,9 @@ export const getDetailedPostDao = async (postId, userId) => {
       return -1;
     }
 
+    const [postImages] = await pool.query(getPostImagesByPostId, postId);
     conn.release();
-    return post;
+    return { post, postImages };
   } catch (err) {
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
