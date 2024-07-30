@@ -254,3 +254,89 @@ paths:
                         "url12.com",
                       ]
                     }
+
+  /room/post/{postId}/comment:
+    get:
+      tags:
+        - room
+      summary: 공지글별 댓글 조회
+      description: 공지글별 댓글 조회
+      operationId: getCommentsInPost
+      consumes:
+        - application/json  
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: postId
+          in: path
+          schema:
+            type: number
+          required: true
+        - name: commentId
+          in: query
+          required: false
+          schema:
+            properties:
+              commentId:
+                type: number
+        - name: paging
+          in: query
+          required: false
+          schema:
+            properties:
+              size:
+                type: number
+      responses:
+        "200":
+          description: 공지글별 댓글 조회 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: number
+                    example: 200
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: array
+                    example: {
+                      "data": [
+                        {
+                            "commentId": 1,
+                            "commentAuthorNickname": "kimroom1",
+                            "commentBody": "com.con.1",
+                            "updatedAt": "24. 7. 27. 18:08",
+                        },
+                        {
+                            "commentId": 3,
+                            "commentAuthorNickname": "parkroom1",
+                            "commentBody": "com.con.3",
+                            "updatedAt": "24. 7. 27. 18:09",
+                        },
+                        {
+                            "commentId": 4,
+                            "commentAuthorNickname": "leeroom1",
+                            "commentBody": "com.con.4",
+                            "updatedAt": "24. 7. 27. 18:09",
+                        },
+                        {
+                            "commentId": 5,
+                            "commentAuthorNickname": null,
+                            "commentBody": "com.con.5",
+                            "updatedAt": "24. 7. 27. 18:10",
+                        },
+                        {
+                            "commentId": 7,
+                            "commentAuthorNickname": "leeroom1",
+                            "commentBody": "com.con.7",
+                            "updatedAt": "24. 7. 27. 18:11",
+                        }
+                      ],
+                    "cursorId": 7,
+                    }
