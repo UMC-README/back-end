@@ -68,10 +68,13 @@ export const updateCommentCountByPostId = `
 
 //개별 공지글 정보 가져오기
 export const getDetailedPostSQL = `
-  SELECT p.id, p.type, p.title, p.content, GROUP_CONCAT(pi.URL SEPARATOR ', ') AS URLs, p.start_date, p.end_date, p.comment_count, s.submit_state FROM post p
+  SELECT p.id, p.type, p.title, p.content, p.start_date, p.end_date, p.comment_count, s.submit_state FROM post p
   JOIN user u ON u.id = ?
-  LEFT JOIN \`post-image\` pi ON pi.post_id = p.id AND pi.state = 'EXIST'
   LEFT JOIN submit s ON s.post_id = p.id AND s.user_id = u.id
   WHERE p.id = ? AND p.state = 'EXIST'
-  GROUP BY p.id, p.type, p.title, p.content, p.start_date, p.end_date, p.comment_count, s.submit_state
+`;
+
+export const getPostImagesByPostId = `
+  SELECT URL FROM \`post-image\` WHERE post_id = ? AND state = 'EXIST'
+  ORDER BY id ASC
 `;
