@@ -81,3 +81,22 @@ export const detailedPostDTO = (data) => {
 
   return { post, imageURLs };
 };
+
+export const allCommentsInPostDTO = (data) => {
+  if (data == -1) {
+    return -1;
+  }
+
+  if (data == -2) {
+    return -2;
+  }
+
+  const comments = data.map((comment) => ({
+    commentId: comment.id,
+    commentAuthorNickname: comment.nickname,
+    commentBody: comment.content,
+    updatedAt: formatDate(comment.updated_at),
+  }));
+
+  return { data: comments, cursorId: data[data.length - 1].id };
+};
