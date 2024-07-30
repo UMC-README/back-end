@@ -4,8 +4,14 @@ import {
   getAllPostInRoomDao,
   getNotCheckedPostInRoomDao,
   getDetailedPostDao,
+  getCommentsDao,
 } from "./room.dao.js";
-import { allPostInRoomDTO, notCheckedPostInRoomDTO, detailedPostDTO } from "./room.dto.js";
+import {
+  allPostInRoomDTO,
+  notCheckedPostInRoomDTO,
+  detailedPostDTO,
+  allCommentsInPostDTO,
+} from "./room.dto.js";
 
 export const postFix = async (postId, userId) => {
   const fixPostData = await fixPostDao({
@@ -66,4 +72,21 @@ export const getDetailedPostSer = async (postId, userId) => {
   }
 
   return detailedPostDTO(roomData);
+};
+
+export const getCommentsSer = async (postId, query) => {
+  const { commentId, size = 100 } = query;
+
+  const postData = await getCommentsDao(postId, commentId, size);
+  const commentData = allCommentsInPostDTO(postData);
+
+  if (commentData == -1) {
+    throw new Error("공지글을 찾을 수 없습니다.");
+  }
+
+  if (commentData == -2) {
+    return null;
+  }
+
+  return commentData;
 };
