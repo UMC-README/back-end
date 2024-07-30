@@ -59,13 +59,6 @@ export const getMyNotCheckedPostInRoom = `
   ORDER BY updatedAtBeforeSec ASC LIMIT 3
 `;
 
-//공지글별 댓글 개수 업데이트
-export const updateCommentCountByPostId = `
-  UPDATE post p
-  SET p.comment_count = (SELECT COUNT(*) FROM comment c WHERE c.state = 'EXIST' AND c.post_id = p.id)
-  WHERE p.id = ?
-`;
-
 //개별 공지글 정보 가져오기
 export const getDetailedPostSQL = `
   SELECT p.id, p.type, p.title, p.content, p.start_date, p.end_date, p.comment_count, s.submit_state FROM post p
@@ -74,7 +67,33 @@ export const getDetailedPostSQL = `
   WHERE p.id = ? AND p.state = 'EXIST'
 `;
 
+//개별 공지글의 이미지 모두 가져오기
 export const getPostImagesByPostId = `
   SELECT URL FROM \`post-image\` WHERE post_id = ? AND state = 'EXIST'
   ORDER BY id ASC
+`;
+
+//공지글별 댓글 조회 (커서 없는 초기값)
+export const getCommentsByPostIdAtFirst = `
+  SELECT c.id, ur.nickname, c.content, c.updated_at FROM comment c
+  JOIN post p ON p.id = ? AND c.post_id = p.id
+  LEFT JOIN \`user-room\` ur ON c.user_id = ur.user_id
+  WHERE c.state = 'EXIST'
+  ORDER BY c.id ASC LIMIT ?
+`;
+
+//공지글별 댓글 조회 (커서 존재)
+export const getCommentsByPostId = `
+  SELECT c.id, ur.nickname, c.content, c.updated_at FROM comment c
+  JOIN post p ON p.id = ? AND c.post_id = p.id
+  LEFT JOIN \`user-room\` ur ON c.user_id = ur.user_id
+  WHERE c.state = 'EXIST' AND c.id < ?
+  ORDER BY c.id ASC LIMIT ?
+`;
+
+//공지글별 댓글 개수 업데이트
+export const updateCommentCountByPostId = `
+  UPDATE post p
+  SET p.comment_count = (SELECT COUNT(*) FROM comment c WHERE c.state = 'EXIST' AND c.post_id = p.id)
+  WHERE p.id = ?
 `;
