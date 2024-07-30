@@ -64,3 +64,19 @@ const elapsedTime = (data) => {
   const years = months / 12;
   return `${Math.floor(years)}년 전`;
 };
+
+export const detailedPostDTO = (data) => {
+  const post = data.map((result) => ({
+    postId: result.id,
+    postType: result.type,
+    postTitle: result.title,
+    postBody: result.content,
+    postImages: result.URLs,
+    startDate: formatDate(result.start_date),
+    endDate: formatDate(result.end_date),
+    commentCount: result.comment_count,
+    submitState: formatSubmitState(result.submit_state),
+  }));
+
+  return { post };
+};
