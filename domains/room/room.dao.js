@@ -9,6 +9,7 @@ import {
   getPostDetailsByRoomId,
   getPostDetailsByRoomIdAtFirst,
   getMyNotCheckedPostInRoom,
+  getDetailedPostSQL,
 } from "./room.sql.js";
 import { getUserById } from "../user/user.sql.js";
 
@@ -113,6 +114,24 @@ export const getNotCheckedPostInRoomDao = async (roomId, userId) => {
     ]);
     conn.release();
     return posts;
+  } catch (err) {
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const getDetailedPostDao = async (postId, userId) => {
+  try {
+    const conn = await pool.getConnection();
+
+    const [post] = await pool.query(getDetailedPostSQL, [userId, postId]);
+
+    if (post.length == 0) {
+      conn.release();
+      return -1;
+    }
+
+    conn.release();
+    return post;
   } catch (err) {
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
