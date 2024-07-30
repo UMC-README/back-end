@@ -199,3 +199,58 @@ paths:
                         }
                       ]
                     }
+
+  /room/post/{postId}:
+    get:
+      tags:
+        - room
+      summary: 개별 공지글 상세 조회
+      description: 개별 공지글 상세 조회
+      operationId: getDetailedPost
+      consumes:
+        - application/json  
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: postId
+          in: path
+          schema:
+            type: number
+          required: true
+      responses:
+        "200":
+          description: 개별 공지글 상세 조회 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: number
+                    example: 200
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: array
+                    example: {
+                      "post": [
+                        {
+                            "postId": 1,
+                            "postType": "Quiz",
+                            "postTitle": "TEST",
+                            "postBody": "TESTCONTENT",
+                            "startDate": "24. 7. 25. 04:24",
+                            "endDate": "24. 7. 25. 05:24",
+                            "commentCount": 5,
+                            "submitState": "complete",
+                        }
+                      ],
+                      "imageURLs": [
+                        "url11.com",
+                        "url12.com",
+                      ]
+                    }

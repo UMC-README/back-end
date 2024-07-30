@@ -3,8 +3,9 @@ import {
   fixPostDao,
   getAllPostInRoomDao,
   getNotCheckedPostInRoomDao,
+  getDetailedPostDao,
 } from "./room.dao.js";
-import { allPostInRoomDTO, notCheckedPostInRoomDTO } from "./room.dto.js";
+import { allPostInRoomDTO, notCheckedPostInRoomDTO, detailedPostDTO } from "./room.dto.js";
 
 export const postFix = async (postId, userId) => {
   const fixPostData = await fixPostDao({
@@ -55,4 +56,14 @@ export const getNotCheckedPostInRoom = async (roomId, userId) => {
   }
 
   return notCheckedPostInRoomDTO(roomData);
+};
+
+export const getDetailedPostSer = async (postId, userId) => {
+  const roomData = await getDetailedPostDao(postId, userId);
+
+  if (getDetailedPostDao == -1) {
+    throw new Error("공지글을 찾을 수 없습니다.");
+  }
+
+  return detailedPostDTO(roomData);
 };
