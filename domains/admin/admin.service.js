@@ -4,6 +4,7 @@ import {
   deleteRoomsDao,
   updateRoomsDao,
   createPostDao,
+  updatePostDao,
   getUserProfile,
 } from "./admin.dao.js";
 
@@ -44,6 +45,16 @@ export const createPostService = async (body) => {
     return postId; // 생성된 공지글 ID 반환
   } catch (error) {
     console.error("공지글 생성하기 에러:", error);
+    throw error;
+  }
+};
+
+export const updatePostService = async (body) => {
+  try {
+    const postId = await updatePostDao(body);
+    return postId; // 수정된 공지글 ID 반환
+  } catch (error) {
+    console.error("공지글 수정하기 에러:", error);
     throw error;
   }
 };
