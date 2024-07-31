@@ -1,9 +1,6 @@
-// 유저 아이디 불러오기
-export const getUserByIdSQL = "SELECT user.id FROM user WHERE id = ?";
-
 // 공지방 생성
 export const createRoomsSQL = `
-  INSERT INTO room (admin_id, admin_nickname, room_name, room_password, room_image, room_invite_url, max_penalty)
+  INSERT INTO room (admin_id, room_image, admin_nickname, room_name, room_password, room_invite_url, max_penalty)
   VALUES (?, ?, ?, ?, ?, ?, ?) 
 `;
 

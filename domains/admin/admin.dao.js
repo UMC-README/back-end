@@ -2,7 +2,6 @@ import { pool } from "../../config/db.config.js";
 import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
 import {
-  getUserByIdSQL,
   createRoomsSQL,
   updateRoomsSQL,
   deleteRoomsSQL,
@@ -12,23 +11,17 @@ import {
   getProfileByUserId,
 } from "./admin.sql.js";
 
-export const getUserByIdDao = async (userId) => {
-  const conn = await pool.getConnection();
-  const result = await conn.query(getUserByIdSQL, [userId]);
-  return result[0];
-};
-
-export const createRoomsDao = async (data) => {
+export const createRoomsDao = async (roomData) => {
   try {
     const conn = await pool.getConnection();
     const result = await conn.query(createRoomsSQL, [
-      data.admin_id,
-      data.admin_nickname,
-      data.room_name,
-      data.room_password,
-      data.room_image,
-      data.room_invite_url,
-      data.max_penalty,
+      roomData.admin_id,
+      roomData.room_image,
+      roomData.admin_nickname,
+      roomData.room_name,
+      roomData.room_password,
+      roomData.room_invite_url, // 초대URL 생성하기 API에서 받아와야
+      roomData.max_penalty,
     ]);
     return result;
   } catch (error) {

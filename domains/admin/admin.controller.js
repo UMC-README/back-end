@@ -11,31 +11,8 @@ import {
 
 export const createRoomsController = async (req, res, next) => {
   try {
-    // 요청 바디에서 데이터 추출
-    const {
-      admin_id,
-      admin_nickname,
-      room_name,
-      room_password,
-      room_image,
-      room_invite_url,
-      max_penalty,
-    } = req.body;
-
-    // 필수 필드 확인
-    if (
-      !admin_id ||
-      !admin_nickname ||
-      !room_name ||
-      !room_password ||
-      !room_image ||
-      !room_invite_url ||
-      !max_penalty
-    ) {
-      return res.status(400).json({ error: "모든 필수 필드를 입력하세요." });
-    }
-
-    res.status(200).json(response(status.SUCCESS, req.body));
+    const result = await createRoomsService(req.body);
+    res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
   }
