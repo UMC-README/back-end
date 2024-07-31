@@ -1,5 +1,4 @@
 import {
-  getUserByIdDao,
   createRoomsDao,
   deleteRoomsDao,
   updateRoomsDao,
@@ -7,10 +6,10 @@ import {
   getUserProfile,
 } from "./admin.dao.js";
 
-export const createRoomsService = async (data) => {
+export const createRoomsService = async (body) => {
   try {
-    console.log("공지방 생성에 관한 데이터를 가져옵니다.");
-    return await createRoomsDao(data);
+    const roomId = await createRoomsDao(body);
+    return roomId; // 생성된 공지방 ID 반환
   } catch (error) {
     console.error("공지방 생성하기 에러:", error);
     throw error;
