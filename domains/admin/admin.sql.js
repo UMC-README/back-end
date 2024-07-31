@@ -27,6 +27,16 @@ export const createPostImgSQL = `
   INSERT INTO \`post-image\` (URL, post_id) VALUES(?,?);  
 `;
 
+// 공지글 수정 & 이미지 삭제
+export const updatePostSQL = ` 
+  UPDATE post
+  SET title = ?, content = ?, start_date = ?, end_date = ?, question = ? 
+  WHERE id = ?;  
+`;
+export const deletePostImgSQL = `
+    UPDATE \`post-image\` SET state = 'DELETED' WHERE post_id = ? AND URL = ?;
+`;
+
 // 유저 프로필 조회
 export const getProfileByUserId = `
   SELECT ur.nickname, ur.profile_image, ur.penalty_count
