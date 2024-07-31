@@ -72,8 +72,7 @@ export const createPostDao = async ({ postData, imgURLs }) => {
     await conn.beginTransaction();
 
     const [memberCountRows] = await conn.query(getMemberCountSQL, [postData.room_id]);
-    const memberCount = memberCountRows[0].user_count; // 총 회원 수
-    const initialUnreadCount = memberCount - 1;
+    const initialUnreadCount = memberCountRows[0].user_count - 1; // 총 회원 수
 
     const [postResult] = await conn.query(createPostSQL, [
       postData.room_id,
