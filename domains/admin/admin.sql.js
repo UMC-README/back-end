@@ -23,6 +23,10 @@ export const createPostSQL = `
   INSERT INTO post (room_id, title, content, type, start_date, end_date, question, unread_count, user_id)
   VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);  
 `;
+export const getMemberCountSQL = `
+  SELECT COUNT(*) AS user_count
+  FROM \`user-room\` WHERE room_id = ?;
+`;
 export const createPostImgSQL = `
   INSERT INTO \`post-image\` (URL, post_id) VALUES(?,?);  
 `;
