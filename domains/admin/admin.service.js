@@ -4,6 +4,7 @@ import {
   updateRoomsDao,
   createPostDao,
   updatePostDao,
+  deletePostDao,
   getUserProfile,
 } from "./admin.dao.js";
 
@@ -56,6 +57,17 @@ export const updatePostService = async (body) => {
     console.error("공지글 수정하기 에러:", error);
     throw error;
   }
+};
+
+export const deletePostService = async (postId) => {
+  if (!postId) {
+    throw new Error("삭제할 공지글의 ID가 필요합니다.");
+  }
+  const deleteRoomsData = await deletePostDao(postId);
+  if (deleteRoomsData.affectedRows === 0) {
+    throw new Error("해당 ID의 공지글이 존재하지 않거나 이미 삭제되었습니다.");
+  }
+  return deleteRoomsData;
 };
 
 export const getProfileUser = async (userId) => {
