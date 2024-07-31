@@ -120,7 +120,7 @@ export const updatePostDao = async ({ postData, imgURLs, imgToDelete }) => {
       await conn.query(createPostImgSQL, [url, postData.id]);
     }
     // 삭제
-    if (imgToDelete && imgToDelete.length > 0) {
+    if (imgToDelete.length > 0) {
       for (const url of imgToDelete) {
         await conn.query(deletePostImgSQL, [postData.id, url]);
       }
