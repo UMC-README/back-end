@@ -7,6 +7,7 @@ import {
   updateRoomsSQL,
   deleteRoomsSQL,
   createPostSQL,
+  getMemberCountSQL,
   createPostImgSQL,
   getProfileByUserId,
 } from "./admin.sql.js";
@@ -68,7 +69,12 @@ export const deleteRoomsDao = async (roomId) => {
 export const createPostDao = async ({ postData, imgURLs }) => {
   const conn = await pool.getConnection();
   try {
-    await conn.beginTransaction(); // 트랜잭션 시작
+    await conn.beginTransaction();
+
+    const [memberCountRows] = await conn.query(getMemberCountSQL, [postData.room_id]);
+    const memberCount = memberCountRows[0].user_count; // 총 회원 수
+    const initialUnreadCount = memberCount - 1;
+
     const [postResult] = await conn.query(createPostSQL, [
       postData.room_id,
       postData.title,
@@ -77,13 +83,13 @@ export const createPostDao = async ({ postData, imgURLs }) => {
       postData.start_date,
       postData.end_date,
       postData.question,
-      postData.unread_count,
+      initialUnreadCount, // unread_count
       postData.user_id,
     ]);
 
-    const result = postResult.insertId; // 생성된 공지글의 ID
+    const result = postResult.insertId;
+
     imgURLs.forEach((url) => {
-      // 각 URL에 대해 별도로 쿼리 실행
       conn.query(createPostImgSQL, [url, result], (error) => {
         if (error) {
           throw error;
@@ -92,7 +98,6 @@ export const createPostDao = async ({ postData, imgURLs }) => {
     });
 
     await conn.commit(); // 트랜잭션 커밋(DB 반영)
-
     return result;
   } catch (error) {
     await conn.rollback(); // 오류 발생 시 롤백
