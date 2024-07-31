@@ -10,6 +10,7 @@ import {
   createPostImgSQL,
   updatePostSQL,
   deletePostImgSQL,
+  deletePostSQL,
   getProfileByUserId,
 } from "./admin.sql.js";
 
@@ -128,6 +129,17 @@ export const updatePostDao = async ({ postData, imgURLs, imgToDelete }) => {
   } catch (error) {
     await conn.rollback();
     console.error("공지글 수정하기 에러:", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const deletePostDao = async (postId) => {
+  try {
+    const conn = await pool.getConnection();
+    const result = await conn.query(deletePostSQL, postId);
+    return result;
+  } catch (error) {
+    console.error("공지글 삭제하기 에러:", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };
