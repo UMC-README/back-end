@@ -7,6 +7,7 @@ import {
   deleteRoomsController,
   createPostController,
   updatePostController,
+  deletePostController,
   userProfile,
 } from "../domains/admin/admin.controller.js";
 
@@ -17,4 +18,5 @@ adminRouter.patch("/rooms/:room_id", tokenAuth, expressAsyncHandler(updateRoomsC
 adminRouter.patch("/rooms", tokenAuth, expressAsyncHandler(deleteRoomsController));
 adminRouter.post("/post", tokenAuth, expressAsyncHandler(createPostController));
 adminRouter.patch("/post/:post_id", tokenAuth, expressAsyncHandler(updatePostController));
+adminRouter.patch("/post", tokenAuth, expressAsyncHandler(deletePostController));
 adminRouter.get("/profile/:user_id", tokenAuth, expressAsyncHandler(userProfile));
