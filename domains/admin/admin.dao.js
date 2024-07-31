@@ -8,6 +8,8 @@ import {
   createPostSQL,
   getMemberCountSQL,
   createPostImgSQL,
+  updatePostSQL,
+  deletePostImgSQL,
   getProfileByUserId,
 } from "./admin.sql.js";
 
@@ -94,6 +96,38 @@ export const createPostDao = async ({ postData, imgURLs }) => {
   } catch (error) {
     await conn.rollback(); // 오류 발생 시 롤백
     console.error("공지글 생성 에러:", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const updatePostDao = async ({ postData, imgURLs, imgToDelete }) => {
+  const conn = await pool.getConnection();
+  try {
+    await conn.beginTransaction();
+    const [postResult] = await conn.query(updatePostSQL, [
+      postData.title,
+      postData.content,
+      postData.start_date,
+      postData.end_date,
+      postData.question,
+      postData.id,
+    ]);
+    // 추가
+    for (const url of imgURLs) {
+      await conn.query(createPostImgSQL, [url, postData.id]);
+    }
+    // 삭제
+    if (imgToDelete.length > 0) {
+      for (const url of imgToDelete) {
+        await conn.query(deletePostImgSQL, [postData.id, url]);
+      }
+    }
+
+    await conn.commit();
+    return postResult;
+  } catch (error) {
+    await conn.rollback();
+    console.error("공지글 수정하기 에러:", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };
