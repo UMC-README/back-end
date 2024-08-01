@@ -21,7 +21,7 @@ export const getKakaoUser = async (token) => {
     method: "GET",
     headers: {
       // Authorization: `Bearer ${token}`,
-      Authorization: `Bearer IrDKo0SmpONQCaWUD-qO-Rary5xo2hNYAAAAAQoqJVEAAAGRDwp1AeiSikwhug`,
+      Authorization: `Bearer ${token}`,
       "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
     },
   }).then((res) => res.json());
