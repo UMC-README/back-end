@@ -14,25 +14,28 @@ import {
   getProfileByUserId,
 } from "./admin.sql.js";
 
-import { v4 } from "uuid";
-
-export const createRoomsDao = async (roomData, userId) => {
+export const createRoomsDao = async (body, userId, roomInviteUrl) => {
   try {
     const conn = await pool.getConnection();
-    const roomInviteUrl = v4(); // 랜덤 url 생성
-    console.log(roomInviteUrl);
-
-    const result = await conn.query(createRoomsSQL, [
+    await conn.query(createRoomsSQL, [
       userId,
-      roomData.room_image,
-      roomData.admin_nickname,
-      roomData.room_name,
-      roomData.room_password,
+      body.room_image,
+      body.admin_nickname,
+      body.room_name,
+      body.room_password,
       roomInviteUrl,
-      roomData.max_penalty,
+      body.max_penalty,
     ]);
 
-    return result;
+    conn.release();
+    return {
+      roomImage: body.room_image,
+      adminNickname: body.admin_nickname,
+      roomName: body.room_name,
+      roomPassword: body.room_password,
+      maxPenalty: body.max_penalty,
+      roomInviteUrl,
+    };
   } catch (error) {
     console.error("공지방 생성하기 에러");
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
