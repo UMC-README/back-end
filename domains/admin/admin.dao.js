@@ -14,18 +14,24 @@ import {
   getProfileByUserId,
 } from "./admin.sql.js";
 
-export const createRoomsDao = async (roomData) => {
+import { v4 } from "uuid";
+
+export const createRoomsDao = async (roomData, userId) => {
   try {
     const conn = await pool.getConnection();
+    const roomInviteUrl = v4(); // 랜덤 url 생성
+    console.log(roomInviteUrl);
+
     const result = await conn.query(createRoomsSQL, [
-      roomData.admin_id,
+      userId,
       roomData.room_image,
       roomData.admin_nickname,
       roomData.room_name,
       roomData.room_password,
-      roomData.room_invite_url, // 초대URL 생성하기 API에서 받아와야
+      roomInviteUrl,
       roomData.max_penalty,
     ]);
+
     return result;
   } catch (error) {
     console.error("공지방 생성하기 에러");
