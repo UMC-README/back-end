@@ -6,6 +6,7 @@ import {
   changeFixedPostSQL,
   getPostById,
   getRoomById,
+  getCommentById,
   getPostDetailsByRoomId,
   getPostDetailsByRoomIdAtFirst,
   getMyNotCheckedPostInRoom,
@@ -15,6 +16,8 @@ import {
   getCommentsByPostId,
   postCommentSQL,
   increaseCommentCountOneByPostId,
+  deleteCommentSQL,
+  decreaseCommentCountOneByPostId,
 } from "./room.sql.js";
 import { getUserById } from "../user/user.sql.js";
 
@@ -196,6 +199,39 @@ export const postCommentDao = async (postId, userId, content) => {
     return result[0].insertId;
   } catch (error) {
     console.log("댓글 작성 에러", error);
+    await conn.rollback();
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const deleteCommentDao = async (commentId, userId) => {
+  const conn = await pool.getConnection();
+  const [comment] = await conn.query(getCommentById, commentId);
+
+  if (comment.length == 0) {
+    conn.release();
+    return -1;
+  }
+
+  if (comment[0].user_id != userId) {
+    conn.release();
+    return -2;
+  }
+
+  try {
+    await conn.beginTransaction();
+
+    const result = await conn.query(deleteCommentSQL, commentId);
+    const updateCommentCount = await conn.query(
+      decreaseCommentCountOneByPostId,
+      comment[0].post_id
+    );
+
+    await conn.commit();
+    conn.release();
+    return commentId;
+  } catch (error) {
+    console.log("댓글 삭제 에러", error);
     await conn.rollback();
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
