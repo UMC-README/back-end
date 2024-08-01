@@ -9,6 +9,7 @@ import {
   getDetailedPost,
   getComments,
   postComment,
+  deleteComment,
 } from "../domains/room/room.controller.js";
 
 import { tokenAuth } from "../middleware/token.auth.js";
@@ -22,3 +23,4 @@ roomRouter.get("/:roomId/notChecked", tokenAuth, expressAsyncHandler(getNotCheck
 roomRouter.get("/post/:postId", tokenAuth, expressAsyncHandler(getDetailedPost));
 roomRouter.get("/post/:postId/comment", tokenAuth, expressAsyncHandler(getComments));
 roomRouter.post("/post/:postId/comment", tokenAuth, expressAsyncHandler(postComment));
+roomRouter.delete("/post/comment/:commentId", tokenAuth, expressAsyncHandler(deleteComment));
