@@ -388,3 +388,44 @@ paths:
                       commentId:
                         type: number
                         description: 댓글 ID
+
+  /room/post/comment/{commentId}:
+    delete:
+      tags:
+        - room
+      summary: 댓글 삭제
+      description: 개별 댓글 삭제
+      operationId: deleteComment
+      consumes:
+        - application/json  
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: commentId
+          in: path
+          schema:
+            type: number
+          required: true
+      responses:
+        "200":
+          description: 댓글 삭제 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: number
+                    example: 200
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: object
+                    properties:
+                      deletedCommentId:
+                        type: number
+                        description: 삭제처리된 댓글의 ID
