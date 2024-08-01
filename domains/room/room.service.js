@@ -6,6 +6,7 @@ import {
   getDetailedPostDao,
   getCommentsDao,
   postCommentDao,
+  deleteCommentDao,
 } from "./room.dao.js";
 import {
   allPostInRoomDTO,
@@ -100,4 +101,18 @@ export const postCommentSer = async (postId, userId, body) => {
   }
 
   return { commentId: commentData };
+};
+
+export const deleteCommentSer = async (commentId, userId) => {
+  const commentData = await deleteCommentDao(commentId, userId);
+
+  if (commentData == -1) {
+    throw new Error("댓글을 찾을 수 없습니다.");
+  }
+
+  if (commentData == -2) {
+    throw new Error("삭제 권한 오류: 댓글 작성자가 아닙니다.");
+  }
+
+  return { deletedCommentId: commentData };
 };
