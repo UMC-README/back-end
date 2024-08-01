@@ -108,6 +108,18 @@ export const increaseCommentCountOneByPostId = `
   WHERE p.id = ?
 `;
 
+//댓글 삭제 (Soft Delete)
+export const deleteCommentSQL = `
+  UPDATE comment SET state = 'DELETED' WHERE id = ?
+`;
+
+//공지글별 댓글 개수 1 감소
+export const decreaseCommentCountOneByPostId = `
+  UPDATE post p
+  SET p.comment_count = p.comment_count -1
+  WHERE p.id = ?
+`;
+
 //공지글별 댓글 개수 업데이트
 export const updateCommentCountByPostId = `
   UPDATE post p
