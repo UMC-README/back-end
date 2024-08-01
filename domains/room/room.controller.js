@@ -98,11 +98,12 @@ export const postComment = async (req, res, next) => {
   try {
     const postId = req.params.postId;
     const userId = req.user.userId;
+    const content = req.body.content;
     console.log("postId: ", postId);
     console.log("userId: ", userId);
-    console.log("body: ", req.body.body);
+    console.log("content: ", content);
 
-    const result = await postCommentSer(postId, userId, req.body);
+    const result = await postCommentSer(postId, userId, content);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);

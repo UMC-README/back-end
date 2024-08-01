@@ -363,7 +363,7 @@ paths:
             schema:
               type: object
               properties:
-                body:
+                content:
                   type: string
       responses:
         "200":

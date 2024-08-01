@@ -176,7 +176,7 @@ export const getCommentsDao = async (postId, cursorId, size) => {
   }
 };
 
-export const postCommentDao = async (postId, userId, body) => {
+export const postCommentDao = async (postId, userId, content) => {
   const conn = await pool.getConnection();
   const [post] = await conn.query(getPostById, postId);
 
@@ -188,7 +188,7 @@ export const postCommentDao = async (postId, userId, body) => {
   try {
     await conn.beginTransaction();
 
-    const result = await conn.query(postCommentSQL, [postId, userId, body.body]);
+    const result = await conn.query(postCommentSQL, [postId, userId, content]);
     const updateCommentCount = await conn.query(increaseCommentCountOneByPostId, postId);
 
     await conn.commit();

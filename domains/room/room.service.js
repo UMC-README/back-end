@@ -92,8 +92,8 @@ export const getCommentsSer = async (postId, query) => {
   return commentData;
 };
 
-export const postCommentSer = async (postId, userId, body) => {
-  const commentData = await postCommentDao(postId, userId, body);
+export const postCommentSer = async (postId, userId, content) => {
+  const commentData = await postCommentDao(postId, userId, content);
 
   if (commentData == -1) {
     throw new Error("공지글을 찾을 수 없습니다.");
