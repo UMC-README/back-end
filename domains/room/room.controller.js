@@ -8,12 +8,11 @@ import {
   getNotCheckedPostInRoom,
   getDetailedPostSer,
   getCommentsSer,
+  postCommentSer,
 } from "./room.service.js";
 
 export const fixPost = async (req, res, next) => {
   try {
-    console.log("고정 공지글 등록");
-
     const userId = req.user.userId;
     const postId = req.body.postId;
     console.log("postId: ", postId);
@@ -28,8 +27,6 @@ export const fixPost = async (req, res, next) => {
 
 export const deleteFixPost = async (req, res, next) => {
   try {
-    console.log("고정 공지글 삭제");
-
     const userId = req.user.userId;
     console.log("userId: ", userId);
 
@@ -42,8 +39,6 @@ export const deleteFixPost = async (req, res, next) => {
 
 export const getAllPost = async (req, res, next) => {
   try {
-    console.log("공지방 내 모든 공지글 조회");
-
     const roomId = req.params.roomId;
     const userId = req.user.userId;
 
@@ -59,8 +54,6 @@ export const getAllPost = async (req, res, next) => {
 
 export const getNotCheckedPost = async (req, res, next) => {
   try {
-    console.log("공지방 내 완료하지 않은 공지글 조회");
-
     const roomId = req.params.roomId;
     const userId = req.user.userId;
 
@@ -76,8 +69,6 @@ export const getNotCheckedPost = async (req, res, next) => {
 
 export const getDetailedPost = async (req, res, next) => {
   try {
-    console.log("개별 공지글 상세 조회");
-
     const postId = req.params.postId;
     const userId = req.user.userId;
 
@@ -93,12 +84,25 @@ export const getDetailedPost = async (req, res, next) => {
 
 export const getComments = async (req, res, next) => {
   try {
-    console.log("해당 공지글의 모든 댓글 조회");
-
     const postId = req.params.postId;
     console.log("postId: ", postId);
 
     const result = await getCommentsSer(postId, req.query);
+    res.status(200).json(response(status.SUCCESS, result));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const postComment = async (req, res, next) => {
+  try {
+    const postId = req.params.postId;
+    const userId = req.user.userId;
+    console.log("postId: ", postId);
+    console.log("userId: ", userId);
+    console.log("body: ", req.body.body);
+
+    const result = await postCommentSer(postId, userId, req.body);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
