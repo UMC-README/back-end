@@ -13,6 +13,11 @@ export const getRoomById = `
   SELECT * FROM room WHERE id = ?
 `;
 
+//ID 값으로 댓글 찾기
+export const getCommentById = `
+  SELECT * FROM comment WHERE id = ?
+`;
+
 //공지방 내 공지글 정보, 나의 제출상태 가져오기 (커서 존재)
 export const getPostDetailsByRoomId = `
   SELECT p.id, p.type, p.title, p.content, pi.URL, p.start_date, p.end_date, p.comment_count, s.submit_state FROM post p
@@ -89,6 +94,18 @@ export const getCommentsByPostId = `
   LEFT JOIN \`user-room\` ur ON c.user_id = ur.user_id
   WHERE c.state = 'EXIST' AND c.id < ?
   ORDER BY c.id ASC LIMIT ?
+`;
+
+//댓글 작성
+export const postCommentSQL = `
+  INSERT INTO comment (post_id, user_id, content) VALUES (?, ?, ?)
+`;
+
+//공지글별 댓글 개수 1 증가
+export const increaseCommentCountOneByPostId = `
+  UPDATE post p
+  SET p.comment_count = p.comment_count + 1
+  WHERE p.id = ?
 `;
 
 //공지글별 댓글 개수 업데이트

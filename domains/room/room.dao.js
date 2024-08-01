@@ -13,6 +13,8 @@ import {
   getPostImagesByPostId,
   getCommentsByPostIdAtFirst,
   getCommentsByPostId,
+  postCommentSQL,
+  increaseCommentCountOneByPostId,
 } from "./room.sql.js";
 import { getUserById } from "../user/user.sql.js";
 
@@ -170,6 +172,31 @@ export const getCommentsDao = async (postId, cursorId, size) => {
       return comments;
     }
   } catch (err) {
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const postCommentDao = async (postId, userId, content) => {
+  const conn = await pool.getConnection();
+  const [post] = await conn.query(getPostById, postId);
+
+  if (post.length == 0) {
+    conn.release();
+    return -1;
+  }
+
+  try {
+    await conn.beginTransaction();
+
+    const result = await conn.query(postCommentSQL, [postId, userId, content]);
+    const updateCommentCount = await conn.query(increaseCommentCountOneByPostId, postId);
+
+    await conn.commit();
+    conn.release();
+    return result[0].insertId;
+  } catch (error) {
+    console.log("댓글 작성 에러", error);
+    await conn.rollback();
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };

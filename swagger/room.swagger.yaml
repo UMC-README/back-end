@@ -340,3 +340,51 @@ paths:
                       ],
                     "cursorId": 7,
                     }
+    post:
+      tags:
+        - room
+      summary: 댓글 작성
+      description: 해당 공지글에 댓글 작성
+      operationId: postComment
+      consumes:
+        - application/json  
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: postId
+          in: path
+          schema:
+            type: number
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+      responses:
+        "200":
+          description: 댓글 작성 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: number
+                    example: 200
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: object
+                    properties:
+                      commentId:
+                        type: number
+                        description: 댓글 ID
