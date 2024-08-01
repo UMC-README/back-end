@@ -11,6 +11,8 @@ import {
   getMyNotCheckedPostInRoom,
   getDetailedPostSQL,
   getPostImagesByPostId,
+  getCommentsByPostIdAtFirst,
+  getCommentsByPostId,
 } from "./room.sql.js";
 import { getUserById } from "../user/user.sql.js";
 
@@ -134,6 +136,39 @@ export const getDetailedPostDao = async (postId, userId) => {
     const [postImages] = await pool.query(getPostImagesByPostId, postId);
     conn.release();
     return { post, postImages };
+  } catch (err) {
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const getCommentsDao = async (postId, cursorId, size) => {
+  try {
+    const conn = await pool.getConnection();
+
+    const [post] = await pool.query(getPostById, postId);
+
+    if (post.length == 0) {
+      conn.release();
+      return -1;
+    }
+
+    if (cursorId == "undefined" || typeof cursorId == "undefined" || cursorId == null) {
+      const [comments] = await pool.query(getCommentsByPostIdAtFirst, [postId, size]);
+      if (comments.length == 0) {
+        conn.release();
+        return -2;
+      }
+      conn.release();
+      return comments;
+    } else {
+      const [comments] = await pool.query(getCommentsByPostId, [postID, cursorId, size]);
+      if (comments.length == 0) {
+        conn.release();
+        return -2;
+      }
+      conn.release();
+      return comments;
+    }
   } catch (err) {
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }

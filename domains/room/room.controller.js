@@ -7,6 +7,7 @@ import {
   getAllPostInRoom,
   getNotCheckedPostInRoom,
   getDetailedPostSer,
+  getCommentsSer,
 } from "./room.service.js";
 
 export const fixPost = async (req, res, next) => {
@@ -84,6 +85,20 @@ export const getDetailedPost = async (req, res, next) => {
     console.log("userId: ", userId);
 
     const result = await getDetailedPostSer(postId, userId);
+    res.status(200).json(response(status.SUCCESS, result));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getComments = async (req, res, next) => {
+  try {
+    console.log("해당 공지글의 모든 댓글 조회");
+
+    const postId = req.params.postId;
+    console.log("postId: ", postId);
+
+    const result = await getCommentsSer(postId, req.query);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);

@@ -56,7 +56,7 @@ const elapsedTime = (data) => {
   if (hours < 24) return `${Math.floor(hours)}시간 전`;
 
   const days = hours / 24;
-  if (days < 7) return `${Math.floor(days)}일 전`;
+  if (days < 30) return `${Math.floor(days)}일 전`;
 
   const months = days / 30;
   if (months < 12) return `${Math.floor(months)}개월 전`;
@@ -80,4 +80,23 @@ export const detailedPostDTO = (data) => {
   const imageURLs = data.postImages.map((result) => result.URL);
 
   return { post, imageURLs };
+};
+
+export const allCommentsInPostDTO = (data) => {
+  if (data == -1) {
+    return -1;
+  }
+
+  if (data == -2) {
+    return -2;
+  }
+
+  const comments = data.map((comment) => ({
+    commentId: comment.id,
+    commentAuthorNickname: comment.nickname,
+    commentBody: comment.content,
+    updatedAt: formatDate(comment.updated_at),
+  }));
+
+  return { data: comments, cursorId: data[data.length - 1].id };
 };
