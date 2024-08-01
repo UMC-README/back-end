@@ -24,19 +24,19 @@ export const tokenAuth = async (req, res, next) => {
       });
     } else {
       // 카카오 토큰인 경우
-      const response = await getKakaoUser(token);
-      if (response.code === -401) {
+      const userResponse = await getKakaoUser(token);
+      if (userResponse.code === -401) {
         // 카카오 토큰이 만료 혹은 잘못된 경우
         return res.send(response(status.UNAUTHORIZED));
       }
 
-      const user = await findUserByEmail(response.kakao_account.email);
+      const user = await findUserByEmail(userResponse.kakao_account.email);
       if (!user) {
         // DB에 등록되지 않은 사용자일 경우
         return res.send(response(status.BAD_REQUEST));
       }
 
-      req.user = user.id;
+      req.user = { userId: user.id };
     }
 
     next();
