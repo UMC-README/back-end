@@ -18,6 +18,7 @@ import {
   increaseCommentCountOneByPostId,
   deleteCommentSQL,
   decreaseCommentCountOneByPostId,
+  getSubmitRequirementsSQL,
 } from "./room.sql.js";
 import { getUserById } from "../user/user.sql.js";
 
@@ -233,6 +234,25 @@ export const deleteCommentDao = async (commentId, userId) => {
   } catch (error) {
     console.log("댓글 삭제 에러", error);
     await conn.rollback();
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const getSubmitRequirementsDao = async (postId) => {
+  try {
+    const conn = await pool.getConnection();
+
+    const [post] = await conn.query(getPostById, postId);
+
+    if (post.length == 0) {
+      conn.release();
+      return -1;
+    }
+
+    const [requirements] = await conn.query(getSubmitRequirementsSQL, postId);
+    conn.release();
+    return requirements[0];
+  } catch (err) {
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };
