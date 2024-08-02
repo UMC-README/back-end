@@ -1,8 +1,10 @@
 import jwt from "jsonwebtoken";
 import { response } from "../config/response.js";
 import { status } from "../config/response.status.js";
+import { checkToken, getKakaoUser } from "../utils/kakao.js";
+import { findUserByEmail } from "../domains/user/user.dao.js";
 
-export const tokenAuth = (req, res, next) => {
+export const tokenAuth = async (req, res, next) => {
   try {
     const header = req.headers["authorization"] || req.headers["Authorization"];
 
@@ -12,15 +14,32 @@ export const tokenAuth = (req, res, next) => {
       return res.send(response(status.EMPTY_TOKEN));
     }
 
-    jwt.verify(token, process.env.JWT_SECRET_KEY, (error, user) => {
-      if (error) {
-        return res.send(response(status.FORBIDDEN));
+    if (!(await checkToken(token))) {
+      jwt.verify(token, process.env.JWT_SECRET_KEY, (error, user) => {
+        if (error) {
+          return res.send(response(status.FORBIDDEN));
+        }
+        // 일반 토큰인 경우
+        req.user = user;
+      });
+    } else {
+      // 카카오 토큰인 경우
+      const userResponse = await getKakaoUser(token);
+      if (userResponse.code === -401) {
+        // 카카오 토큰이 만료 혹은 잘못된 경우
+        return res.send(response(status.UNAUTHORIZED));
       }
 
-      req.user = user;
+      const user = await findUserByEmail(userResponse.kakao_account.email);
+      if (!user) {
+        // DB에 등록되지 않은 사용자일 경우
+        return res.send(response(status.BAD_REQUEST));
+      }
 
-      next();
-    });
+      req.user = { userId: user.id };
+    }
+
+    next();
   } catch (error) {
     console.log(error);
   }
