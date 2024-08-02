@@ -7,7 +7,9 @@ import {
   getCommentsDao,
   postCommentDao,
   deleteCommentDao,
+  getSubmitRequirementsDao,
 } from "./room.dao.js";
+
 import {
   allPostInRoomDTO,
   notCheckedPostInRoomDTO,
@@ -115,4 +117,14 @@ export const deleteCommentSer = async (commentId, userId) => {
   }
 
   return { deletedCommentId: commentData };
+};
+
+export const getSubmitRequirementsSer = async (postId) => {
+  const postData = await getSubmitRequirementsDao(postId);
+
+  if (postData == -1) {
+    throw new Error("공지글을 찾을 수 없습니다.");
+  }
+
+  return postData;
 };
