@@ -4,12 +4,10 @@ paths:
       tags:
         - admin
       summary: 공지방 생성
-      description: 공지방을 생성합니다.
+      description: 공지방 생성
       operationId: createRooms
       consumes:
         - application/json
-      security:
-        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -17,38 +15,59 @@ paths:
             schema:
               type: object
               properties:
-                content:
+                admin_id:
                   type: string
+                  description: 관리자 id
+                room_image:
+                  type: string
+                  description: 공지방 이미지 url
+                admin_nickname:
+                  type: string
+                  description: 관리자 닉네임
+                room_name:
+                  type: string
+                  description: 공지방 이름
+                room_password:
+                  type: string
+                  description: 공지방 비밀번호
+                max_penalty:
+                  type: number
+                  description: 최대 페널티 개수
       responses:
         "200":
           description: 공지방 생성 성공!
           content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                isSuccess:
-                  type: boolean
-                  example: true
-                code:
-                  type: integer
-                  example: 200
-                message:
-                  type: string
-                  example: "success!"
-                result:
-                  type: array
-                  example:
-                    {
-                      "roomData":
-                        [
-                          {
-                            "room_image": "http:/s3/image.jpg",
-                            "admin_nickname": "제이",
-                            "room_name": "My Chat Room",
-                            "room_password": "password123",
-                            "max_penalty": 5,
-                            "roomInviteUrl": "44a44aa3",
-                          },
-                        ],
-                    }
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "공지방 생성 성공!"
+                  result:
+                    type: object
+                    properties:
+                      roomImage:
+                        type: string
+                        description: 공지방 이미지 url
+                      adminNickname:
+                        type: string
+                        description: 운영진 닉네임
+                      roomName:
+                        type: string
+                        description: 공지방 이름
+                      roomPassword:
+                        type: string
+                        description: 공지방 비밀번호
+                      maxPenalty:
+                        type: number
+                        description: 최대 패널티 개수
+                      roomInviteUrl:
+                        type: string
+                        description: 초대 url
