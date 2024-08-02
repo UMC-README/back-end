@@ -33,8 +33,6 @@ const formatDate = (date) => {
 };
 
 export const notCheckedPostInRoomDTO = (data) => {
-  const length = 3;
-
   const posts = data.map((post) => ({
     roomName: post.room_name,
     postId: post.id,
