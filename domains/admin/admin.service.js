@@ -7,13 +7,12 @@ import {
   deletePostDao,
   getUserProfile,
 } from "./admin.dao.js";
+import { createShortUUID } from "./uuid.js";
 import { createRoomsDTO } from "./admin.dto.js";
-// import { v4 } from "uuid";
-import short from "short-uuid";
 
 export const createRoomsService = async (body, userId) => {
   try {
-    const roomInviteUrl = short.generate(); // 짧은 랜덤 UUID 생성
+    const roomInviteUrl = createShortUUID();
     const createRoomsData = await createRoomsDao(body, userId, roomInviteUrl);
     return createRoomsDTO(createRoomsData);
   } catch (error) {
