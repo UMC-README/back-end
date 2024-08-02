@@ -10,6 +10,15 @@ paths:
         - application/json
       security:
         - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
       responses:
         "200":
           description: 공지방 생성 성공!
@@ -34,7 +43,6 @@ paths:
                       "roomData":
                         [
                           {
-                            "admin_id": "25",
                             "room_image": "http:/s3/image.jpg",
                             "admin_nickname": "제이",
                             "room_name": "My Chat Room",
