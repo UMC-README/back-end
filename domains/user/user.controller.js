@@ -44,9 +44,10 @@ export const userLogin = async (req, res, next) => {
 
 export const userKakaoLogin = async (req, res) => {
   try {
-    const { code } = req.query;
+    const { code, platform } = req.query;
 
-    const { access_token: accessToken } = await getKakaoToken(code);
+    const { access_token } = await getKakaoToken(code);
+    const accessToken = platform === "ios" ? code : access_token;
 
     const userResponse = await getKakaoUser(accessToken);
     if (userResponse.code === -401) {
