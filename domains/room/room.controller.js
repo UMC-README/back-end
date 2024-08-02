@@ -10,6 +10,7 @@ import {
   getCommentsSer,
   postCommentSer,
   deleteCommentSer,
+  getSubmitRequirementsSer,
 } from "./room.service.js";
 
 export const fixPost = async (req, res, next) => {
@@ -119,6 +120,19 @@ export const deleteComment = async (req, res, next) => {
     console.log("userId: ", userId);
 
     const result = await deleteCommentSer(commentId, userId);
+    res.status(200).json(response(status.SUCCESS, result));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getSubmitRequirements = async (req, res, next) => {
+  try {
+    const postId = req.params.postId;
+
+    console.log("postId: ", postId);
+
+    const result = await getSubmitRequirementsSer(postId);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
