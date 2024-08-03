@@ -20,6 +20,7 @@ export const createRoomsService = async (body, userId) => {
     throw error;
   }
 };
+
 export const updateRoomsService = async (body) => {
   try {
     const updateRoomsData = await updateRoomsDao(body);
