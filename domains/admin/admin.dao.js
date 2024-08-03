@@ -67,11 +67,12 @@ export const updateRoomsDao = async (body) => {
   }
 };
 
-export const deleteRoomsDao = async (roomId) => {
+export const deleteRoomsDao = async (body) => {
   try {
     const conn = await pool.getConnection();
-    const result = await conn.query(deleteRoomsSQL, roomId);
-    return result;
+    const { roomId } = body;
+    await conn.query(deleteRoomsSQL, roomId);
+    return "공지방 삭제가 완료되었습니다.";
   } catch (error) {
     console.error("공지방 삭제하기 에러:", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);

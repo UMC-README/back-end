@@ -31,9 +31,7 @@ export const updateRoomsController = async (req, res, next) => {
 
 export const deleteRoomsController = async (req, res, next) => {
   try {
-    const { roomId } = req.body;
-    const result = await deleteRoomsService(roomId);
-
+    const result = await deleteRoomsService(req.body);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
