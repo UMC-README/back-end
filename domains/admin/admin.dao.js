@@ -42,18 +42,25 @@ export const createRoomsDao = async (body, userId, roomInviteUrl) => {
   }
 };
 
-export const updateRoomsDao = async (roomData) => {
+export const updateRoomsDao = async (body) => {
   try {
     const conn = await pool.getConnection();
-    const result = await conn.query(updateRoomsSQL, [
-      roomData.admin_nickname,
-      roomData.room_name,
-      roomData.room_password,
-      roomData.room_image,
-      roomData.max_penalty,
-      roomData.id,
+    await conn.query(updateRoomsSQL, [
+      body.room_image,
+      body.admin_nickname,
+      body.room_name,
+      body.room_password,
+      body.max_penalty,
+      body.id,
     ]);
-    return result;
+    conn.release();
+    return {
+      roomImage: body.room_image,
+      adminNickname: body.admin_nickname,
+      roomName: body.room_name,
+      passWord: body.room_password,
+      maxPenalty: body.max_penalty,
+    };
   } catch (error) {
     console.error("공지방 수정하기 에러:", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
