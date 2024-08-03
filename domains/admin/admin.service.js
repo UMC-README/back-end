@@ -7,11 +7,14 @@ import {
   deletePostDao,
   getUserProfile,
 } from "./admin.dao.js";
+import { createShortUUID } from "./uuid.js";
+import { createRoomsDTO } from "./admin.dto.js";
 
-export const createRoomsService = async (body) => {
+export const createRoomsService = async (body, userId) => {
   try {
-    const roomId = await createRoomsDao(body);
-    return roomId; // 생성된 공지방 ID 반환
+    const roomInviteUrl = createShortUUID();
+    const createRoomsData = await createRoomsDao(body, userId, roomInviteUrl);
+    return createRoomsDTO(createRoomsData);
   } catch (error) {
     console.error("공지방 생성하기 에러:", error);
     throw error;

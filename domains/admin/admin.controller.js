@@ -13,7 +13,7 @@ import {
 
 export const createRoomsController = async (req, res, next) => {
   try {
-    const result = await createRoomsService(req.body);
+    const result = await createRoomsService(req.body, req.user.userId);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);

@@ -14,19 +14,28 @@ import {
   getProfileByUserId,
 } from "./admin.sql.js";
 
-export const createRoomsDao = async (roomData) => {
+export const createRoomsDao = async (body, userId, roomInviteUrl) => {
   try {
     const conn = await pool.getConnection();
-    const result = await conn.query(createRoomsSQL, [
-      roomData.admin_id,
-      roomData.room_image,
-      roomData.admin_nickname,
-      roomData.room_name,
-      roomData.room_password,
-      roomData.room_invite_url, // 초대URL 생성하기 API에서 받아와야
-      roomData.max_penalty,
+    await conn.query(createRoomsSQL, [
+      userId,
+      body.room_image,
+      body.admin_nickname,
+      body.room_name,
+      body.room_password,
+      roomInviteUrl,
+      body.max_penalty,
     ]);
-    return result;
+
+    conn.release();
+    return {
+      roomImage: body.room_image,
+      adminNickname: body.admin_nickname,
+      roomName: body.room_name,
+      roomPassword: body.room_password,
+      maxPenalty: body.max_penalty,
+      roomInviteUrl,
+    };
   } catch (error) {
     console.error("공지방 생성하기 에러");
     throw new BaseError(status.INTERNAL_SERVER_ERROR);

@@ -7,6 +7,7 @@ dotenv.config();
 
 const userSwagger = YAML.load(path.join(cwd(), "/swagger/user.swagger.yaml"));
 const roomSwagger = YAML.load(path.join(cwd(), "/swagger/room.swagger.yaml"));
+const adminSwagger = YAML.load(path.join(cwd(), "/swagger/admin.swagger.yaml"));
 
 export const swaggerSpec = {
   openapi: "3.0.3",
@@ -28,6 +29,7 @@ export const swaggerSpec = {
   paths: {
     ...userSwagger.paths,
     ...roomSwagger.paths,
+    ...adminSwagger.paths,
   },
   components: {
     securitySchemes: {
@@ -40,6 +42,7 @@ export const swaggerSpec = {
     schemas: {
       ...userSwagger.components?.schemas,
       ...roomSwagger.components?.schemas,
+      ...adminSwagger.components?.schemas,
     },
   },
   security: [
