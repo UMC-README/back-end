@@ -8,6 +8,7 @@ import {
   findRoomByUserId,
   updateUserProfileById,
   updateUserPasswordById,
+  updateUserRoomProfileById,
 } from "./user.dao.js";
 import { passwordHashing } from "../../utils/passwordHash.js";
 import { generateJWTToken } from "../../utils/generateToken.js";
@@ -110,6 +111,18 @@ export const updateBasicProfile = async (userId, name, nickname, profileImage) =
   }
 
   await updateUserProfileById(userId, name, nickname, profileImage);
+
+  return true;
+};
+
+export const updateRoomProfile = async (userId, roomId, nickname, profileImage) => {
+  const user = await findUserById(userId);
+
+  if (!user) {
+    throw new Error("사용자를 찾을 수 없습니다.");
+  }
+
+  await updateUserRoomProfileById(userId, roomId, nickname, profileImage);
 
   return true;
 };

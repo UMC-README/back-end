@@ -15,6 +15,7 @@ import {
   updateBasicProfile,
   verifyUserPassword,
   updatePassword,
+  updateRoomProfile,
 } from "./user.service.js";
 
 export const userSignUp = async (req, res, next) => {
@@ -168,6 +169,26 @@ export const updateUserBasicProfile = async (req, res, next) => {
     const { name, nickname, profileImage } = req.body;
 
     const isSuccess = await updateBasicProfile(userId, name, nickname, profileImage);
+
+    if (isSuccess) {
+      res.status(200).json(response(status.SUCCESS, { isSuccess: true }));
+    } else {
+      res.status(400).json(response(status.BAD_REQUEST, { isSuccess: false }));
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateUserRoomProfile = async (req, res, next) => {
+  try {
+    console.log("공지방별 프로필 수정");
+
+    const userId = req.user.userId;
+    const roomId = req.params.roomId;
+    const { nickname, profileImage } = req.body;
+
+    const isSuccess = await updateRoomProfile(userId, roomId, nickname, profileImage);
 
     if (isSuccess) {
       res.status(200).json(response(status.SUCCESS, { isSuccess: true }));
