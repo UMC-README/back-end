@@ -169,9 +169,8 @@ export const getMyCreateRoom = async (userId, page, pageSize) => {
 
   const { rooms, isNext } = await findCreateRoomByUserId(userData.userId, page, pageSize);
 
-  // rooms가 null인 경우 처리
   if (!rooms) {
-    return { rooms: [], isNext: false };
+    return { rooms: null, isNext: false };
   }
 
   return { rooms, isNext };
@@ -187,7 +186,7 @@ export const getMyJoinRoom = async (userId, page, pageSize) => {
   const { rooms, isNext } = await findJoinRoomByUserId(userData.userId, page, pageSize);
 
   if (!rooms) {
-    return { rooms: [], isNext: false };
+    return { rooms: null, isNext: false };
   }
 
   return { rooms, isNext };
