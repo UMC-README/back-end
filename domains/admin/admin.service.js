@@ -31,16 +31,15 @@ export const updateRoomsService = async (body) => {
   }
 };
 
-export const deleteRoomsService = async (roomId) => {
-  // 방의 ID가 제공되었는지 확인
-  if (!roomId) {
-    throw new Error("삭제할 방의 ID가 필요합니다.");
+export const deleteRoomsService = async (body) => {
+  try {
+    if (!body) throw new Error("삭제할 방의 ID가 필요합니다.");
+    const deleteRoomsData = await deleteRoomsDao(body);
+    return deleteRoomsData;
+  } catch (error) {
+    console.error("공지방 삭제하기 에러:", error);
+    throw error;
   }
-  const deleteRoomsData = await deleteRoomsDao(roomId);
-  if (deleteRoomsData.affectedRows === 0) {
-    throw new Error("해당 ID의 공지방이 존재하지 않거나 이미 삭제되었습니다.");
-  }
-  return deleteRoomsData;
 };
 
 export const createPostService = async (body) => {
