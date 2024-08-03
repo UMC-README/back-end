@@ -9,3 +9,15 @@ export const updateRoomsDTO = (updateRoomsData) => {
     ...updateRoomsData,
   };
 };
+
+export const createPostDTO = (createPostData) => {
+  return {
+    ...createPostData,
+  };
+};
+
+export const updatePostDTO = (updatePostData) => {
+  return {
+    ...updatePostData,
+  };
+};
