@@ -187,7 +187,7 @@ export const getMyJoinRoom = async (userId, page, pageSize) => {
   const { rooms, isNext } = await findJoinRoomByUserId(userData.userId, page, pageSize);
 
   if (!rooms) {
-    return { rooms: null, isNext: false };
+    return { rooms: [], isNext: false };
   }
 
   return { rooms, isNext };
