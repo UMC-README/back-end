@@ -24,7 +24,7 @@ export const createRoomsService = async (body, userId) => {
 export const updateRoomsService = async (body) => {
   try {
     const updateRoomsData = await updateRoomsDao(body);
-    return updateRoomsData;
+    return updateRoomsDTO(updateRoomsData);
   } catch (error) {
     console.error("공지방 수정하기 에러:", error);
     throw error;
