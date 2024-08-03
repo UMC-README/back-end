@@ -19,6 +19,12 @@ export const updateUserProfile = `
   WHERE id = ?
 `;
 
+export const updateUserRoomProfile = `
+  UPDATE \`user-room\`
+  SET name = ?, nickname = ?, profile_image = ?
+  WHERE \`user-room\`.user_id = ?
+`;
+
 export const updateUserPassword = `
   UPDATE user
   SET password = ?
