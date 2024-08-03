@@ -3,3 +3,8 @@ export const createRoomsDTO = (createRoomsData) => {
     ...createRoomsData,
   };
 };
+export const updateRoomsDTO = (updateRoomsData) => {
+  return {
+    ...updateRoomsData,
+  };
+};

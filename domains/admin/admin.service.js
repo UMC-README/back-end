@@ -8,7 +8,7 @@ import {
   getUserProfile,
 } from "./admin.dao.js";
 import { createShortUUID } from "./uuid.js";
-import { createRoomsDTO } from "./admin.dto.js";
+import { createRoomsDTO, updateRoomsDTO } from "./admin.dto.js";
 
 export const createRoomsService = async (body, userId) => {
   try {
@@ -21,13 +21,14 @@ export const createRoomsService = async (body, userId) => {
   }
 };
 
-export const updateRoomsService = async (roomData) => {
-  const updateRoomsData = await updateRoomsDao(roomData);
-
-  if (updateRoomsData.affectedRows === 0) {
-    throw new Error("공지방 수정에 실패. 방 ID를 확인하세요.");
+export const updateRoomsService = async (body) => {
+  try {
+    const updateRoomsData = await updateRoomsDao(body);
+    return updateRoomsDTO(updateRoomsData);
+  } catch (error) {
+    console.error("공지방 수정하기 에러:", error);
+    throw error;
   }
-  return updateRoomsData;
 };
 
 export const deleteRoomsService = async (roomId) => {
