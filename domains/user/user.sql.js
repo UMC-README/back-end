@@ -74,6 +74,6 @@ export const getJoinRoom = `
   FROM \`user-room\` ur
   JOIN user u ON u.id = ur.user_id
   JOIN room r ON r.id = ur.room_id
-  WHERE u.id = ?
+  WHERE u.id = ? AND r.admin_id != u.id
   LIMIT ? OFFSET ?
 `;
