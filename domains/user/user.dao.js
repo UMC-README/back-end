@@ -14,6 +14,7 @@ import {
   getRoom,
   updateUserProfile,
   updateUserPassword,
+  updateUserRoomProfile,
 } from "./user.sql.js";
 
 export const insertUser = async (data) => {
@@ -81,6 +82,20 @@ export const updateUserProfileById = async (userId, name, nickname, profileImage
     return true;
   } catch (error) {
     console.log("프로필 업데이트 에러", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const updateUserRoomProfileById = async (userId, roomId, nickname, profileImage) => {
+  try {
+    const conn = await pool.getConnection();
+    await conn.query(updateUserRoomProfile, [nickname, profileImage, userId, roomId]);
+
+    conn.release();
+
+    return true;
+  } catch (error) {
+    console.log("공지방별 프로필 업데이트 에러", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };
