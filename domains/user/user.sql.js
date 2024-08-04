@@ -52,11 +52,13 @@ export const getCreateRoomCount = `
 
 // 개설한 공지방 찾기
 export const getCreateRoom = `
-  SELECT r.*
-  FROM user u
-  JOIN room r ON u.id = r.admin_id
-  WHERE u.id = ?
-  LIMIT ? OFFSET ?
+  SELECT room.*, MAX(post.created_at) as latest_post_time
+  FROM room
+  LEFT JOIN post ON room.id = post.room_id
+  WHERE room.admin_id = ?
+  GROUP BY room.id
+  LIMIT ?
+  OFFSET ?
 `;
 
 // 입장한 공지방 개수 구하기
@@ -70,10 +72,12 @@ export const getJoinRoomCount = `
 
 // 입장한 공지방 찾기
 export const getJoinRoom = `
-  SELECT ur.nickname, r.room_name, r.room_image
-  FROM \`user-room\` ur
-  JOIN user u ON u.id = ur.user_id
-  JOIN room r ON r.id = ur.room_id
-  WHERE u.id = ?
-  LIMIT ? OFFSET ?
+  SELECT room.*, MAX(post.created_at) as latest_post_time
+  FROM room
+  JOIN \`user-room\` ON room.id = \`user-room\`.room_id
+  LEFT JOIN post ON room.id = post.room_id
+  WHERE \`user-room\`.user_id = ?
+  GROUP BY room.id
+  LIMIT ?
+  OFFSET ?
 `;

@@ -145,11 +145,6 @@ export const findCreateRoomByUserId = async (userId, page, pageSize) => {
 
     const isNext = offset + pageSize < count;
 
-    if (rooms.length == 0) {
-      conn.release();
-      return null;
-    }
-
     conn.release();
     return { rooms, isNext };
   } catch (error) {
