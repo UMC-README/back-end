@@ -44,13 +44,16 @@ export const userLogin = async (req, res, next) => {
 
 export const userKakaoLogin = async (req, res) => {
   try {
-    const { code } = req.query;
+    const { code, platform } = req.query;
 
-    const { access_token: accessToken } = await getKakaoToken(code);
+    const { access_token } = await getKakaoToken(code);
+    const accessToken = platform === "ios" ? code : access_token;
 
     const userResponse = await getKakaoUser(accessToken);
     if (userResponse.code === -401) {
-      res.status(401).json(response(status.UNAUTHORIZED, { message: "유효하지 않은 토큰입니다." }));
+      return res
+        .status(401)
+        .json(response(status.UNAUTHORIZED, { message: "유효하지 않은 토큰입니다." }));
     }
 
     const userExist = await kakaoLoginUser(userResponse.kakao_account.email);
@@ -66,7 +69,7 @@ export const userKakaoLogin = async (req, res) => {
         accessToken
       );
     }
-    res.status(200).json(response(status.SUCCESS, { accessToken }));
+    return res.status(200).json(response(status.SUCCESS, { accessToken }));
   } catch (err) {
     console.log(err);
   }
