@@ -8,6 +8,7 @@ import {
   postCommentDao,
   deleteCommentDao,
   getSubmitRequirementsDao,
+  postSubmitDAO,
 } from "./room.dao.js";
 
 import {
@@ -127,4 +128,22 @@ export const getSubmitRequirementsSer = async (postId) => {
   }
 
   return postData;
+};
+
+export const postSubmitService = async (postId, userId, content, imageURLs) => {
+  const submitData = await postSubmitDAO(postId, userId, content, imageURLs);
+
+  if (submitData == -1) {
+    throw new Error("공지글을 찾을 수 없습니다.");
+  }
+
+  if (submitData == -2) {
+    throw new Error("Quiz에 제출하기 위한 답변 내용이 없습니다.");
+  }
+
+  if (submitData == -3) {
+    throw new Error("Mission에 제출하기 위한 사진이 없습니다.");
+  }
+
+  return submitData;
 };
