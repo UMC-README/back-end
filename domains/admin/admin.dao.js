@@ -17,7 +17,7 @@ import {
 export const createRoomsDao = async (body, userId, roomInviteUrl) => {
   try {
     const conn = await pool.getConnection();
-    await conn.query(createRoomsSQL, [
+    const [result] = await conn.query(createRoomsSQL, [
       userId,
       body.room_image,
       body.admin_nickname,
@@ -26,9 +26,10 @@ export const createRoomsDao = async (body, userId, roomInviteUrl) => {
       roomInviteUrl,
       body.max_penalty,
     ]);
-
+    const roomId = result.insertId; // 생성된 roomId 가져오기
     conn.release();
     return {
+      roomId: roomId, // 생성된 방 Id 반환
       roomImage: body.room_image,
       adminNickname: body.admin_nickname,
       roomName: body.room_name,
@@ -72,7 +73,7 @@ export const deleteRoomsDao = async (body) => {
     const conn = await pool.getConnection();
     const { roomId } = body;
     await conn.query(deleteRoomsSQL, roomId);
-    return "공지방 삭제가 완료되었습니다.";
+    return { deletedRoomId: roomId };
   } catch (error) {
     console.error("공지방 삭제하기 에러:", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
@@ -83,15 +84,15 @@ export const createPostDao = async ({ postData, imgURLs }) => {
   const conn = await pool.getConnection();
   try {
     await conn.beginTransaction();
-
+    // 특정 공지방의 전체 멤버 수 카운트
     const [memberCountRows] = await conn.query(getMemberCountSQL, [postData.room_id]);
-    const initialUnreadCount = memberCountRows[0].user_count - 1; // 총 회원 수
+    const initialUnreadCount = memberCountRows[0].user_count - 1;
 
     const [postResult] = await conn.query(createPostSQL, [
       postData.room_id,
+      postData.type,
       postData.title,
       postData.content,
-      postData.type,
       postData.start_date,
       postData.end_date,
       postData.question,
@@ -110,7 +111,16 @@ export const createPostDao = async ({ postData, imgURLs }) => {
     });
 
     await conn.commit(); // 트랜잭션 커밋(DB 반영)
-    return result;
+    return {
+      newPostId: result, // 생성된 공지글 ID
+      postType: postData.type,
+      postTitle: postData.title,
+      postContent: postData.content,
+      imgURLs: imgURLs,
+      startDate: postData.start_date,
+      endDate: postData.end_date,
+      question: postData.question,
+    };
   } catch (error) {
     await conn.rollback(); // 오류 발생 시 롤백
     console.error("공지글 생성 에러:", error);
@@ -122,7 +132,7 @@ export const updatePostDao = async ({ postData, imgURLs, imgToDelete }) => {
   const conn = await pool.getConnection();
   try {
     await conn.beginTransaction();
-    const [postResult] = await conn.query(updatePostSQL, [
+    await conn.query(updatePostSQL, [
       postData.title,
       postData.content,
       postData.start_date,
@@ -130,11 +140,11 @@ export const updatePostDao = async ({ postData, imgURLs, imgToDelete }) => {
       postData.question,
       postData.id,
     ]);
-    // 추가
+    // 추가할 이미지
     for (const url of imgURLs) {
       await conn.query(createPostImgSQL, [url, postData.id]);
     }
-    // 삭제
+    // 삭제할 이미지
     if (imgToDelete.length > 0) {
       for (const url of imgToDelete) {
         await conn.query(deletePostImgSQL, [postData.id, url]);
@@ -142,7 +152,15 @@ export const updatePostDao = async ({ postData, imgURLs, imgToDelete }) => {
     }
 
     await conn.commit();
-    return postResult;
+    return {
+      postTitle: postData.title,
+      postContent: postData.content,
+      addImgURLs: imgURLs, // 추가할 이미지
+      deleteImgURLs: imgToDelete, // 삭제할 이미지
+      startDate: postData.start_date,
+      endDate: postData.end_date,
+      question: postData.question,
+    };
   } catch (error) {
     await conn.rollback();
     console.error("공지글 수정하기 에러:", error);
@@ -153,8 +171,8 @@ export const updatePostDao = async ({ postData, imgURLs, imgToDelete }) => {
 export const deletePostDao = async (postId) => {
   try {
     const conn = await pool.getConnection();
-    const result = await conn.query(deletePostSQL, postId);
-    return result;
+    await conn.query(deletePostSQL, postId);
+    return { deletedPostId: postId };
   } catch (error) {
     console.error("공지글 삭제하기 에러:", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
