@@ -429,3 +429,50 @@ paths:
                       deletedCommentId:
                         type: number
                         description: 삭제처리된 댓글의 ID
+
+  /room/post/{postId}/submit:
+    get:
+      tags:
+        - room
+      summary: 공지글 퀴즈/미션 제출 요구사항 조회 구현
+      description: 공지글 퀴즈/미션 제출 요구사항 조회 구현
+      operationId: getSubmitRequirements
+      consumes:
+        - application/json  
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: postId
+          in: path
+          schema:
+            type: number
+          required: true
+      responses:
+        "200":
+          description: 퀴즈/미션 제출 요구사항 조회 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: number
+                    example: 200
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: object
+                    properties:
+                        id:
+                          type: number
+                          description: 해당 포스트 ID
+                        type:
+                          type: string
+                          description: 해당 포스트 타입 (퀴즈/미션)
+                        question:
+                          type: string
+                          description: 해당 포스트의 퀴즈/미션 제출 요구사항

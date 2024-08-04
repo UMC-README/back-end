@@ -126,3 +126,10 @@ export const updateCommentCountByPostId = `
   SET p.comment_count = (SELECT COUNT(*) FROM comment c WHERE c.state = 'EXIST' AND c.post_id = p.id)
   WHERE p.id = ?
 `;
+
+//공지글별 제출 요구사항 조회
+export const getSubmitRequirementsSQL = `
+  SELECT id, type, question
+  FROM post
+  WHERE id = ?
+`;
