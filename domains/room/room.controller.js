@@ -11,6 +11,7 @@ import {
   postCommentSer,
   deleteCommentSer,
   getSubmitRequirementsSer,
+  postSubmitService,
 } from "./room.service.js";
 
 export const fixPost = async (req, res, next) => {
@@ -133,6 +134,24 @@ export const getSubmitRequirements = async (req, res, next) => {
     console.log("postId: ", postId);
 
     const result = await getSubmitRequirementsSer(postId);
+    res.status(200).json(response(status.SUCCESS, result));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const postSubmit = async (req, res, next) => {
+  try {
+    const postId = req.params.postId;
+    const userId = req.user.userId;
+    const content = req.body.content;
+    const imageURLs = req.body.imageURLs;
+    console.log("postId: ", postId);
+    console.log("userId: ", userId);
+    console.log("content: ", content);
+    console.log("imageURLs: ", imageURLs);
+
+    const result = await postSubmitService(postId, userId, content, imageURLs);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
