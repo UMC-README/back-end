@@ -19,6 +19,11 @@ import {
   deleteCommentSQL,
   decreaseCommentCountOneByPostId,
   getSubmitRequirementsSQL,
+  postSubmitSQL,
+  decreaseUnreadCountOneByPostId,
+  postSubmitImageSQL,
+  deletePreviousSubmitImageSQL,
+  getSubmitIdByPostIdAndUserId,
 } from "./room.sql.js";
 import { getUserById } from "../user/user.sql.js";
 
@@ -193,7 +198,7 @@ export const postCommentDao = async (postId, userId, content) => {
     await conn.beginTransaction();
 
     const result = await conn.query(postCommentSQL, [postId, userId, content]);
-    const updateCommentCount = await conn.query(increaseCommentCountOneByPostId, postId);
+    await conn.query(increaseCommentCountOneByPostId, postId);
 
     await conn.commit();
     conn.release();
@@ -222,11 +227,8 @@ export const deleteCommentDao = async (commentId, userId) => {
   try {
     await conn.beginTransaction();
 
-    const result = await conn.query(deleteCommentSQL, commentId);
-    const updateCommentCount = await conn.query(
-      decreaseCommentCountOneByPostId,
-      comment[0].post_id
-    );
+    await conn.query(deleteCommentSQL, commentId);
+    await conn.query(decreaseCommentCountOneByPostId, comment[0].post_id);
 
     await conn.commit();
     conn.release();
@@ -253,6 +255,99 @@ export const getSubmitRequirementsDao = async (postId) => {
     conn.release();
     return requirements[0];
   } catch (err) {
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const postSubmitDAO = async (postId, userId, content, imageURLs) => {
+  const conn = await pool.getConnection();
+  const [post] = await conn.query(getPostById, postId);
+
+  if (post.length == 0) {
+    conn.release();
+    return -1;
+  }
+
+  const validateSubmitId = async (submit) => {
+    if (!submit[0].insertId) {
+      const [findSubmitId] = await pool.query(getSubmitIdByPostIdAndUserId, [postId, userId]);
+      return findSubmitId[0].id;
+    } else {
+      return submit[0].insertId;
+    }
+  };
+
+  try {
+    await conn.beginTransaction();
+    if (post[0].type == "QUIZ") {
+      if (!content) {
+        await conn.rollback();
+        conn.release();
+        return -2;
+      }
+      if (content == post[0].quiz_answer) {
+        const submit = await conn.query(postSubmitSQL, [
+          postId,
+          userId,
+          content,
+          "COMPLETE",
+          content,
+          "COMPLETE",
+        ]);
+        await conn.query(decreaseUnreadCountOneByPostId, postId);
+
+        await conn.commit();
+        conn.release();
+        return {
+          submitId: await validateSubmitId(submit),
+          submitState: "COMPLETE",
+        };
+      } else {
+        const submit = await conn.query(postSubmitSQL, [
+          postId,
+          userId,
+          content,
+          "NOT_COMPLETE",
+          content,
+          "NOT_COMPLETE",
+        ]);
+
+        await conn.commit();
+        conn.release();
+        return {
+          submitId: await validateSubmitId(submit),
+          submitState: "NOT_COMPLETE",
+        };
+      }
+    } else {
+      if (!imageURLs || (Array.isArray(imageURLs) && imageURLs.length === 0)) {
+        await conn.rollback();
+        conn.release();
+        return -3;
+      }
+      const submit = await conn.query(postSubmitSQL, [
+        postId,
+        userId,
+        content,
+        "PENDING",
+        content,
+        "PENDING",
+      ]);
+
+      await conn.query(deletePreviousSubmitImageSQL, [postId, userId]);
+      const submitId = await validateSubmitId(submit);
+
+      imageURLs.forEach((URL) => {
+        conn.query(postSubmitImageSQL, [submitId, URL]);
+      });
+
+      await conn.commit();
+      conn.release();
+      return { submitId: submitId, submitState: "PENDING" };
+    }
+  } catch (error) {
+    console.log("제출 에러", error);
+    await conn.rollback();
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };
