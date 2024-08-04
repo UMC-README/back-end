@@ -17,7 +17,7 @@ import {
 export const createRoomsDao = async (body, userId, roomInviteUrl) => {
   try {
     const conn = await pool.getConnection();
-    await conn.query(createRoomsSQL, [
+    const [result] = await conn.query(createRoomsSQL, [
       userId,
       body.room_image,
       body.admin_nickname,
@@ -26,9 +26,10 @@ export const createRoomsDao = async (body, userId, roomInviteUrl) => {
       roomInviteUrl,
       body.max_penalty,
     ]);
-
+    const roomId = result.insertId; // 생성된 roomId 가져오기
     conn.release();
     return {
+      roomId: roomId, // 생성된 방 Id 반환
       roomImage: body.room_image,
       adminNickname: body.admin_nickname,
       roomName: body.room_name,
@@ -72,7 +73,7 @@ export const deleteRoomsDao = async (body) => {
     const conn = await pool.getConnection();
     const { roomId } = body;
     await conn.query(deleteRoomsSQL, roomId);
-    return "공지방 삭제가 완료되었습니다.";
+    return { deletedRoomId: roomId };
   } catch (error) {
     console.error("공지방 삭제하기 에러:", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
@@ -111,6 +112,7 @@ export const createPostDao = async ({ postData, imgURLs }) => {
 
     await conn.commit(); // 트랜잭션 커밋(DB 반영)
     return {
+      newPostId: result, // 생성된 공지글 ID
       postType: postData.type,
       postTitle: postData.title,
       postContent: postData.content,
@@ -170,7 +172,7 @@ export const deletePostDao = async (postId) => {
   try {
     const conn = await pool.getConnection();
     await conn.query(deletePostSQL, postId);
-    return "공지글 삭제가 완료되었습니다.";
+    return { deletedPostId: postId };
   } catch (error) {
     console.error("공지글 삭제하기 에러:", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);

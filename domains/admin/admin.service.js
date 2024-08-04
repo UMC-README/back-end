@@ -62,9 +62,8 @@ export const updatePostService = async (body) => {
   }
 };
 
-export const deletePostService = async (body) => {
+export const deletePostService = async (postId) => {
   try {
-    const postId = body.id;
     if (!postId) {
       throw new Error("삭제할 공지글의 ID가 필요합니다.");
     }
