@@ -624,3 +624,57 @@ paths:
                         type: boolean
                         description: 수정 성공 여부
 
+  /user/profile/{roomId}:
+    patch:
+      tags:
+        - user
+      summary: 공지방별 프로필 수정
+      description: 공지방별 프로필 수정
+      operationId: user-profile-room
+      consumes:
+        - application/json
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: roomId
+          required: true
+          schema:
+            type: string
+            description: 프로필을 수정할 공지방의 아이디
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nickname:
+                  type: string
+                  description: 닉네임
+                profileImage:
+                  type: string
+                  description: 사용자 프로필 사진
+      responses:
+        "200":
+          description: 공지방별 프로필 수정 성공!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: object
+                    properties:
+                      isSuccess:
+                        type: boolean
+                        description: 수정 성공 여부
