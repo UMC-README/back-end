@@ -94,6 +94,10 @@ export const getAllPostInRoomDAO = async (roomId, userId, cursorId, size) => {
         parseInt(userId),
         parseInt(size),
       ]);
+      if (posts.length == 0) {
+        conn.release();
+        return -2;
+      }
       conn.release();
       return posts;
     } else {
@@ -103,6 +107,10 @@ export const getAllPostInRoomDAO = async (roomId, userId, cursorId, size) => {
         parseInt(cursorId),
         parseInt(size),
       ]);
+      if (posts.length == 0) {
+        conn.release();
+        return -2;
+      }
       conn.release();
       return posts;
     }
@@ -126,6 +134,10 @@ export const getNotCheckedPostInRoomDAO = async (roomId, userId) => {
       parseInt(roomId),
       parseInt(userId),
     ]);
+    if (posts.length == 0) {
+      conn.release();
+      return -2;
+    }
     conn.release();
     return posts;
   } catch (err) {
