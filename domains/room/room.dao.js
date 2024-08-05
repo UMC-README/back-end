@@ -27,7 +27,7 @@ import {
 } from "./room.sql.js";
 import { getUserById } from "../user/user.sql.js";
 
-export const fixPostDao = async (data) => {
+export const fixPostDAO = async (data) => {
   try {
     const conn = await pool.getConnection();
 
@@ -55,7 +55,7 @@ export const fixPostDao = async (data) => {
   }
 };
 
-export const deleteFixPostDao = async (data) => {
+export const deleteFixPostDAO = async (data) => {
   try {
     const conn = await pool.getConnection();
 
@@ -77,7 +77,7 @@ export const deleteFixPostDao = async (data) => {
   }
 };
 
-export const getAllPostInRoomDao = async (roomId, userId, cursorId, size) => {
+export const getAllPostInRoomDAO = async (roomId, userId, cursorId, size) => {
   try {
     const conn = await pool.getConnection();
 
@@ -111,7 +111,7 @@ export const getAllPostInRoomDao = async (roomId, userId, cursorId, size) => {
   }
 };
 
-export const getNotCheckedPostInRoomDao = async (roomId, userId) => {
+export const getNotCheckedPostInRoomDAO = async (roomId, userId) => {
   try {
     const conn = await pool.getConnection();
 
@@ -133,7 +133,7 @@ export const getNotCheckedPostInRoomDao = async (roomId, userId) => {
   }
 };
 
-export const getDetailedPostDao = async (postId, userId) => {
+export const getDetailedPostDAO = async (postId, userId) => {
   try {
     const conn = await pool.getConnection();
 
@@ -152,7 +152,7 @@ export const getDetailedPostDao = async (postId, userId) => {
   }
 };
 
-export const getCommentsDao = async (postId, cursorId, size) => {
+export const getCommentsDAO = async (postId, cursorId, size) => {
   try {
     const conn = await pool.getConnection();
 
@@ -185,7 +185,7 @@ export const getCommentsDao = async (postId, cursorId, size) => {
   }
 };
 
-export const postCommentDao = async (postId, userId, content) => {
+export const postCommentDAO = async (postId, userId, content) => {
   const conn = await pool.getConnection();
   const [post] = await conn.query(getPostById, postId);
 
@@ -210,7 +210,7 @@ export const postCommentDao = async (postId, userId, content) => {
   }
 };
 
-export const deleteCommentDao = async (commentId, userId) => {
+export const deleteCommentDAO = async (commentId, userId) => {
   const conn = await pool.getConnection();
   const [comment] = await conn.query(getCommentById, commentId);
 
@@ -240,7 +240,7 @@ export const deleteCommentDao = async (commentId, userId) => {
   }
 };
 
-export const getSubmitRequirementsDao = async (postId) => {
+export const getSubmitRequirementsDAO = async (postId) => {
   try {
     const conn = await pool.getConnection();
 

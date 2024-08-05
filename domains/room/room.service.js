@@ -1,13 +1,13 @@
 import {
-  deleteFixPostDao,
-  fixPostDao,
-  getAllPostInRoomDao,
-  getNotCheckedPostInRoomDao,
-  getDetailedPostDao,
-  getCommentsDao,
-  postCommentDao,
-  deleteCommentDao,
-  getSubmitRequirementsDao,
+  deleteFixPostDAO,
+  fixPostDAO,
+  getAllPostInRoomDAO,
+  getNotCheckedPostInRoomDAO,
+  getDetailedPostDAO,
+  getCommentsDAO,
+  postCommentDAO,
+  deleteCommentDAO,
+  getSubmitRequirementsDAO,
   postSubmitDAO,
 } from "./room.dao.js";
 
@@ -19,7 +19,7 @@ import {
 } from "./room.dto.js";
 
 export const postFix = async (postId, userId) => {
-  const fixPostData = await fixPostDao({
+  const fixPostData = await fixPostDAO({
     postId,
     userId,
   });
@@ -36,7 +36,7 @@ export const postFix = async (postId, userId) => {
 };
 
 export const deletePostFix = async (userId) => {
-  const fixPostData = await deleteFixPostDao({
+  const fixPostData = await deleteFixPostDAO({
     userId: userId,
   });
 
@@ -50,9 +50,9 @@ export const deletePostFix = async (userId) => {
 export const getAllPostInRoom = async (roomId, userId, query) => {
   const { postId, size = 10 } = query;
 
-  const roomData = await getAllPostInRoomDao(roomId, userId, postId, size);
+  const roomData = await getAllPostInRoomDAO(roomId, userId, postId, size);
 
-  if (getAllPostInRoomDao == -1) {
+  if (roomData == -1) {
     throw new Error("공지방을 찾을 수 없습니다.");
   }
 
@@ -60,29 +60,29 @@ export const getAllPostInRoom = async (roomId, userId, query) => {
 };
 
 export const getNotCheckedPostInRoom = async (roomId, userId) => {
-  const roomData = await getNotCheckedPostInRoomDao(roomId, userId);
+  const roomData = await getNotCheckedPostInRoomDAO(roomId, userId);
 
-  if (getNotCheckedPostInRoomDao == -1) {
+  if (roomData == -1) {
     throw new Error("공지방을 찾을 수 없습니다.");
   }
 
   return notCheckedPostInRoomDTO(roomData);
 };
 
-export const getDetailedPostSer = async (postId, userId) => {
-  const roomData = await getDetailedPostDao(postId, userId);
+export const getDetailedPostService = async (postId, userId) => {
+  const roomData = await getDetailedPostDAO(postId, userId);
 
-  if (getDetailedPostDao == -1) {
+  if (roomData == -1) {
     throw new Error("공지글을 찾을 수 없습니다.");
   }
 
   return detailedPostDTO(roomData);
 };
 
-export const getCommentsSer = async (postId, query) => {
+export const getCommentsService = async (postId, query) => {
   const { commentId, size = 100 } = query;
 
-  const postData = await getCommentsDao(postId, commentId, size);
+  const postData = await getCommentsDAO(postId, commentId, size);
   const commentData = allCommentsInPostDTO(postData);
 
   if (commentData == -1) {
@@ -96,8 +96,8 @@ export const getCommentsSer = async (postId, query) => {
   return commentData;
 };
 
-export const postCommentSer = async (postId, userId, content) => {
-  const commentData = await postCommentDao(postId, userId, content);
+export const postCommentService = async (postId, userId, content) => {
+  const commentData = await postCommentDAO(postId, userId, content);
 
   if (commentData == -1) {
     throw new Error("공지글을 찾을 수 없습니다.");
@@ -106,8 +106,8 @@ export const postCommentSer = async (postId, userId, content) => {
   return { commentId: commentData };
 };
 
-export const deleteCommentSer = async (commentId, userId) => {
-  const commentData = await deleteCommentDao(commentId, userId);
+export const deleteCommentService = async (commentId, userId) => {
+  const commentData = await deleteCommentDAO(commentId, userId);
 
   if (commentData == -1) {
     throw new Error("댓글을 찾을 수 없습니다.");
@@ -120,8 +120,8 @@ export const deleteCommentSer = async (commentId, userId) => {
   return { deletedCommentId: commentData };
 };
 
-export const getSubmitRequirementsSer = async (postId) => {
-  const postData = await getSubmitRequirementsDao(postId);
+export const getSubmitRequirementsService = async (postId) => {
+  const postData = await getSubmitRequirementsDAO(postId);
 
   if (postData == -1) {
     throw new Error("공지글을 찾을 수 없습니다.");
