@@ -8,9 +8,11 @@ import {
   findRoomByUserId,
   updateUserProfileById,
   updateUserPasswordById,
+  updateUserRoomProfileById,
 } from "./user.dao.js";
 import { passwordHashing } from "../../utils/passwordHash.js";
 import { generateJWTToken } from "../../utils/generateToken.js";
+import { getRelativeTime } from "../../utils/elapsedTime.js";
 
 export const signupUser = async (userInfo, token) => {
   // 비밀번호 해싱
@@ -114,6 +116,18 @@ export const updateBasicProfile = async (userId, name, nickname, profileImage) =
   return true;
 };
 
+export const updateRoomProfile = async (userId, roomId, nickname, profileImage) => {
+  const user = await findUserById(userId);
+
+  if (!user) {
+    throw new Error("사용자를 찾을 수 없습니다.");
+  }
+
+  await updateUserRoomProfileById(userId, roomId, nickname, profileImage);
+
+  return true;
+};
+
 export const getMyFixedPost = async (userId) => {
   const userData = await findUserById(userId);
 
@@ -142,21 +156,19 @@ export const getMyRoomProfiles = async (userId) => {
     throw new Error("사용자를 찾을 수 없습니다.");
   }
 
-  const rooms = await findRoomByUserId(userData.userId);
+  const rooms = await findRoomByUserId(userId);
 
   if (!rooms) {
     return {
       nickname: userData.nickname,
-      email: userData.email,
       profileImage: userData.profile_image,
     };
   }
 
   return {
     nickname: userData.nickname,
-    email: userData.email,
     profileImage: userData.profile_image,
-    profiles: [rooms],
+    profiles: rooms,
   };
 };
 
@@ -173,7 +185,16 @@ export const getMyCreateRoom = async (userId, page, pageSize) => {
     return { rooms: null, isNext: false };
   }
 
-  return { rooms, isNext };
+  const Myrooms = rooms.map((room) => ({
+    id: room.id,
+    nickname: room.user_nickname,
+    roomName: room.room_name,
+    roomImage: room.room_image,
+    state: room.state,
+    latestPostTime: getRelativeTime(room.latest_post_time),
+  }));
+
+  return { rooms: Myrooms, isNext };
 };
 
 export const getMyJoinRoom = async (userId, page, pageSize) => {
@@ -189,5 +210,14 @@ export const getMyJoinRoom = async (userId, page, pageSize) => {
     return { rooms: null, isNext: false };
   }
 
-  return { rooms, isNext };
+  const Myrooms = rooms.map((room) => ({
+    id: room.id,
+    nickname: room.user_nickname,
+    roomName: room.room_name,
+    roomImage: room.room_image,
+    state: room.state,
+    latestPostTime: getRelativeTime(room.latest_post_time),
+  }));
+
+  return { rooms: Myrooms, isNext };
 };
