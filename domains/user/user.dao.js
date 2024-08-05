@@ -143,7 +143,11 @@ export const findRoomByUserId = async (userId) => {
     }
 
     conn.release();
-    return rooms;
+    return rooms.map((room) => ({
+      nickname: room.nickname,
+      profileImage: room.profile_image,
+      roomName: room.room_name,
+    }));
   } catch (error) {
     console.log("내 공지방 찾기 에러", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
