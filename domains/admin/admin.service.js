@@ -6,6 +6,7 @@ import {
   updatePostDao,
   deletePostDao,
   userProfileDao,
+  userInviteDao,
 } from "./admin.dao.js";
 import { createShortUUID } from "./uuid.js";
 import { createRoomsDTO, updateRoomsDTO, createPostDTO, updatePostDTO } from "./admin.dto.js";
@@ -81,6 +82,17 @@ export const userProfileService = async (userId) => {
       throw new Error("삭제할 공지글의 ID가 필요합니다.");
     }
     return await userProfileDao(userId);
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const userInviteService = async (roomId) => {
+  try {
+    if (!roomId) {
+      throw new Error("조회할 공지방의 ID가 필요합니다.");
+    }
+    return await userInviteDao(roomId);
   } catch (error) {
     throw error;
   }

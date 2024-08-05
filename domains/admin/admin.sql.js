@@ -50,3 +50,10 @@ export const userProfileSQL = `
   JOIN user u ON u.id = ur.user_id
   WHERE u.id = ?
 `;
+
+// 유저 초대하기 (=공지방 조회)
+export const userInviteSQL = `
+  SELECT r.room_image, r.room_invite_url, r.room_name, r.room_password, r.admin_nickname
+  FROM room r
+  WHERE r.id = ?; 
+`;

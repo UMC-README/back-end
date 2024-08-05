@@ -13,6 +13,7 @@ import {
   deletePostImgSQL,
   deletePostSQL,
   userProfileSQL,
+  userInviteSQL,
 } from "./admin.sql.js";
 
 export const createRoomsDao = async (body, userId, roomInviteUrl) => {
@@ -188,6 +189,18 @@ export const userProfileDao = async (userId) => {
     return result[0];
   } catch (error) {
     console.log("User 프로필 조회 에러");
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const userInviteDao = async (roomId) => {
+  try {
+    const conn = await pool.getConnection();
+    const [result] = await conn.query(userInviteSQL, roomId);
+    conn.release();
+    return result[0];
+  } catch (error) {
+    console.log("초대 관련 공지방 정보 조회 에러");
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };

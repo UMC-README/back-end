@@ -9,6 +9,7 @@ import {
   updatePostService,
   deletePostService,
   userProfileService,
+  userInviteService,
 } from "./admin.service.js";
 
 export const createRoomsController = async (req, res, next) => {
@@ -68,6 +69,15 @@ export const deletePostController = async (req, res, next) => {
 export const userProfileController = async (req, res, next) => {
   try {
     const result = await userProfileService(req.params.userId);
+    res.status(200).json(response(status.SUCCESS, result));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const userInviteController = async (req, res, next) => {
+  try {
+    const result = await userInviteService(req.params.roomId);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
