@@ -13,18 +13,35 @@ export const getUserByEmail = `
   SELECT * FROM user WHERE email = ?
 `;
 
+// 사용자 기본 프로필 수정
 export const updateUserProfile = `
   UPDATE user
   SET name = ?, nickname = ?, profile_image = ?
   WHERE id = ?
 `;
 
+// 공지방 별 프로필 수정
 export const updateUserRoomProfile = `
   UPDATE \`user-room\`
   SET nickname = ?, profile_image = ?
   WHERE user_id = ? AND room_id = ?
 `;
 
+// 사용자와 방의 운영진 확인
+export const selectAdminId = `
+  SELECT admin_id 
+  FROM room
+  WHERE id = ? AND admin_id = ?
+`;
+
+// 사용자가 공지방의 운영진인 경우 공지방의 운영진 닉네임 변경
+export const updateRoomAdminNickname = `
+  UPDATE room
+  SET admin_nickname = ?
+  WHERE id = ? AND admin_id = ?
+`;
+
+// 사용자 비밀번호 변경
 export const updateUserPassword = `
   UPDATE user
   SET password = ?
