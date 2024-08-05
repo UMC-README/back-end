@@ -14,6 +14,9 @@ import {
   getRoom,
   updateUserProfile,
   updateUserPassword,
+  updateUserRoomProfile,
+  selectAdminId,
+  updateRoomAdminNickname,
 } from "./user.sql.js";
 
 export const insertUser = async (data) => {
@@ -85,6 +88,32 @@ export const updateUserProfileById = async (userId, name, nickname, profileImage
   }
 };
 
+export const updateUserRoomProfileById = async (userId, roomId, nickname, profileImage) => {
+  try {
+    const conn = await pool.getConnection();
+    await conn.beginTransaction();
+
+    // user-room의 프로필 수정
+    await conn.query(updateUserRoomProfile, [nickname, profileImage, userId, roomId]);
+
+    // 본인이 해당 공지방의 운영진인지 확인
+    const [rows] = await conn.query(selectAdminId, [roomId, userId]);
+
+    // 본인이 해당 공지방의 운영진이라면 room의 admin_nickname도 수정
+    if (rows.length > 0) {
+      await conn.query(updateRoomAdminNickname, [nickname, roomId, userId]);
+    }
+
+    await conn.commit();
+    conn.release();
+
+    return true;
+  } catch (error) {
+    console.log("공지방별 프로필 업데이트 에러", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
 export const updateUserPasswordById = async (userId, password) => {
   try {
     const conn = await pool.getConnection();
@@ -128,7 +157,12 @@ export const findRoomByUserId = async (userId) => {
     }
 
     conn.release();
-    return rooms;
+    return rooms.map((room) => ({
+      roomId: room.id,
+      roomName: room.room_name,
+      nickname: room.nickname,
+      profileImage: room.profile_image,
+    }));
   } catch (error) {
     console.log("내 공지방 찾기 에러", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
@@ -145,11 +179,6 @@ export const findCreateRoomByUserId = async (userId, page, pageSize) => {
 
     const isNext = offset + pageSize < count;
 
-    if (rooms.length == 0) {
-      conn.release();
-      return null;
-    }
-
     conn.release();
     return { rooms, isNext };
   } catch (error) {
@@ -163,8 +192,8 @@ export const findJoinRoomByUserId = async (userId, page, pageSize) => {
     const conn = await pool.getConnection();
     const offset = (page - 1) * pageSize;
 
-    const [[{ count }]] = await conn.query(getJoinRoomCount, [userId]);
-    const [rooms] = await conn.query(getJoinRoom, [userId, pageSize, offset]);
+    const [[{ count }]] = await conn.query(getJoinRoomCount, [userId, userId]);
+    const [rooms] = await conn.query(getJoinRoom, [userId, userId, pageSize, offset]);
 
     const isNext = offset + pageSize < count;
 

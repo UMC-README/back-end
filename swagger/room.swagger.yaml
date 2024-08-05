@@ -76,7 +76,7 @@ paths:
             properties:
               postId:
                 type: number
-        - name: paging
+        - name: size
           in: query
           required: false
           schema:
@@ -199,3 +199,338 @@ paths:
                         }
                       ]
                     }
+
+  /room/post/{postId}:
+    get:
+      tags:
+        - room
+      summary: 개별 공지글 상세 조회
+      description: 개별 공지글 상세 조회
+      operationId: getDetailedPost
+      consumes:
+        - application/json  
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: postId
+          in: path
+          schema:
+            type: number
+          required: true
+      responses:
+        "200":
+          description: 개별 공지글 상세 조회 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: number
+                    example: 200
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: array
+                    example: {
+                      "post": [
+                        {
+                            "postId": 1,
+                            "postType": "Quiz",
+                            "postTitle": "TEST",
+                            "postBody": "TESTCONTENT",
+                            "startDate": "24. 7. 25. 04:24",
+                            "endDate": "24. 7. 25. 05:24",
+                            "commentCount": 5,
+                            "submitState": "complete",
+                        }
+                      ],
+                      "imageURLs": [
+                        "url11.com",
+                        "url12.com",
+                      ]
+                    }
+
+  /room/post/{postId}/comment:
+    get:
+      tags:
+        - room
+      summary: 공지글별 댓글 조회
+      description: 공지글별 댓글 조회
+      operationId: getCommentsInPost
+      consumes:
+        - application/json  
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: postId
+          in: path
+          schema:
+            type: number
+          required: true
+        - name: commentId
+          in: query
+          required: false
+          schema:
+            properties:
+              commentId:
+                type: number
+        - name: size
+          in: query
+          required: false
+          schema:
+            properties:
+              size:
+                type: number
+      responses:
+        "200":
+          description: 공지글별 댓글 조회 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: number
+                    example: 200
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: array
+                    example: {
+                      "data": [
+                        {
+                            "commentId": 1,
+                            "commentAuthorNickname": "kimroom1",
+                            "commentBody": "com.con.1",
+                            "updatedAt": "24. 7. 27. 18:08",
+                        },
+                        {
+                            "commentId": 3,
+                            "commentAuthorNickname": "parkroom1",
+                            "commentBody": "com.con.3",
+                            "updatedAt": "24. 7. 27. 18:09",
+                        },
+                        {
+                            "commentId": 4,
+                            "commentAuthorNickname": "leeroom1",
+                            "commentBody": "com.con.4",
+                            "updatedAt": "24. 7. 27. 18:09",
+                        },
+                        {
+                            "commentId": 5,
+                            "commentAuthorNickname": null,
+                            "commentBody": "com.con.5",
+                            "updatedAt": "24. 7. 27. 18:10",
+                        },
+                        {
+                            "commentId": 7,
+                            "commentAuthorNickname": "leeroom1",
+                            "commentBody": "com.con.7",
+                            "updatedAt": "24. 7. 27. 18:11",
+                        }
+                      ],
+                    "cursorId": 7,
+                    }
+    post:
+      tags:
+        - room
+      summary: 댓글 작성
+      description: 해당 공지글에 댓글 작성
+      operationId: postComment
+      consumes:
+        - application/json  
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: postId
+          in: path
+          schema:
+            type: number
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+      responses:
+        "200":
+          description: 댓글 작성 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: number
+                    example: 200
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: object
+                    properties:
+                      commentId:
+                        type: number
+                        description: 댓글 ID
+
+  /room/post/comment/{commentId}:
+    delete:
+      tags:
+        - room
+      summary: 댓글 삭제
+      description: 개별 댓글 삭제
+      operationId: deleteComment
+      consumes:
+        - application/json  
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: commentId
+          in: path
+          schema:
+            type: number
+          required: true
+      responses:
+        "200":
+          description: 댓글 삭제 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: number
+                    example: 200
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: object
+                    properties:
+                      deletedCommentId:
+                        type: number
+                        description: 삭제처리된 댓글의 ID
+
+  /room/post/{postId}/submit:
+    get:
+      tags:
+        - room
+      summary: 공지글 퀴즈/미션 제출 요구사항 조회 구현
+      description: 공지글 퀴즈/미션 제출 요구사항 조회 구현
+      operationId: getSubmitRequirements
+      consumes:
+        - application/json  
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: postId
+          in: path
+          schema:
+            type: number
+          required: true
+      responses:
+        "200":
+          description: 퀴즈/미션 제출 요구사항 조회 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: number
+                    example: 200
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: object
+                    properties:
+                        id:
+                          type: number
+                          description: 해당 포스트 ID
+                        type:
+                          type: string
+                          description: 해당 포스트 타입 (퀴즈/미션)
+                        question:
+                          type: string
+                          description: 해당 포스트의 퀴즈/미션 제출 요구사항
+    post:
+      tags:
+        - room
+      summary: 공지글 퀴즈/미션 답변 및 인증사진 제출
+      description: 공지글 퀴즈/미션 답변 및 인증사진 제출
+      operationId: postSubmit
+      consumes:
+        - application/json  
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: postId
+          in: path
+          schema:
+            type: number
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                  description: 퀴즈/미션에 제출할 답변 (퀴즈에서는 필수, 미션에서는 NULL 가능)
+                imageURLs:
+                  type: array
+                  description: 미션에 제출할 답변 (퀴즈에서는 NULL, 미션에서는 필수)
+                  example: ["https://image1.jpeg", "https://image2.jpeg", "https://image3.jpeg"]
+                  items:
+                    type: string    
+      responses:
+        "200":
+          description: 제출 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: number
+                    example: 200
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: object
+                    properties:
+                      submitId:
+                        type: number
+                        description: 제출 ID
+                      submitState:
+                        type: string
+                        description: 제출 상태 (퀴즈의 경우 정답 여부에 따라 COMPLETE / NOT_COMPLETE, 미션의 경우 PENDING)

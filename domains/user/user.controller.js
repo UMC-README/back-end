@@ -15,6 +15,7 @@ import {
   updateBasicProfile,
   verifyUserPassword,
   updatePassword,
+  updateRoomProfile,
 } from "./user.service.js";
 
 export const userSignUp = async (req, res, next) => {
@@ -44,13 +45,16 @@ export const userLogin = async (req, res, next) => {
 
 export const userKakaoLogin = async (req, res) => {
   try {
-    const { code } = req.query;
+    const { code, platform } = req.query;
 
-    const { access_token: accessToken } = await getKakaoToken(code);
+    const { access_token } = await getKakaoToken(code);
+    const accessToken = platform === "ios" ? code : access_token;
 
     const userResponse = await getKakaoUser(accessToken);
     if (userResponse.code === -401) {
-      res.status(401).json(response(status.UNAUTHORIZED, { message: "유효하지 않은 토큰입니다." }));
+      return res
+        .status(401)
+        .json(response(status.UNAUTHORIZED, { message: "유효하지 않은 토큰입니다." }));
     }
 
     const userExist = await kakaoLoginUser(userResponse.kakao_account.email);
@@ -66,7 +70,7 @@ export const userKakaoLogin = async (req, res) => {
         accessToken
       );
     }
-    res.status(200).json(response(status.SUCCESS, { accessToken }));
+    return res.status(200).json(response(status.SUCCESS, { accessToken }));
   } catch (err) {
     console.log(err);
   }
@@ -165,6 +169,26 @@ export const updateUserBasicProfile = async (req, res, next) => {
     const { name, nickname, profileImage } = req.body;
 
     const isSuccess = await updateBasicProfile(userId, name, nickname, profileImage);
+
+    if (isSuccess) {
+      res.status(200).json(response(status.SUCCESS, { isSuccess: true }));
+    } else {
+      res.status(400).json(response(status.BAD_REQUEST, { isSuccess: false }));
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateUserRoomProfile = async (req, res, next) => {
+  try {
+    console.log("공지방별 프로필 수정");
+
+    const userId = req.user.userId;
+    const roomId = req.params.roomId;
+    const { nickname, profileImage } = req.body;
+
+    const isSuccess = await updateRoomProfile(userId, roomId, nickname, profileImage);
 
     if (isSuccess) {
       res.status(200).json(response(status.SUCCESS, { isSuccess: true }));

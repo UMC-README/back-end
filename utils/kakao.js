@@ -20,6 +20,7 @@ export const getKakaoUser = async (token) => {
   const response = await fetch("https://kapi.kakao.com/v2/user/me", {
     method: "GET",
     headers: {
+      // Authorization: `Bearer ${token}`,
       Authorization: `Bearer ${token}`,
       "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
     },
@@ -36,9 +37,6 @@ export const checkToken = async (token) => {
     },
   }).then((res) => res.json());
 
-  if (response.code === -401) {
-    // refresh token 요청하는 로직 필요
-    return false;
-  }
+  if (response.code === -401) return false;
   return true;
 };
