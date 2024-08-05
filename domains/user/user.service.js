@@ -142,6 +142,7 @@ export const getMyFixedPost = async (userId) => {
   }
 
   return {
+    roomId: fixedPostData.room_id,
     postId: fixedPostData.id,
     title: fixedPostData.title,
     startDate: getYearMonthDay(fixedPostData.start_date),
