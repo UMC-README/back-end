@@ -58,7 +58,7 @@ export const getFixedPost = `
 
 // 내 공지방 찾기
 export const getRoom = `
-  SELECT ur.nickname, ur.profile_image, r.room_name
+  SELECT ur.nickname, ur.profile_image, r.room_name, r.id
   FROM \`user-room\` ur 
   JOIN user u ON u.id = ur.user_id
   JOIN room r ON r.id = ur.room_id
