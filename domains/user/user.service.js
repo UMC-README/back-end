@@ -155,7 +155,7 @@ export const getMyRoomProfiles = async (userId) => {
     throw new Error("사용자를 찾을 수 없습니다.");
   }
 
-  const rooms = await findRoomByUserId(userData.userId);
+  const rooms = await findRoomByUserId(userId);
 
   if (!rooms) {
     return {
