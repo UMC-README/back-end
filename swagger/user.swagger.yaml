@@ -574,3 +574,53 @@ paths:
                             profileImage:
                               type: string
                               description: 공지방 별 프로필 사진
+    patch:
+      tags:
+        - user
+      summary: 내 기본 프로필 수정
+      description: 내 기본 프로필 수정
+      operationId: user-basic-profile
+      consumes:
+        - application/json
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 이름
+                nickname:
+                  type: string
+                  description: 닉네임
+                profileImage:
+                  type: string
+                  description: 사용자 프로필 사진
+      responses:
+        "200":
+          description: 내 기본 프로필 수정 성공!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: object
+                    properties:
+                      isSuccess:
+                        type: boolean
+                        description: 수정 성공 여부
+
