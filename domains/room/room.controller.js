@@ -146,10 +146,7 @@ export const postSubmit = async (req, res, next) => {
     const userId = req.user.userId;
     const content = req.body.content;
     const imageURLs = req.body.imageURLs;
-    console.log("postId: ", postId);
-    console.log("userId: ", userId);
-    console.log("content: ", content);
-    console.log("imageURLs: ", imageURLs);
+    console.log("공지 확인 제출");
 
     const result = await postSubmitService(postId, userId, content, imageURLs);
     res.status(200).json(response(status.SUCCESS, result));
