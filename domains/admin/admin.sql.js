@@ -12,7 +12,7 @@ export const updateRoomsSQL = `
 
 // 공지방 삭제
 export const deleteRoomsSQL = `
-    UPDATE room SET updated_at = NOW(), state = 'deleted' WHERE id = ?;
+    UPDATE room SET updated_at = NOW(), state = 'DELETED' WHERE id = ?;
 `;
 
 // 공지글 생성 & 공지방 이미지
@@ -56,4 +56,13 @@ export const userInviteSQL = `
   SELECT r.room_image, r.room_invite_url, r.room_name, r.room_password, r.admin_nickname
   FROM room r
   WHERE r.id = ?; 
+`;
+
+// 유저 강퇴하기
+export const checkUserInRoomSQL = `
+  select * from \`user-room\` where nickname = ? AND room_id = ?
+`;
+
+export const deleteUserSQL = ` 
+  DELETE FROM  \`user-room\` WHERE nickname = ? AND room_id;
 `;
