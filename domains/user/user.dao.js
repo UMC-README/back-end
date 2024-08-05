@@ -15,6 +15,8 @@ import {
   updateUserProfile,
   updateUserPassword,
   updateUserRoomProfile,
+  selectAdminId,
+  updateRoomAdminNickname,
 } from "./user.sql.js";
 
 export const insertUser = async (data) => {
@@ -89,8 +91,20 @@ export const updateUserProfileById = async (userId, name, nickname, profileImage
 export const updateUserRoomProfileById = async (userId, roomId, nickname, profileImage) => {
   try {
     const conn = await pool.getConnection();
+    await conn.beginTransaction();
+
+    // user-room의 프로필 수정
     await conn.query(updateUserRoomProfile, [nickname, profileImage, userId, roomId]);
 
+    // 본인이 해당 공지방의 운영진인지 확인
+    const [rows] = await conn.query(selectAdminId, [roomId, userId]);
+
+    // 본인이 해당 공지방의 운영진이라면 room의 admin_nickname도 수정
+    if (rows.length > 0) {
+      await conn.query(updateRoomAdminNickname, [nickname, roomId, userId]);
+    }
+
+    await conn.commit();
     conn.release();
 
     return true;
