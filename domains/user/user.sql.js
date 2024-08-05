@@ -19,6 +19,12 @@ export const updateUserProfile = `
   WHERE id = ?
 `;
 
+export const updateUserRoomProfile = `
+  UPDATE \`user-room\`
+  SET nickname = ?, profile_image = ?
+  WHERE user_id = ? AND room_id = ?
+`;
+
 export const updateUserPassword = `
   UPDATE user
   SET password = ?
@@ -35,7 +41,7 @@ export const getFixedPost = `
 
 // 내 공지방 찾기
 export const getRoom = `
-  SELECT ur.*, r.room_name
+  SELECT ur.nickname, ur.profile_image, r.room_name
   FROM \`user-room\` ur 
   JOIN user u ON u.id = ur.user_id
   JOIN room r ON r.id = ur.room_id
@@ -52,11 +58,12 @@ export const getCreateRoomCount = `
 
 // 개설한 공지방 찾기
 export const getCreateRoom = `
-  SELECT room.*, MAX(post.created_at) as latest_post_time
+  SELECT room.id, ur.nickname as user_nickname, room.room_name, room.room_image, room.state, MAX(post.created_at) as latest_post_time
   FROM room
+  JOIN \`user-room\` ur ON room.id = ur.room_id AND ur.user_id = room.admin_id
   LEFT JOIN post ON room.id = post.room_id
   WHERE room.admin_id = ?
-  GROUP BY room.id
+  GROUP BY room.id, ur.nickname
   LIMIT ?
   OFFSET ?
 `;
@@ -67,17 +74,17 @@ export const getJoinRoomCount = `
   FROM \`user-room\` ur
   JOIN user u ON u.id = ur.user_id
   JOIN room r ON r.id = ur.room_id
-  WHERE u.id = ?
+  WHERE u.id = ? AND r.admin_id <> ?
 `;
 
 // 입장한 공지방 찾기
 export const getJoinRoom = `
-  SELECT room.*, MAX(post.created_at) as latest_post_time
+  SELECT room.id, ur.nickname as user_nickname, room.room_name, room.room_image, room.state, MAX(post.created_at) as latest_post_time
   FROM room
-  JOIN \`user-room\` ON room.id = \`user-room\`.room_id
+  JOIN \`user-room\` ur ON room.id = ur.room_id
   LEFT JOIN post ON room.id = post.room_id
-  WHERE \`user-room\`.user_id = ?
-  GROUP BY room.id
+  WHERE ur.user_id = ? AND room.admin_id <> ?
+  GROUP BY room.id, ur.nickname
   LIMIT ?
   OFFSET ?
 `;

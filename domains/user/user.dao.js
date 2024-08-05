@@ -14,6 +14,7 @@ import {
   getRoom,
   updateUserProfile,
   updateUserPassword,
+  updateUserRoomProfile,
 } from "./user.sql.js";
 
 export const insertUser = async (data) => {
@@ -85,6 +86,20 @@ export const updateUserProfileById = async (userId, name, nickname, profileImage
   }
 };
 
+export const updateUserRoomProfileById = async (userId, roomId, nickname, profileImage) => {
+  try {
+    const conn = await pool.getConnection();
+    await conn.query(updateUserRoomProfile, [nickname, profileImage, userId, roomId]);
+
+    conn.release();
+
+    return true;
+  } catch (error) {
+    console.log("공지방별 프로필 업데이트 에러", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
 export const updateUserPasswordById = async (userId, password) => {
   try {
     const conn = await pool.getConnection();
@@ -128,7 +143,11 @@ export const findRoomByUserId = async (userId) => {
     }
 
     conn.release();
-    return rooms;
+    return rooms.map((room) => ({
+      nickname: room.nickname,
+      profileImage: room.profile_image,
+      roomName: room.room_name,
+    }));
   } catch (error) {
     console.log("내 공지방 찾기 에러", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
@@ -158,8 +177,8 @@ export const findJoinRoomByUserId = async (userId, page, pageSize) => {
     const conn = await pool.getConnection();
     const offset = (page - 1) * pageSize;
 
-    const [[{ count }]] = await conn.query(getJoinRoomCount, [userId]);
-    const [rooms] = await conn.query(getJoinRoom, [userId, pageSize, offset]);
+    const [[{ count }]] = await conn.query(getJoinRoomCount, [userId, userId]);
+    const [rooms] = await conn.query(getJoinRoom, [userId, userId, pageSize, offset]);
 
     const isNext = offset + pageSize < count;
 
