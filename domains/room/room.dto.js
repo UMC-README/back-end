@@ -81,14 +81,6 @@ export const detailedPostDTO = (data) => {
 };
 
 export const allCommentsInPostDTO = (data) => {
-  if (data == -1) {
-    return -1;
-  }
-
-  if (data == -2) {
-    return -2;
-  }
-
   const comments = data.map((comment) => ({
     commentId: comment.id,
     commentAuthorNickname: comment.nickname,
