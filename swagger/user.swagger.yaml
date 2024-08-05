@@ -526,7 +526,7 @@ paths:
         - user
       summary: 내 프로필 전체 조회
       description: 내 프로필 전체 조회
-      operationId: user
+      operationId: user-profile
       consumes:
         - application/json
       security:
@@ -539,9 +539,6 @@ paths:
               schema:
                 type: object
                 properties:
-                  status:
-                    type: integer
-                    example: 200
                   isSuccess:
                     type: boolean
                     example: true
@@ -550,22 +547,30 @@ paths:
                     example: 200
                   message:
                     type: string
-                    example: "내 프로필 전체 조회 성공"
+                    example: "success!"
                   result:
                     type: object
                     properties:
-                      userId:
-                        type: number
-                        description: 유저 ID
-                      name:
-                        type: string
-                        description: 유저 이름
                       nickname:
                         type: string
                         description: 유저 닉네임
-                      email:
-                        type: string
-                        description: 유저 이메일
                       profileImage:
                         type: string
                         description: 유저 프로필 사진
+                      profiles:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            roomId:
+                              type: integer
+                              description: 공지방 ID
+                            roomName:
+                              type: string
+                              description: 공지방 이름
+                            nickname:
+                              type: string
+                              description: 공지방 별 닉네임
+                            profileImage:
+                              type: string
+                              description: 공지방 별 프로필 사진
