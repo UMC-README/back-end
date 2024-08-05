@@ -10,6 +10,7 @@ import {
   deletePostController,
   userProfileController,
   userInviteController,
+  deleteUserController,
 } from "../domains/admin/admin.controller.js";
 
 export const adminRouter = express.Router();
@@ -22,3 +23,4 @@ adminRouter.patch("/post/:post_id", tokenAuth, expressAsyncHandler(updatePostCon
 adminRouter.patch("/post", tokenAuth, expressAsyncHandler(deletePostController));
 adminRouter.get("/profile/:userId", tokenAuth, expressAsyncHandler(userProfileController));
 adminRouter.get("/invitation/:roomId", tokenAuth, expressAsyncHandler(userInviteController));
+adminRouter.delete("/user-Ban", tokenAuth, expressAsyncHandler(deleteUserController));

@@ -14,6 +14,8 @@ import {
   deletePostSQL,
   userProfileSQL,
   userInviteSQL,
+  checkUserInRoomSQL,
+  deleteUserSQL,
 } from "./admin.sql.js";
 
 export const createRoomsDao = async (body, userId, roomInviteUrl) => {
@@ -201,6 +203,25 @@ export const userInviteDao = async (roomId) => {
     return result[0];
   } catch (error) {
     console.log("초대 관련 공지방 정보 조회 에러");
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const deleteUserDao = async (body) => {
+  try {
+    const conn = await pool.getConnection();
+
+    const [checkUser] = await conn.query(checkUserInRoomSQL, [body.nickname, body.room_id]);
+    if (!checkUser.length) {
+      conn.release();
+      return -1;
+    }
+    await conn.query(deleteUserSQL, [body.nickname, body.room_id]);
+
+    conn.release();
+    return "유저 강퇴에 성공하였습니다.";
+  } catch (error) {
+    console.log("유저 강퇴하기 에러");
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };
