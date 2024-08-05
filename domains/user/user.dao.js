@@ -133,8 +133,6 @@ export const findFixedPostByUserId = async (userId) => {
     const conn = await pool.getConnection();
     const [post] = await conn.query(getFixedPost, [userId]);
 
-    console.log(post);
-
     if (post.length == 0) {
       conn.release();
       return null;
