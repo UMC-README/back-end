@@ -220,7 +220,7 @@ paths:
                     example: 200
                   message:
                     type: string
-                    example: "회원가입 성공"
+                    example: "success!"
                   result:
                     type: object
                     properties:
@@ -269,7 +269,7 @@ paths:
                     example: 200
                   message:
                     type: string
-                    example: "로그인 성공"
+                    example: "success!"
                   result:
                     type: object
                     properties:
@@ -299,9 +299,6 @@ paths:
               schema:
                 type: object
                 properties:
-                  status:
-                    type: integer
-                    example: 200
                   isSuccess:
                     type: boolean
                     example: true
@@ -310,7 +307,7 @@ paths:
                     example: 200
                   message:
                     type: string
-                    example: "내 프로필 조회 성공"
+                    example: "success!"
                   result:
                     type: object
                     properties:
