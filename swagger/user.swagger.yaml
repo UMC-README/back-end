@@ -261,9 +261,6 @@ paths:
               schema:
                 type: object
                 properties:
-                  status:
-                    type: integer
-                    example: 200
                   isSuccess:
                     type: boolean
                     example: true
