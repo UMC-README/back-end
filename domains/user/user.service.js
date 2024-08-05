@@ -12,7 +12,7 @@ import {
 } from "./user.dao.js";
 import { passwordHashing } from "../../utils/passwordHash.js";
 import { generateJWTToken } from "../../utils/generateToken.js";
-import { getRelativeTime } from "../../utils/elapsedTime.js";
+import { getRelativeTime, getYearMonthDay } from "../../utils/timeChange.js";
 
 export const signupUser = async (userInfo, token) => {
   // 비밀번호 해싱
@@ -135,17 +135,18 @@ export const getMyFixedPost = async (userId) => {
     throw new Error("사용자를 찾을 수 없습니다.");
   }
 
-  const fixedPostData = await findFixedPostByUserId(userData.userId);
+  const fixedPostData = await findFixedPostByUserId(userId);
 
   if (!fixedPostData) {
     return null;
   }
 
   return {
+    roomId: fixedPostData.room_id,
     postId: fixedPostData.id,
     title: fixedPostData.title,
-    startDate: fixedPostData.start_date,
-    endDate: fixedPostData.end_date,
+    startDate: getYearMonthDay(fixedPostData.start_date),
+    endDate: getYearMonthDay(fixedPostData.end_date),
   };
 };
 
