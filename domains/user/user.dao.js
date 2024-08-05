@@ -177,8 +177,8 @@ export const findJoinRoomByUserId = async (userId, page, pageSize) => {
     const conn = await pool.getConnection();
     const offset = (page - 1) * pageSize;
 
-    const [[{ count }]] = await conn.query(getJoinRoomCount, [userId]);
-    const [rooms] = await conn.query(getJoinRoom, [userId, pageSize, offset]);
+    const [[{ count }]] = await conn.query(getJoinRoomCount, [userId, userId]);
+    const [rooms] = await conn.query(getJoinRoom, [userId, userId, pageSize, offset]);
 
     const isNext = offset + pageSize < count;
 

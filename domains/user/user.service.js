@@ -12,6 +12,7 @@ import {
 } from "./user.dao.js";
 import { passwordHashing } from "../../utils/passwordHash.js";
 import { generateJWTToken } from "../../utils/generateToken.js";
+import { getRelativeTime } from "../../utils/elapsedTime.js";
 
 export const signupUser = async (userInfo, token) => {
   // 비밀번호 해싱
@@ -186,11 +187,11 @@ export const getMyCreateRoom = async (userId, page, pageSize) => {
 
   const Myrooms = rooms.map((room) => ({
     id: room.id,
-    adminNickname: room.admin_nickname,
+    nickname: room.user_nickname,
     roomName: room.room_name,
     roomImage: room.room_image,
     state: room.state,
-    latestPostTime: room.latest_post_time,
+    latestPostTime: getRelativeTime(room.latest_post_time),
   }));
 
   return { rooms: Myrooms, isNext };
@@ -211,11 +212,11 @@ export const getMyJoinRoom = async (userId, page, pageSize) => {
 
   const Myrooms = rooms.map((room) => ({
     id: room.id,
-    adminNickname: room.admin_nickname,
+    nickname: room.user_nickname,
     roomName: room.room_name,
     roomImage: room.room_image,
     state: room.state,
-    latestPostTime: room.latest_post_time,
+    latestPostTime: getRelativeTime(room.latest_post_time),
   }));
 
   return { rooms: Myrooms, isNext };
