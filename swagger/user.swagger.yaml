@@ -408,9 +408,6 @@ paths:
               schema:
                 type: object
                 properties:
-                  status:
-                    type: integer
-                    example: 200
                   isSuccess:
                     type: boolean
                     example: true
@@ -419,23 +416,37 @@ paths:
                     example: 200
                   message:
                     type: string
-                    example: "내가 생성한 공지방 조회 성공"
+                    example: "success!"
                   result:
                     type: object
                     properties:
-                      roomId:
-                        type: number
-                        description: 공지방 ID
-                      roomImage:
-                        type: string
-                        description: 공지방 사진
-                      roomName:
-                        type: string
-                        description: 공지방 이름
-                      nickname:
-                        type: string
-                        description: 본인 닉네임
-
+                      rooms:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              description: 공지방 ID
+                            nickname:
+                              type: string
+                              description: 본인 닉네임
+                            roomName:
+                              type: string
+                              description: 공지방 이름
+                            roomImage:
+                              type: string
+                              description: 공지방 사진
+                            state:
+                              type: string
+                              description: 공지방 상태 (EXIST / DELETED)
+                            latestPostTime:
+                              type: string
+                              description: 공지방의 최근 공지글 작성 시간
+                      isNext:
+                        type: boolean
+                        description: 다음 페이지가 있는지 여부
+                      
   /user/join-room:
     get:
       tags:
@@ -464,15 +475,12 @@ paths:
             description: 페이지 크기 (기본값: 6)
       responses:
         "200":
-          description: 내가 입장한 공지방 조회 성공!
+          description: 내가 생성한 공지방 조회 성공!
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  status:
-                    type: integer
-                    example: 200
                   isSuccess:
                     type: boolean
                     example: true
@@ -481,22 +489,36 @@ paths:
                     example: 200
                   message:
                     type: string
-                    example: "내가 입장한 공지방 조회 성공"
+                    example: "success!"
                   result:
                     type: object
                     properties:
-                      roomId:
-                        type: number
-                        description: 공지방 ID
-                      roomImage:
-                        type: string
-                        description: 공지방 사진
-                      roomName:
-                        type: string
-                        description: 공지방 이름
-                      nickname:
-                        type: string
-                        description: 본인 닉네임
+                      rooms:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              description: 공지방 ID
+                            nickname:
+                              type: string
+                              description: 본인 닉네임
+                            roomName:
+                              type: string
+                              description: 공지방 이름
+                            roomImage:
+                              type: string
+                              description: 공지방 사진
+                            state:
+                              type: string
+                              description: 공지방 상태 (EXIST / DELETED)
+                            latestPostTime:
+                              type: string
+                              description: 공지방의 최근 공지글 작성 시간
+                      isNext:
+                        type: boolean
+                        description: 다음 페이지가 있는지 여부
 
   /user/profile:
     get:
