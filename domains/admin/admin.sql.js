@@ -44,7 +44,7 @@ export const deletePostSQL = `
 `;
 
 // 유저 프로필 조회
-export const getProfileByUserId = `
+export const userProfileSQL = `
   SELECT ur.nickname, ur.profile_image, ur.penalty_count
   FROM \`user-room\` ur
   JOIN user u ON u.id = ur.user_id

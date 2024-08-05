@@ -8,7 +8,7 @@ import {
   createPostController,
   updatePostController,
   deletePostController,
-  userProfile,
+  userProfileController,
 } from "../domains/admin/admin.controller.js";
 
 export const adminRouter = express.Router();
@@ -19,4 +19,4 @@ adminRouter.patch("/rooms", tokenAuth, expressAsyncHandler(deleteRoomsController
 adminRouter.post("/post", tokenAuth, expressAsyncHandler(createPostController));
 adminRouter.patch("/post/:post_id", tokenAuth, expressAsyncHandler(updatePostController));
 adminRouter.patch("/post", tokenAuth, expressAsyncHandler(deletePostController));
-adminRouter.get("/profile/:user_id", tokenAuth, expressAsyncHandler(userProfile));
+adminRouter.get("/profile/:userId", tokenAuth, expressAsyncHandler(userProfileController));
