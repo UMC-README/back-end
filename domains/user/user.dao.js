@@ -15,6 +15,7 @@ import {
   updateUserProfile,
   updateUserPassword,
   updateUserRoomProfile,
+  selectAdminId,
   updateRoomAdminNickname,
 } from "./user.sql.js";
 
@@ -96,7 +97,7 @@ export const updateUserRoomProfileById = async (userId, roomId, nickname, profil
     await conn.query(updateUserRoomProfile, [nickname, profileImage, userId, roomId]);
 
     // 본인이 해당 공지방의 운영진인지 확인
-    const [rows] = await conn.query(selectAdminIdQuery, [roomId, userId]);
+    const [rows] = await conn.query(selectAdminId, [roomId, userId]);
 
     // 본인이 해당 공지방의 운영진이라면 room의 admin_nickname도 수정
     if (rows.length > 0) {
