@@ -184,7 +184,16 @@ export const getMyCreateRoom = async (userId, page, pageSize) => {
     return { rooms: null, isNext: false };
   }
 
-  return { rooms, isNext };
+  const Myrooms = rooms.map((room) => ({
+    id: room.id,
+    adminNickname: room.admin_nickname,
+    roomName: room.room_name,
+    roomImage: room.room_image,
+    state: room.state,
+    latestPostTime: room.latest_post_time,
+  }));
+
+  return { rooms: Myrooms, isNext };
 };
 
 export const getMyJoinRoom = async (userId, page, pageSize) => {
@@ -200,5 +209,14 @@ export const getMyJoinRoom = async (userId, page, pageSize) => {
     return { rooms: null, isNext: false };
   }
 
-  return { rooms, isNext };
+  const Myrooms = rooms.map((room) => ({
+    id: room.id,
+    adminNickname: room.admin_nickname,
+    roomName: room.room_name,
+    roomImage: room.room_image,
+    state: room.state,
+    latestPostTime: room.latest_post_time,
+  }));
+
+  return { rooms: Myrooms, isNext };
 };

@@ -58,7 +58,7 @@ export const getCreateRoomCount = `
 
 // 개설한 공지방 찾기
 export const getCreateRoom = `
-  SELECT room.*, MAX(post.created_at) as latest_post_time
+  SELECT room.id, room.admin_nickname, room.room_name, room.room_image, room.state, MAX(post.created_at) as latest_post_time
   FROM room
   LEFT JOIN post ON room.id = post.room_id
   WHERE room.admin_id = ?
@@ -78,7 +78,7 @@ export const getJoinRoomCount = `
 
 // 입장한 공지방 찾기
 export const getJoinRoom = `
-  SELECT room.*, MAX(post.created_at) as latest_post_time
+  SELECT room.id, room.admin_nickname, room.room_name, room.room_image, room.state, MAX(post.created_at) as latest_post_time
   FROM room
   JOIN \`user-room\` ON room.id = \`user-room\`.room_id
   LEFT JOIN post ON room.id = post.room_id
