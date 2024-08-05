@@ -160,16 +160,14 @@ export const getMyRoomProfiles = async (userId) => {
   if (!rooms) {
     return {
       nickname: userData.nickname,
-      email: userData.email,
       profileImage: userData.profile_image,
     };
   }
 
   return {
     nickname: userData.nickname,
-    email: userData.email,
     profileImage: userData.profile_image,
-    profiles: [rooms],
+    profiles: rooms,
   };
 };
 
