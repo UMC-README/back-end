@@ -8,7 +8,7 @@ import {
   createPostService,
   updatePostService,
   deletePostService,
-  getProfileUser,
+  userProfileService,
 } from "./admin.service.js";
 
 export const createRoomsController = async (req, res, next) => {
@@ -65,11 +65,9 @@ export const deletePostController = async (req, res, next) => {
   }
 };
 
-export const userProfile = async (req, res, next) => {
+export const userProfileController = async (req, res, next) => {
   try {
-    console.log("특정 멤버 프로필 조회");
-    const userId = req.user.user_id;
-    const result = await getProfileUser(userId);
+    const result = await userProfileService(req.params.userId);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
