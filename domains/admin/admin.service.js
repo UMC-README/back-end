@@ -5,7 +5,7 @@ import {
   createPostDao,
   updatePostDao,
   deletePostDao,
-  getUserProfile,
+  userProfileDao,
 } from "./admin.dao.js";
 import { createShortUUID } from "./uuid.js";
 import { createRoomsDTO, updateRoomsDTO, createPostDTO, updatePostDTO } from "./admin.dto.js";
@@ -75,10 +75,12 @@ export const deletePostService = async (postId) => {
   }
 };
 
-export const getProfileUser = async (userId) => {
+export const userProfileService = async (userId) => {
   try {
-    console.log("유저 프로필 정보를 가져옵니다.");
-    return await getUserProfile(userId);
+    if (!userId) {
+      throw new Error("삭제할 공지글의 ID가 필요합니다.");
+    }
+    return await userProfileDao(userId);
   } catch (error) {
     throw error;
   }
