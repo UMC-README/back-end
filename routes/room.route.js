@@ -11,6 +11,7 @@ import {
   postComment,
   deleteComment,
   getSubmitRequirements,
+  postSubmit,
 } from "../domains/room/room.controller.js";
 
 import { tokenAuth } from "../middleware/token.auth.js";
@@ -26,3 +27,4 @@ roomRouter.get("/post/:postId/comment", tokenAuth, expressAsyncHandler(getCommen
 roomRouter.post("/post/:postId/comment", tokenAuth, expressAsyncHandler(postComment));
 roomRouter.delete("/post/comment/:commentId", tokenAuth, expressAsyncHandler(deleteComment));
 roomRouter.get("/post/:postId/submit", tokenAuth, expressAsyncHandler(getSubmitRequirements));
+roomRouter.post("/post/:postId/submit", tokenAuth, expressAsyncHandler(postSubmit));

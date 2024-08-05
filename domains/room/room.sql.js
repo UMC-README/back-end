@@ -133,3 +133,35 @@ export const getSubmitRequirementsSQL = `
   FROM post
   WHERE id = ?
 `;
+
+//제출 생성 (기존 제출 존재시 업데이트)
+export const postSubmitSQL = `
+  INSERT INTO submit (post_id, user_id, content, submit_state) VALUES (?, ?, ?, ?)
+  ON DUPLICATE KEY UPDATE content = ?, submit_state = ?
+`;
+
+//공지글의 안 읽은 인원수 1 감소
+export const decreaseUnreadCountOneByPostId = `
+  UPDATE post p
+  SET p.unread_count = p.unread_count - 1
+  WHERE p.id = ?
+`;
+
+//제출이미지 생성
+export const postSubmitImageSQL = `
+  INSERT INTO \`submit-image\` (submit_id, URL) VALUES (?, ?)
+`;
+
+//이전 제출이미지 삭제 (Soft Delete)
+export const deletePreviousSubmitImageSQL = `
+  UPDATE \`submit-image\` si
+  JOIN submit s ON s.post_id = ? AND s.user_id = ?
+  SET si.state = 'DELETED'
+  WHERE si.submit_id = s.id
+`;
+
+//포스트 ID와 유저 ID로 제출 ID 찾기
+export const getSubmitIdByPostIdAndUserId = `
+  SELECT id FROM submit s
+  WHERE post_id = ? AND user_id = ?
+`;

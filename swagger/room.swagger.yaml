@@ -476,3 +476,61 @@ paths:
                         question:
                           type: string
                           description: 해당 포스트의 퀴즈/미션 제출 요구사항
+    post:
+      tags:
+        - room
+      summary: 공지글 퀴즈/미션 답변 및 인증사진 제출
+      description: 공지글 퀴즈/미션 답변 및 인증사진 제출
+      operationId: postSubmit
+      consumes:
+        - application/json  
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: postId
+          in: path
+          schema:
+            type: number
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                  description: 퀴즈/미션에 제출할 답변 (퀴즈에서는 필수, 미션에서는 NULL 가능)
+                imageURLs:
+                  type: array
+                  description: 미션에 제출할 답변 (퀴즈에서는 NULL, 미션에서는 필수)
+                  example: ["https://image1.jpeg", "https://image2.jpeg", "https://image3.jpeg"]
+                  items:
+                    type: string    
+      responses:
+        "200":
+          description: 제출 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: number
+                    example: 200
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: object
+                    properties:
+                      submitId:
+                        type: number
+                        description: 제출 ID
+                      submitState:
+                        type: string
+                        description: 제출 상태 (퀴즈의 경우 정답 여부에 따라 COMPLETE / NOT_COMPLETE, 미션의 경우 PENDING)
