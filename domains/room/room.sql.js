@@ -92,7 +92,7 @@ export const getCommentsByPostId = `
   SELECT c.id, ur.nickname, c.content, c.updated_at FROM comment c
   JOIN post p ON p.id = ? AND c.post_id = p.id
   LEFT JOIN \`user-room\` ur ON c.user_id = ur.user_id
-  WHERE c.state = 'EXIST' AND c.id < ?
+  WHERE c.state = 'EXIST' AND c.id > ?
   ORDER BY c.id ASC LIMIT ?
 `;
 
