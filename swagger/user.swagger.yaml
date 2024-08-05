@@ -378,8 +378,8 @@ paths:
     get:
       tags:
         - user
-      summary: 내가 생성한 공지방 조회
-      description: 내가 생성한 공지방 조회
+      summary: 내가 개설한 공지방 조회
+      description: 내가 개설한 공지방 조회
       operationId: create-room
       consumes:
         - application/json
@@ -402,7 +402,7 @@ paths:
             description: 페이지 크기 (기본값: 6)
       responses:
         "200":
-          description: 내가 생성한 공지방 조회 성공!
+          description: 내가 개설한 공지방 조회 성공!
           content:
             application/json:
               schema:
@@ -475,7 +475,7 @@ paths:
             description: 페이지 크기 (기본값: 6)
       responses:
         "200":
-          description: 내가 생성한 공지방 조회 성공!
+          description: 내가 입장한 공지방 조회 성공!
           content:
             application/json:
               schema:
