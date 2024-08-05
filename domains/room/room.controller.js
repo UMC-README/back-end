@@ -6,11 +6,11 @@ import {
   postFix,
   getAllPostInRoom,
   getNotCheckedPostInRoom,
-  getDetailedPostSer,
-  getCommentsSer,
-  postCommentSer,
-  deleteCommentSer,
-  getSubmitRequirementsSer,
+  getDetailedPostService,
+  getCommentsService,
+  postCommentService,
+  deleteCommentService,
+  getSubmitRequirementsService,
   postSubmitService,
 } from "./room.service.js";
 
@@ -78,7 +78,7 @@ export const getDetailedPost = async (req, res, next) => {
     console.log("postId: ", postId);
     console.log("userId: ", userId);
 
-    const result = await getDetailedPostSer(postId, userId);
+    const result = await getDetailedPostService(postId, userId);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
@@ -90,7 +90,7 @@ export const getComments = async (req, res, next) => {
     const postId = req.params.postId;
     console.log("postId: ", postId);
 
-    const result = await getCommentsSer(postId, req.query);
+    const result = await getCommentsService(postId, req.query);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
@@ -106,7 +106,7 @@ export const postComment = async (req, res, next) => {
     console.log("userId: ", userId);
     console.log("content: ", content);
 
-    const result = await postCommentSer(postId, userId, content);
+    const result = await postCommentService(postId, userId, content);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
@@ -120,7 +120,7 @@ export const deleteComment = async (req, res, next) => {
     console.log("commentId: ", commentId);
     console.log("userId: ", userId);
 
-    const result = await deleteCommentSer(commentId, userId);
+    const result = await deleteCommentService(commentId, userId);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
@@ -133,7 +133,7 @@ export const getSubmitRequirements = async (req, res, next) => {
 
     console.log("postId: ", postId);
 
-    const result = await getSubmitRequirementsSer(postId);
+    const result = await getSubmitRequirementsService(postId);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
