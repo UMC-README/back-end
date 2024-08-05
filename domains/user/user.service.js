@@ -167,7 +167,7 @@ export const getMyCreateRoom = async (userId, page, pageSize) => {
     throw new Error("사용자를 찾을 수 없습니다.");
   }
 
-  const { rooms, isNext } = await findCreateRoomByUserId(userData.userId, page, pageSize);
+  const { rooms, isNext } = await findCreateRoomByUserId(userId, page, pageSize);
 
   if (!rooms) {
     return { rooms: null, isNext: false };
@@ -183,7 +183,7 @@ export const getMyJoinRoom = async (userId, page, pageSize) => {
     throw new Error("사용자를 찾을 수 없습니다.");
   }
 
-  const { rooms, isNext } = await findJoinRoomByUserId(userData.userId, page, pageSize);
+  const { rooms, isNext } = await findJoinRoomByUserId(userId, page, pageSize);
 
   if (!rooms) {
     return { rooms: null, isNext: false };
