@@ -89,11 +89,7 @@ export const getAllPostInRoomDAO = async (roomId, userId, cursorId, size) => {
     }
 
     if (cursorId == "undefined" || typeof cursorId == "undefined" || cursorId == null) {
-      const [posts] = await pool.query(getPostDetailsByRoomIdAtFirst, [
-        parseInt(roomId),
-        parseInt(userId),
-        parseInt(size),
-      ]);
+      const [posts] = await pool.query(getPostDetailsByRoomIdAtFirst, [+roomId, +userId, +size]);
       if (posts.length == 0) {
         conn.release();
         return -2;
@@ -102,10 +98,10 @@ export const getAllPostInRoomDAO = async (roomId, userId, cursorId, size) => {
       return posts;
     } else {
       const [posts] = await pool.query(getPostDetailsByRoomId, [
-        parseInt(roomId),
-        parseInt(userId),
-        parseInt(cursorId),
-        parseInt(size),
+        +roomId,
+        +userId,
+        +cursorId,
+        +size,
       ]);
       if (posts.length == 0) {
         conn.release();
@@ -130,10 +126,7 @@ export const getNotCheckedPostInRoomDAO = async (roomId, userId) => {
       return -1;
     }
 
-    const [posts] = await pool.query(getMyNotCheckedPostInRoom, [
-      parseInt(roomId),
-      parseInt(userId),
-    ]);
+    const [posts] = await pool.query(getMyNotCheckedPostInRoom, [roomId, userId]);
     if (posts.length == 0) {
       conn.release();
       return -2;
@@ -175,10 +168,7 @@ export const getCommentsDAO = async (postId, cursorId, size) => {
     }
 
     if (cursorId == "undefined" || typeof cursorId == "undefined" || cursorId == null) {
-      const [comments] = await pool.query(getCommentsByPostIdAtFirst, [
-        parseInt(postId),
-        parseInt(size),
-      ]);
+      const [comments] = await pool.query(getCommentsByPostIdAtFirst, [+postId, +size]);
       if (comments.length == 0) {
         conn.release();
         return -2;
@@ -186,11 +176,7 @@ export const getCommentsDAO = async (postId, cursorId, size) => {
       conn.release();
       return comments;
     } else {
-      const [comments] = await pool.query(getCommentsByPostId, [
-        parseInt(postId),
-        parseInt(cursorId),
-        parseInt(size),
-      ]);
+      const [comments] = await pool.query(getCommentsByPostId, [+postId, +cursorId, +size]);
       if (comments.length == 0) {
         conn.release();
         return -2;
