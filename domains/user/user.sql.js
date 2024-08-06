@@ -111,3 +111,12 @@ export const checkDuplicateNickname = `
   FROM \`user-room\`
   WHERE room_id = ? AND nickname = ?
 `;
+
+// 가장 최근의 공지글 찾기
+export const getLatestPostInRoom = `
+  SELECT p.id as post_id, p.title, p.content, p.created_at
+  FROM post p
+  WHERE p.room_id = ? AND p.state = 'EXIST'
+  ORDER BY p.created_at DESC
+  LIMIT 1
+`;
