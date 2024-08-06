@@ -534,3 +534,50 @@ paths:
                       submitState:
                         type: string
                         description: 제출 상태 (퀴즈의 경우 정답 여부에 따라 COMPLETE / NOT_COMPLETE, 미션의 경우 PENDING)
+
+  /room/enter/{roomId}:
+    get:
+      tags:
+        - room
+      summary: 공지방 최초 입장 화면 구현
+      description: 공지방 최초 입장시 공지방 정보 조회
+      operationId: getRoomEntrance
+      consumes:
+        - application/json  
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: roomId
+          in: path
+          schema:
+            type: number
+          required: true
+      responses:
+        "200":
+          description: 공지방 최초 입장시 공지방 정보 조회 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: number
+                    example: 200
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: object
+                    properties:
+                        room_name:
+                          type: string
+                          description: 해당 공지방 이름
+                        room_image:
+                          type: string
+                          description: 해당 공지방 이미지 URL
+                        admin_nickname:
+                          type: string
+                          description: 해당 공지방 관리자 닉네임
