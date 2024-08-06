@@ -13,6 +13,7 @@ import {
   getSubmitRequirements,
   postSubmit,
   getRoomEntrance,
+  postRoomEntrance,
   checkPassword,
 } from "../domains/room/room.controller.js";
 
@@ -31,4 +32,5 @@ roomRouter.delete("/post/comment/:commentId", tokenAuth, expressAsyncHandler(del
 roomRouter.get("/post/:postId/submit", tokenAuth, expressAsyncHandler(getSubmitRequirements));
 roomRouter.post("/post/:postId/submit", tokenAuth, expressAsyncHandler(postSubmit));
 roomRouter.get("/enter/:roomId", tokenAuth, expressAsyncHandler(getRoomEntrance));
+roomRouter.post("/enter/:roomId", tokenAuth, expressAsyncHandler(postRoomEntrance));
 roomRouter.post("/:roomId/checkPassword", tokenAuth, expressAsyncHandler(checkPassword));
