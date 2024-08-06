@@ -175,3 +175,8 @@ export const getRoomEntranceInfoByRoomId = `
 export const checkRoomPasswordSQL = `
   SELECT BINARY r.room_password = ? AS isValidResult FROM room r WHERE r.id = ?
 `;
+
+//공지방에 유저를 입장 등록
+export const createRoomEntranceSQL = `
+  INSERT INTO \`user-room\` (user_id, room_id, nickname) VALUES (?, ?, ?)
+`;
