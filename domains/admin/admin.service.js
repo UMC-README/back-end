@@ -5,6 +5,7 @@ import {
   createPostDao,
   updatePostDao,
   deletePostDao,
+  userListDao,
   userProfileDao,
   userInviteDao,
   deleteUserDao,
@@ -76,6 +77,16 @@ export const deletePostService = async (postId) => {
     throw error;
   }
 };
+
+export const userListService = async (nickname) => {
+  try {
+    return await userListDao(nickname);
+  } catch (error) {
+    console.error("유저 목록 조회 에러:", error);
+    throw error;
+  }
+};
+
 
 export const userProfileService = async (userId) => {
   try {
