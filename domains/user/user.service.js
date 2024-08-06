@@ -10,6 +10,9 @@ import {
   updateUserPasswordById,
   updateUserRoomProfileById,
   findDuplicateNickname,
+  findLatestPostInRoom,
+  findAllRooms,
+  getRoomsCount,
 } from "./user.dao.js";
 import { passwordHashing } from "../../utils/passwordHash.js";
 import { generateJWTToken } from "../../utils/generateToken.js";
@@ -228,4 +231,30 @@ export const checkRoomDuplicateNickname = async (roomId, nickname) => {
   const isDuplicate = await findDuplicateNickname(roomId, nickname);
 
   return isDuplicate;
+};
+
+export const getLatestPostsInAllRooms = async (userId, page, pageSize) => {
+  const rooms = await findAllRooms(userId, page, pageSize);
+  const totalCount = await getRoomsCount(userId);
+
+  const recentPostsPromises = rooms.map(async (room) => {
+    const recentPost = await findLatestPostInRoom(room.id);
+
+    if (recentPost) {
+      return {
+        roomId: room.id,
+        roomName: room.room_name,
+        postId: recentPost ? recentPost.post_id : null,
+        title: recentPost ? recentPost.title : null,
+        createdAt: recentPost ? getRelativeTime(recentPost.created_at) : null,
+      };
+    } else {
+      return null;
+    }
+  });
+
+  const recentPostList = (await Promise.all(recentPostsPromises)).filter((post) => post !== null);
+  const isNext = page * pageSize < totalCount;
+
+  return { recentPostList, isNext };
 };

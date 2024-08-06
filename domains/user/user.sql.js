@@ -56,13 +56,22 @@ export const getFixedPost = `
   WHERE u.id = ?
 `;
 
-// 내 공지방 찾기
-export const getRoom = `
-  SELECT ur.nickname, ur.profile_image, r.room_name, r.id
+// 모든 공지방 찾기 (내가 개설한 공지방과 입장한 공지방)
+export const getAllRooms = `
+  SELECT ur.nickname, ur.profile_image, r.room_name, r.id, r.admin_id
   FROM \`user-room\` ur 
-  JOIN user u ON u.id = ur.user_id
   JOIN room r ON r.id = ur.room_id
-  WHERE u.id = ?
+  WHERE ur.user_id = ?
+  LIMIT ?
+  OFFSET ?
+`;
+
+// 공지방 개수 찾기 (페이지네이션을 위한 전체 개수)
+export const getAllRoomsCount = `
+  SELECT COUNT(*) as count
+  FROM \`user-room\` ur 
+  JOIN room r ON r.id = ur.room_id
+  WHERE ur.user_id = ?
 `;
 
 // 개설한 공지방 개수 구하기
@@ -111,4 +120,13 @@ export const checkDuplicateNickname = `
   SELECT COUNT(*) as count
   FROM \`user-room\`
   WHERE room_id = ? AND nickname = ?
+`;
+
+// 가장 최근의 공지글 찾기
+export const getLatestPostInRoom = `
+  SELECT p.id as post_id, p.title, p.created_at
+  FROM post p
+  WHERE p.room_id = ? AND p.state = 'EXIST'
+  ORDER BY p.created_at DESC
+  LIMIT 1
 `;
