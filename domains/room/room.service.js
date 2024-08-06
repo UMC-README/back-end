@@ -191,5 +191,5 @@ export const postRoomEntranceService = async (roomId, userId, userNickname) => {
     throw new Error("공지방을 찾을 수 없습니다.");
   }
 
-  return userRoomData;
+  return { isSuccess: userRoomData };
 };

@@ -624,6 +624,13 @@ paths:
                   message:
                     type: string
                     example: "success!"
+                  result:
+                    type: object
+                    properties:
+                        isSuccess:
+                          type: boolean
+                          example: true
+                          description: 공지방에 유저 등록 성공
 
   /room/{roomId}/checkPassword:
     post:
