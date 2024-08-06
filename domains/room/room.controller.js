@@ -190,8 +190,8 @@ export const postRoomEntrance = async (req, res, next) => {
     const userNickname = req.body.nickname;
     console.log("공지방 입장 등록");
 
-    await postRoomEntranceService(roomId, userId, userNickname);
-    res.status(200).json(response(status.SUCCESS));
+    const result = await postRoomEntranceService(roomId, userId, userNickname);
+    res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
   }

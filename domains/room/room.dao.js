@@ -405,7 +405,7 @@ export const postRoomEntranceDAO = async (roomId, userId, userNickname) => {
       return -1;
     }
 
-    const result = await conn.query(createRoomEntranceSQL, [userId, roomId, userNickname]);
+    await conn.query(createRoomEntranceSQL, [userId, roomId, userNickname]);
     conn.release();
     return true;
   } catch (err) {
