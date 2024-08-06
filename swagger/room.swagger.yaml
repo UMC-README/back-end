@@ -581,6 +581,49 @@ paths:
                         admin_nickname:
                           type: string
                           description: 해당 공지방 관리자 닉네임
+    post:
+      tags:
+        - room
+      summary: 공지방 입장 등록
+      description: 공지방 최초 입장 확정하여 유저를 user-room 테이블에 등록
+      operationId: postRoomEntrance
+      consumes:
+        - application/json  
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: roomId
+          in: path
+          schema:
+            type: number
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nickname:
+                  type: string
+                  description: 해당 방에서 사용할 사용자가 입력한 닉네임
+      responses:
+        "200":
+          description: 공지방 입장 등록 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: number
+                    example: 200
+                  message:
+                    type: string
+                    example: "success!"
 
   /room/{roomId}/checkPassword:
     post:
