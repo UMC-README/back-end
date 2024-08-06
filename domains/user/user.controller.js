@@ -16,6 +16,7 @@ import {
   verifyUserPassword,
   updatePassword,
   updateRoomProfile,
+  checkRoomDuplicateNickname,
 } from "./user.service.js";
 
 export const userSignUp = async (req, res, next) => {
