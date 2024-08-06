@@ -37,7 +37,7 @@ export const notCheckedPostInRoomDTO = (data) => {
     roomName: post.room_name,
     postId: post.id,
     postTitle: post.title,
-    updatedAtBefore: elapsedTime(post.updatedAtBeforeSec),
+    createdAtBefore: elapsedTime(post.createdAtBeforeSec),
   }));
 
   return { posts };
@@ -85,7 +85,7 @@ export const allCommentsInPostDTO = (data) => {
     commentId: comment.id,
     commentAuthorNickname: comment.nickname,
     commentBody: comment.content,
-    updatedAt: formatDate(comment.updated_at),
+    createdAt: formatDate(comment.created_at),
   }));
 
   return { data: comments, cursorId: data[data.length - 1].id };
