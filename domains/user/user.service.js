@@ -222,3 +222,9 @@ export const getMyJoinRoom = async (userId, page, pageSize) => {
 
   return { rooms: Myrooms, isNext };
 };
+
+export const checkRoomDuplicateNickname = async (roomId, nickname) => {
+  const isDuplicate = await findDuplicateNickname(roomId, nickname);
+
+  return isDuplicate;
+};
