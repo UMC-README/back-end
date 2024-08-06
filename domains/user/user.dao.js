@@ -18,6 +18,7 @@ import {
   selectAdminId,
   updateRoomAdminNickname,
   checkDuplicateNickname,
+  getLatestPostInRoom,
 } from "./user.sql.js";
 
 export const insertUser = async (data) => {
@@ -215,6 +216,18 @@ export const findDuplicateNickname = async (roomId, nickname) => {
     return count > 0;
   } catch (error) {
     console.log("중복 닉네임 확인 에러", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const findLatestPostInRoom = async (roomId) => {
+  try {
+    const conn = await pool.getConnection();
+    const [post] = await conn.query(getLatestPostInRoom, [roomId]);
+    conn.release();
+    return post[0];
+  } catch (error) {
+    console.log("가장 최근 공지글 찾기 에러", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };
