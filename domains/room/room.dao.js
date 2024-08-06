@@ -24,6 +24,7 @@ import {
   postSubmitImageSQL,
   deletePreviousSubmitImageSQL,
   getSubmitIdByPostIdAndUserId,
+  getRoomEntranceInfoByRoomId,
 } from "./room.sql.js";
 import { getUserById } from "../user/user.sql.js";
 
@@ -352,6 +353,22 @@ export const postSubmitDAO = async (postId, userId, content, imageURLs) => {
   } catch (error) {
     console.log("제출 에러", error);
     await conn.rollback();
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const getRoomEntranceDAO = async (roomId) => {
+  try {
+    const conn = await pool.getConnection();
+
+    const [roomInfo] = await conn.query(getRoomEntranceInfoByRoomId, roomId);
+    if (roomInfo.length == 0) {
+      conn.release();
+      return -1;
+    }
+    conn.release();
+    return roomInfo[0];
+  } catch (err) {
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };
