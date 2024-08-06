@@ -237,17 +237,17 @@ export const getLatestPostsInAllRooms = async (userId, page, pageSize) => {
   const rooms = await findAllRooms(userId, page, pageSize);
   const totalCount = await getRoomsCount(userId);
 
-  const latestPostsPromises = rooms.map(async (room) => {
-    const latestPost = await findLatestPostInRoom(room.id);
+  const recentPostsPromises = rooms.map(async (room) => {
+    const recentPost = await findLatestPostInRoom(room.id);
     return {
       roomName: room.room_name,
-      title: latestPost ? latestPost.title : null,
-      createdAt: latestPost ? getRelativeTime(latestPost.created_at) : null,
+      title: recentPost ? recentPost.title : null,
+      createdAt: recentPost ? getRelativeTime(recentPost.created_at) : null,
     };
   });
 
-  const latestPosts = await Promise.all(latestPostsPromises);
+  const recentPostList = await Promise.all(recentPostsPromises);
   const isNext = page * pageSize < totalCount;
 
-  return { latestPosts, isNext };
+  return { recentPostList, isNext };
 };
