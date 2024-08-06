@@ -14,6 +14,7 @@ import {
   postSubmitService,
   getRoomEntranceService,
   checkPasswordService,
+  postRoomEntranceService,
 } from "./room.service.js";
 
 export const fixPost = async (req, res, next) => {
@@ -177,6 +178,20 @@ export const checkPassword = async (req, res, next) => {
 
     const result = await checkPasswordService(roomId, passwordInput);
     res.status(200).json(response(status.SUCCESS, result));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const postRoomEntrance = async (req, res, next) => {
+  try {
+    const roomId = req.params.roomId;
+    const userId = req.user.userId;
+    const userNickname = req.body.nickname;
+    console.log("공지방 입장 등록");
+
+    await postRoomEntranceService(roomId, userId, userNickname);
+    res.status(200).json(response(status.SUCCESS));
   } catch (error) {
     next(error);
   }
