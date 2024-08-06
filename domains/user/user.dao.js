@@ -17,6 +17,7 @@ import {
   updateUserRoomProfile,
   selectAdminId,
   updateRoomAdminNickname,
+  checkDuplicateNickname,
 } from "./user.sql.js";
 
 export const insertUser = async (data) => {
@@ -201,6 +202,19 @@ export const findJoinRoomByUserId = async (userId, page, pageSize) => {
     return { rooms, isNext };
   } catch (error) {
     console.log("내가 입장한 공지방 찾기 에러", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const findDuplicateNickname = async (roomId, nickname) => {
+  try {
+    const conn = await pool.getConnection();
+    const [[{ count }]] = await conn.query(checkDuplicateNickname, [roomId, nickname]);
+
+    conn.release();
+    return count > 0;
+  } catch (error) {
+    console.log("중복 닉네임 확인 에러", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };
