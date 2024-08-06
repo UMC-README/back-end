@@ -17,6 +17,7 @@ import {
   updatePassword,
   updateRoomProfile,
   checkRoomDuplicateNickname,
+  getLatestPostsInAllRooms,
 } from "./user.service.js";
 
 export const userSignUp = async (req, res, next) => {
@@ -279,6 +280,19 @@ export const checkUserRoomNicknameDuplicate = async (req, res, next) => {
     const isDuplicate = await checkRoomDuplicateNickname(roomId, nickname);
 
     res.status(200).json(response(status.SUCCESS, { isDuplicate }));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getLatestPosts = async (req, res, next) => {
+  try {
+    console.log("최근 공지글 목록 조회");
+
+    const userId = req.user.userId;
+    const result = await getLatestPostsInAllRooms(userId);
+
+    res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
   }
