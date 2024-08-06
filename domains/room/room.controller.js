@@ -13,6 +13,7 @@ import {
   getSubmitRequirementsService,
   postSubmitService,
   getRoomEntranceService,
+  checkPasswordService,
 } from "./room.service.js";
 
 export const fixPost = async (req, res, next) => {
@@ -162,6 +163,19 @@ export const getRoomEntrance = async (req, res, next) => {
     console.log("최초 입장시 공지방 정보 조회");
 
     const result = await getRoomEntranceService(roomId);
+    res.status(200).json(response(status.SUCCESS, result));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const checkPassword = async (req, res, next) => {
+  try {
+    const roomId = req.params.roomId;
+    const passwordInput = req.body.content;
+    console.log("최초 입장시 공지방 정보 조회");
+
+    const result = await checkPasswordService(roomId, passwordInput);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
