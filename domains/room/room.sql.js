@@ -56,12 +56,12 @@ export const getPostDetailsByRoomIdAtFirst = `
 
 //공지방 내 미확인 공지글 가져오기 (최신순 3개까지)
 export const getMyNotCheckedPostInRoom = `
-  SELECT p.id, r.room_name, p.title, TIMESTAMPDIFF(second, p.updated_at, CURRENT_TIMESTAMP) as updatedAtBeforeSec FROM post p
+  SELECT p.id, r.room_name, p.title, TIMESTAMPDIFF(second, p.created_at, CURRENT_TIMESTAMP) as createdAtBeforeSec FROM post p
   JOIN user u ON p.room_id = ? AND u.id = ?
   JOIN room r ON r.id = p.room_id
   LEFT JOIN submit s ON s.post_id = p.id AND s.user_id = u.id
   WHERE p.state = 'EXIST' AND (s.submit_state IS NULL OR s.submit_state = 'NOT_COMPLETE' OR s.submit_state = 'REJECT')
-  ORDER BY updatedAtBeforeSec ASC LIMIT 3
+  ORDER BY createdAtBeforeSec ASC LIMIT 3
 `;
 
 //개별 공지글 정보 가져오기
@@ -80,7 +80,7 @@ export const getPostImagesByPostId = `
 
 //공지글별 댓글 조회 (커서 없는 초기값)
 export const getCommentsByPostIdAtFirst = `
-  SELECT c.id, ur.nickname, c.content, c.updated_at FROM comment c
+  SELECT c.id, ur.nickname, c.content, c.created_at FROM comment c
   JOIN post p ON p.id = ? AND c.post_id = p.id
   LEFT JOIN \`user-room\` ur ON c.user_id = ur.user_id
   WHERE c.state = 'EXIST'
@@ -89,7 +89,7 @@ export const getCommentsByPostIdAtFirst = `
 
 //공지글별 댓글 조회 (커서 존재)
 export const getCommentsByPostId = `
-  SELECT c.id, ur.nickname, c.content, c.updated_at FROM comment c
+  SELECT c.id, ur.nickname, c.content, c.created_at FROM comment c
   JOIN post p ON p.id = ? AND c.post_id = p.id
   LEFT JOIN \`user-room\` ur ON c.user_id = ur.user_id
   WHERE c.state = 'EXIST' AND c.id > ?
