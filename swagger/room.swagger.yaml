@@ -183,19 +183,19 @@ paths:
                             "roomName": "README",
                             "postId": 6,
                             "postTitle": "test6",
-                            "updatedAtBefore": "1분 전",
+                            "createdAtBefore": "1분 전",
                         },
                         {
                             "roomName": "README",
                             "postId": 4,
                             "postTitle": "test4",
-                            "updatedAtBefore": "2개월 전",
+                            "createdAtBefore": "2개월 전",
                         },
                         {
                             "roomName": "README",
                             "postId": 3,
                             "postTitle": "test3",
-                            "updatedAtBefore": "4년 전",
+                            "createdAtBefore": "4년 전",
                         }
                       ]
                     }
@@ -311,31 +311,31 @@ paths:
                             "commentId": 1,
                             "commentAuthorNickname": "kimroom1",
                             "commentBody": "com.con.1",
-                            "updatedAt": "24. 7. 27. 18:08",
+                            "createdAt": "24. 7. 27. 18:08",
                         },
                         {
                             "commentId": 3,
                             "commentAuthorNickname": "parkroom1",
                             "commentBody": "com.con.3",
-                            "updatedAt": "24. 7. 27. 18:09",
+                            "createdAt": "24. 7. 27. 18:09",
                         },
                         {
                             "commentId": 4,
                             "commentAuthorNickname": "leeroom1",
                             "commentBody": "com.con.4",
-                            "updatedAt": "24. 7. 27. 18:09",
+                            "createdAt": "24. 7. 27. 18:09",
                         },
                         {
                             "commentId": 5,
                             "commentAuthorNickname": null,
                             "commentBody": "com.con.5",
-                            "updatedAt": "24. 7. 27. 18:10",
+                            "createdAt": "24. 7. 27. 18:10",
                         },
                         {
                             "commentId": 7,
                             "commentAuthorNickname": "leeroom1",
                             "commentBody": "com.con.7",
-                            "updatedAt": "24. 7. 27. 18:11",
+                            "createdAt": "24. 7. 27. 18:11",
                         }
                       ],
                     "cursorId": 7,
