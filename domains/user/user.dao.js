@@ -19,6 +19,7 @@ import {
   updateRoomAdminNickname,
   checkDuplicateNickname,
   getLatestPostInRoom,
+  getAllRoomsCount,
 } from "./user.sql.js";
 
 export const insertUser = async (data) => {
@@ -220,14 +221,27 @@ export const findDuplicateNickname = async (roomId, nickname) => {
   }
 };
 
-export const findAllRooms = async (userId) => {
+export const findAllRooms = async (userId, page, pageSize) => {
   try {
     const conn = await pool.getConnection();
-    const [rooms] = await conn.query(getAllRooms, [userId]);
+    const offset = (page - 1) * pageSize;
+    const [rooms] = await conn.query(getAllRooms, [userId, pageSize, offset]);
     conn.release();
     return rooms;
   } catch (error) {
     console.log("모든 공지방 찾기 에러", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const getRoomsCount = async (userId) => {
+  try {
+    const conn = await pool.getConnection();
+    const [[{ count }]] = await conn.query(getAllRoomsCount, [userId]);
+    conn.release();
+    return count;
+  } catch (error) {
+    console.log("공지방 개수 찾기 에러", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };
