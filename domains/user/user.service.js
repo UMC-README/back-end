@@ -239,14 +239,21 @@ export const getLatestPostsInAllRooms = async (userId, page, pageSize) => {
 
   const recentPostsPromises = rooms.map(async (room) => {
     const recentPost = await findLatestPostInRoom(room.id);
-    return {
-      roomName: room.room_name,
-      title: recentPost ? recentPost.title : null,
-      createdAt: recentPost ? getRelativeTime(recentPost.created_at) : null,
-    };
+
+    if (recentPost) {
+      return {
+        roomId: room.id,
+        roomName: room.room_name,
+        postId: recentPost ? recentPost.post_id : null,
+        title: recentPost ? recentPost.title : null,
+        createdAt: recentPost ? getRelativeTime(recentPost.created_at) : null,
+      };
+    } else {
+      return null;
+    }
   });
 
-  const recentPostList = await Promise.all(recentPostsPromises);
+  const recentPostList = (await Promise.all(recentPostsPromises)).filter((post) => post !== null);
   const isNext = page * pageSize < totalCount;
 
   return { recentPostList, isNext };
