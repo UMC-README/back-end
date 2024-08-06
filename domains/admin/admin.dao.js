@@ -199,7 +199,7 @@ export const userListDao = async (nickname) => {
 
     const [result] = await conn.query(userListSQLQuery, params);
     conn.release();
-        return result.map(user => ({
+    return result.map(user => ({
       nickname: user.nickname,
       profile_image: user.profile_image
     })); 
