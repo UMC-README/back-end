@@ -220,6 +220,18 @@ export const findDuplicateNickname = async (roomId, nickname) => {
   }
 };
 
+export const findAllRooms = async (userId) => {
+  try {
+    const conn = await pool.getConnection();
+    const [rooms] = await conn.query(getAllRooms, [userId]);
+    conn.release();
+    return rooms;
+  } catch (error) {
+    console.log("모든 공지방 찾기 에러", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
 export const findLatestPostInRoom = async (roomId) => {
   try {
     const conn = await pool.getConnection();
