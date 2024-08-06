@@ -12,6 +12,7 @@ import {
   deleteCommentService,
   getSubmitRequirementsService,
   postSubmitService,
+  getRoomEntranceService,
 } from "./room.service.js";
 
 export const fixPost = async (req, res, next) => {
@@ -149,6 +150,18 @@ export const postSubmit = async (req, res, next) => {
     console.log("공지 확인 제출");
 
     const result = await postSubmitService(postId, userId, content, imageURLs);
+    res.status(200).json(response(status.SUCCESS, result));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getRoomEntrance = async (req, res, next) => {
+  try {
+    const roomId = req.params.roomId;
+    console.log("최초 입장시 공지방 정보 조회");
+
+    const result = await getRoomEntranceService(roomId);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);

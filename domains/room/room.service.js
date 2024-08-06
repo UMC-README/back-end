@@ -9,6 +9,7 @@ import {
   deleteCommentDAO,
   getSubmitRequirementsDAO,
   postSubmitDAO,
+  getRoomEntranceDAO,
 } from "./room.dao.js";
 
 import {
@@ -153,4 +154,14 @@ export const postSubmitService = async (postId, userId, content, imageURLs) => {
   }
 
   return submitData;
+};
+
+export const getRoomEntranceService = async (roomId) => {
+  const roomData = await getRoomEntranceDAO(roomId);
+
+  if (roomData == -1) {
+    throw new Error("공지방을 찾을 수 없습니다.");
+  }
+
+  return roomData;
 };
