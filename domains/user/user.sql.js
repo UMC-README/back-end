@@ -105,3 +105,10 @@ export const getJoinRoom = `
   LIMIT ?
   OFFSET ?
 `;
+
+// 닉네임 중복 확인
+export const checkDuplicateNickname = `
+  SELECT COUNT(*) as count
+  FROM \`user-room\`
+  WHERE room_id = ? AND nickname = ?
+`;
