@@ -12,6 +12,8 @@ import {
   updatePostSQL,
   deletePostImgSQL,
   deletePostSQL,
+  userListNameSQL,
+  userListSQL,
   userProfileSQL,
   userInviteSQL,
   checkUserInRoomSQL,
@@ -182,6 +184,33 @@ export const deletePostDao = async (postId) => {
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };
+
+export const userListDao = async (nickname) => { 
+  try {
+    const conn = await pool.getConnection();
+
+    let userListSQLQuery;
+    let params = [];
+
+    if (nickname && nickname.trim() !== '') { // nickname 유효성 검사
+      userListSQLQuery = userListNameSQL;  
+      params = [nickname]; 
+    } else {
+      userListSQLQuery = userListSQL; // 모든 유저 조회 쿼리
+    }
+
+    const [result] = await conn.query(userListSQLQuery, params);
+    conn.release();
+        return result.map(user => ({
+      nickname: user.nickname,
+      profile_image: user.profile_image
+    })); 
+  } catch (error) {
+    console.log("User 검색 에러:", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
 
 export const userProfileDao = async (userId) => {
   try {

@@ -43,6 +43,15 @@ export const deletePostSQL = `
     UPDATE post SET updated_at = NOW(), state = 'deleted' WHERE id = ?;
 `;
 
+// 유저 검색
+export const userListNameSQL = ` 
+  SELECT nickname, profile_image FROM \`user-room\` WHERE nickname = ?;
+`; 
+export const userListSQL = ` 
+  SELECT nickname, profile_image FROM \`user-room\`;
+`; 
+
+
 // 유저 프로필 조회
 export const userProfileSQL = `
   SELECT ur.nickname, ur.profile_image, ur.penalty_count
