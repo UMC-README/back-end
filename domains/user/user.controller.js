@@ -290,7 +290,10 @@ export const getLatestPosts = async (req, res, next) => {
     console.log("최근 공지글 목록 조회");
 
     const userId = req.user.userId;
-    const result = await getLatestPostsInAllRooms(userId);
+    const page = parseInt(req.query.page, 10) || 1;
+    const pageSize = parseInt(req.query.pageSize, 10) || 5;
+
+    const result = await getLatestPostsInAllRooms(userId, page, pageSize);
 
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {

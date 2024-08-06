@@ -12,6 +12,7 @@ import {
   findDuplicateNickname,
   findLatestPostInRoom,
   findAllRooms,
+  getRoomsCount,
 } from "./user.dao.js";
 import { passwordHashing } from "../../utils/passwordHash.js";
 import { generateJWTToken } from "../../utils/generateToken.js";
@@ -232,15 +233,21 @@ export const checkRoomDuplicateNickname = async (roomId, nickname) => {
   return isDuplicate;
 };
 
-export const getLatestPostsInAllRooms = async (userId) => {
-  const rooms = await findAllRooms(userId);
+export const getLatestPostsInAllRooms = async (userId, page, pageSize) => {
+  const rooms = await findAllRooms(userId, page, pageSize);
+  const totalCount = await getRoomsCount(userId);
 
   const latestPostsPromises = rooms.map(async (room) => {
     const latestPost = await findLatestPostInRoom(room.id);
-    return { room, latestPost };
+    return {
+      roomName: room.room_name,
+      title: latestPost ? latestPost.title : null,
+      createdAt: latestPost ? getRelativeTime(latestPost.created_at) : null,
+    };
   });
 
-  // 모든 작업이 완료된 경우에 return할 수 있도록 Promise.all 사용
   const latestPosts = await Promise.all(latestPostsPromises);
-  return latestPosts;
+  const isNext = page * pageSize < totalCount;
+
+  return { latestPosts, isNext };
 };
