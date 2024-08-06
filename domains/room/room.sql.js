@@ -165,3 +165,8 @@ export const getSubmitIdByPostIdAndUserId = `
   SELECT id FROM submit s
   WHERE post_id = ? AND user_id = ?
 `;
+
+//공지방 최초 입장시 공지방 정보 가져오기
+export const getRoomEntranceInfoByRoomId = `
+  SELECT room_name, room_image, admin_nickname FROM room WHERE id = ?
+`;
