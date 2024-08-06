@@ -31,6 +31,7 @@ export const signupUser = async (userInfo, token) => {
 
   return {
     userId,
+    nickname: userInfo.nickname,
     accessToken: token ?? accessToken,
   };
 };
