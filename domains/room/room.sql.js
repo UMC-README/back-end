@@ -170,3 +170,8 @@ export const getSubmitIdByPostIdAndUserId = `
 export const getRoomEntranceInfoByRoomId = `
   SELECT room_name, room_image, admin_nickname FROM room WHERE id = ?
 `;
+
+//공지방 비밀번호가 일치하는지 여부 확인
+export const checkRoomPasswordSQL = `
+  SELECT BINARY r.room_password = ? AS isValidResult FROM room r WHERE r.id = ?
+`;
