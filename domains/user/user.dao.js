@@ -11,7 +11,7 @@ import {
   getJoinRoom,
   getCreateRoomCount,
   getJoinRoomCount,
-  getRoom,
+  getAllRooms,
   updateUserProfile,
   updateUserPassword,
   updateUserRoomProfile,
@@ -150,7 +150,7 @@ export const findFixedPostByUserId = async (userId) => {
 export const findRoomByUserId = async (userId) => {
   try {
     const conn = await pool.getConnection();
-    const [rooms] = await conn.query(getRoom, [userId]);
+    const [rooms] = await conn.query(getAllRooms, [userId]);
 
     if (rooms.length == 0) {
       conn.release();

@@ -56,13 +56,12 @@ export const getFixedPost = `
   WHERE u.id = ?
 `;
 
-// 내 공지방 찾기
-export const getRoom = `
-  SELECT ur.nickname, ur.profile_image, r.room_name, r.id
+// 모든 공지방 찾기 (내가 개설한 공지방과 입장한 공지방)
+export const getAllRooms = `
+  SELECT ur.nickname, ur.profile_image, r.room_name, r.id, r.admin_id
   FROM \`user-room\` ur 
-  JOIN user u ON u.id = ur.user_id
   JOIN room r ON r.id = ur.room_id
-  WHERE u.id = ?
+  WHERE ur.user_id = ?
 `;
 
 // 개설한 공지방 개수 구하기
