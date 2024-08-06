@@ -267,3 +267,18 @@ export const getUserJoinRoom = async (req, res, next) => {
     next(error);
   }
 };
+
+export const checkUserRoomNicknameDuplicate = async (req, res, next) => {
+  try {
+    console.log("공지방 내 닉네임 중복 확인");
+
+    const roomId = req.params.roomId;
+    const { nickname } = req.body;
+
+    const isDuplicate = await checkRoomDuplicateNickname(roomId, nickname);
+
+    res.status(200).json(response(status.SUCCESS, { isDuplicate }));
+  } catch (error) {
+    next(error);
+  }
+};
