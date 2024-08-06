@@ -373,6 +373,76 @@ paths:
                       endDate:
                         type: string
                         description: 마감일
+  
+  /user/recent:
+    get:
+      tags:
+        - user
+      summary: 최근 공지글 목록 조회 조회
+      description: 최근 공지글 목록 조회 조회
+      operationId: recent
+      consumes:
+        - application/json
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: integer
+            example: 1
+            description: 페이지 번호 (기본값: 1)
+        - in: query
+          name: pageSize
+          required: false
+          schema:
+            type: integer
+            example: 5
+            description: 페이지 크기 (기본값: 5)
+      responses:
+        "200":
+          description: 최근 공지글 목록 조회 성공!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: object
+                    properties:
+                      recentPostList:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            roomId:
+                              type: integer
+                              description: 공지방 ID
+                            roomName:
+                              type: string
+                              description: 공지방 이름
+                            postId:
+                              type: string
+                              description: 공지글 ID
+                            title:
+                              type: string
+                              description: 공지글 제목
+                            createdAt:
+                              type: string
+                              description: 공지글 작성일
+                      isNext:
+                        type: boolean
+                        description: 다음 페이지가 있는지 여부
 
   /user/create-room:
     get:
