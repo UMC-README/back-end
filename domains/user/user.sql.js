@@ -62,6 +62,16 @@ export const getAllRooms = `
   FROM \`user-room\` ur 
   JOIN room r ON r.id = ur.room_id
   WHERE ur.user_id = ?
+  LIMIT ?
+  OFFSET ?
+`;
+
+// 공지방 개수 찾기 (페이지네이션을 위한 전체 개수)
+export const getAllRoomsCount = `
+  SELECT COUNT(*) as count
+  FROM \`user-room\` ur 
+  JOIN room r ON r.id = ur.room_id
+  WHERE ur.user_id = ?
 `;
 
 // 개설한 공지방 개수 구하기
@@ -114,7 +124,7 @@ export const checkDuplicateNickname = `
 
 // 가장 최근의 공지글 찾기
 export const getLatestPostInRoom = `
-  SELECT p.id as post_id, p.title, p.content, p.created_at
+  SELECT p.id as post_id, p.title, p.created_at
   FROM post p
   WHERE p.room_id = ? AND p.state = 'EXIST'
   ORDER BY p.created_at DESC
