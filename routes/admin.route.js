@@ -8,6 +8,7 @@ import {
   createPostController,
   updatePostController,
   deletePostController,
+  userListController,
   userProfileController,
   userInviteController,
   deleteUserController,
@@ -21,6 +22,7 @@ adminRouter.patch("/rooms", tokenAuth, expressAsyncHandler(deleteRoomsController
 adminRouter.post("/post", tokenAuth, expressAsyncHandler(createPostController));
 adminRouter.patch("/post/:post_id", tokenAuth, expressAsyncHandler(updatePostController));
 adminRouter.patch("/post", tokenAuth, expressAsyncHandler(deletePostController));
+adminRouter.get("/users/", tokenAuth, expressAsyncHandler(userListController));
 adminRouter.get("/profile/:userId", tokenAuth, expressAsyncHandler(userProfileController));
 adminRouter.get("/invitation/:roomId", tokenAuth, expressAsyncHandler(userInviteController));
 adminRouter.delete("/user-Ban", tokenAuth, expressAsyncHandler(deleteUserController));
