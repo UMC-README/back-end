@@ -10,6 +10,7 @@ import {
   updateUserPasswordById,
   updateUserRoomProfileById,
   findDuplicateNickname,
+  findLatestPostInRoom,
 } from "./user.dao.js";
 import { passwordHashing } from "../../utils/passwordHash.js";
 import { generateJWTToken } from "../../utils/generateToken.js";
