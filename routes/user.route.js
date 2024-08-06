@@ -17,6 +17,7 @@ import {
   getUserPassword,
   updateUserPassword,
   updateUserRoomProfile,
+  checkUserRoomNicknameDuplicate,
 } from "../domains/user/user.controller.js";
 import { tokenAuth } from "../middleware/token.auth.js";
 import { imageUploader } from "../middleware/image.uploader.js";
@@ -53,6 +54,12 @@ userRouter.get("/profile", tokenAuth, expressAsyncHandler(getUserRoomProfiles));
 userRouter.patch("/profile", tokenAuth, expressAsyncHandler(updateUserBasicProfile));
 
 userRouter.patch("/profile/:roomId", tokenAuth, expressAsyncHandler(updateUserRoomProfile));
+
+userRouter.post(
+  "/profile/:roomId/nickname",
+  tokenAuth,
+  expressAsyncHandler(checkUserRoomNicknameDuplicate)
+);
 
 userRouter.post("/password", tokenAuth, expressAsyncHandler(getUserPassword));
 

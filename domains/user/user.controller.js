@@ -16,6 +16,7 @@ import {
   verifyUserPassword,
   updatePassword,
   updateRoomProfile,
+  checkRoomDuplicateNickname,
 } from "./user.service.js";
 
 export const userSignUp = async (req, res, next) => {
@@ -263,6 +264,21 @@ export const getUserJoinRoom = async (req, res, next) => {
 
     const result = await getMyJoinRoom(userId, page, pageSize);
     res.status(200).json(response(status.SUCCESS, result));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const checkUserRoomNicknameDuplicate = async (req, res, next) => {
+  try {
+    console.log("공지방 내 닉네임 중복 확인");
+
+    const roomId = req.params.roomId;
+    const { nickname } = req.body;
+
+    const isDuplicate = await checkRoomDuplicateNickname(roomId, nickname);
+
+    res.status(200).json(response(status.SUCCESS, { isDuplicate }));
   } catch (error) {
     next(error);
   }

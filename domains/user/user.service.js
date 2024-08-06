@@ -9,6 +9,7 @@ import {
   updateUserProfileById,
   updateUserPasswordById,
   updateUserRoomProfileById,
+  findDuplicateNickname,
 } from "./user.dao.js";
 import { passwordHashing } from "../../utils/passwordHash.js";
 import { generateJWTToken } from "../../utils/generateToken.js";
@@ -221,4 +222,10 @@ export const getMyJoinRoom = async (userId, page, pageSize) => {
   }));
 
   return { rooms: Myrooms, isNext };
+};
+
+export const checkRoomDuplicateNickname = async (roomId, nickname) => {
+  const isDuplicate = await findDuplicateNickname(roomId, nickname);
+
+  return isDuplicate;
 };
