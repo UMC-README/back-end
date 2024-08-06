@@ -17,7 +17,7 @@ export const deleteRoomsSQL = `
 
 // 공지글 생성 & 공지방 이미지
 export const createPostSQL = `
-  INSERT INTO post (room_id, title, content, type, start_date, end_date, question, unread_count, user_id)
+  INSERT INTO post (room_id, type, title, content, start_date, end_date, question, unread_count, user_id)
   VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);  
 `;
 export const getMemberCountSQL = `
@@ -42,6 +42,15 @@ export const deletePostImgSQL = `
 export const deletePostSQL = `
     UPDATE post SET updated_at = NOW(), state = 'deleted' WHERE id = ?;
 `;
+
+// 유저 검색
+export const userListNameSQL = ` 
+  SELECT nickname, profile_image FROM \`user-room\` WHERE nickname = ?;
+`; 
+export const userListSQL = ` 
+  SELECT nickname, profile_image FROM \`user-room\`;
+`; 
+
 
 // 유저 프로필 조회
 export const userProfileSQL = `

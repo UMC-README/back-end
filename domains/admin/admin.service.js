@@ -5,6 +5,7 @@ import {
   createPostDao,
   updatePostDao,
   deletePostDao,
+  userListDao,
   userProfileDao,
   userInviteDao,
   deleteUserDao,
@@ -44,9 +45,9 @@ export const deleteRoomsService = async (body) => {
   }
 };
 
-export const createPostService = async (body) => {
+export const createPostService = async (body, userId) => {
   try {
-    const postData = await createPostDao(body);
+    const postData = await createPostDao(body, userId);
     return createPostDTO(postData);
   } catch (error) {
     console.error("공지글 생성하기 에러:", error);
@@ -76,6 +77,16 @@ export const deletePostService = async (postId) => {
     throw error;
   }
 };
+
+export const userListService = async (nickname) => {
+  try {
+    return await userListDao(nickname);
+  } catch (error) {
+    console.error("유저 목록 조회 에러:", error);
+    throw error;
+  }
+};
+
 
 export const userProfileService = async (userId) => {
   try {
