@@ -45,9 +45,9 @@ export const deleteRoomsService = async (body) => {
   }
 };
 
-export const createPostService = async (body) => {
+export const createPostService = async (body, userId) => {
   try {
-    const postData = await createPostDao(body);
+    const postData = await createPostDao(body, userId);
     return createPostDTO(postData);
   } catch (error) {
     console.error("공지글 생성하기 에러:", error);

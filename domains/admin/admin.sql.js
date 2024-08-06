@@ -17,7 +17,7 @@ export const deleteRoomsSQL = `
 
 // 공지글 생성 & 공지방 이미지
 export const createPostSQL = `
-  INSERT INTO post (room_id, title, content, type, start_date, end_date, question, unread_count, user_id)
+  INSERT INTO post (room_id, type, title, content, start_date, end_date, question, unread_count, user_id)
   VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);  
 `;
 export const getMemberCountSQL = `
