@@ -227,6 +227,9 @@ paths:
                       userId:
                         type: number
                         description: 유저 ID
+                      nickname:
+                        type: string
+                        description: 유저 닉네임
                       accessToken:
                         type: string
                         description: JWT 토큰
