@@ -300,3 +300,17 @@ export const getLatestPosts = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getSubmitListByRoom = async (req, res, next) => {
+  try {
+    console.log("미션 제출 목록 조회");
+
+    const roomId = req.params.roomId;
+
+    const result = await getSubmitList(roomId);
+
+    res.status(200).json(response(status.SUCCESS, result));
+  } catch (error) {
+    next(error);
+  }
+};
