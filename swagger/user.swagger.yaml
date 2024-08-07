@@ -900,3 +900,61 @@ paths:
                       isSuccess:
                         type: boolean
                         description: 수정 성공 여부
+  
+  /user/rooms/missions/{roomId}:
+    get:
+      tags:
+        - user
+      summary: 공지방마다 제출한 미션 내역 조회
+      description: 공지방마다 제출한 미션 내역 조회
+      operationId: user-room-missions
+      consumes:
+        - application/json
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: roomId
+          required: true
+          schema:
+            type: integer
+            description: 미션 제출 내역을 확인 할 공지방의 아이디
+      responses:
+        "200":
+          description: 공지방마다 제출한 미션 내역 조회 성공!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        nickname:
+                          type: string
+                          description: 해당 공지방에서의 닉네임
+                        profileImage:
+                          type: string
+                          description: 해당 공지방에서의 프로필 사진
+                        submitState:
+                          type: string
+                          description: 해당 제출의 상태 (COMPLETE, PENDING, REJECT)
+                        content:
+                          type: string
+                          description: 해당 제출의 기타사항
+                        images:
+                          type: array
+                          items:
+                            type: string
+                            description: 이미지 URL
