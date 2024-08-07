@@ -20,6 +20,7 @@ import {
   checkDuplicateNickname,
   getLatestPostInRoom,
   getAllRoomsCount,
+  getSubmitCountInRoom,
 } from "./user.sql.js";
 
 export const insertUser = async (data) => {
