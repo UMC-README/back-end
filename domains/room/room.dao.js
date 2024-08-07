@@ -47,9 +47,8 @@ export const fixPostDAO = async (data) => {
       return -2;
     }
 
-    const result = await conn.query(changeFixedPostSQL, [data.postId, data.userId]);
+    await conn.query(changeFixedPostSQL, [data.postId, data.userId]);
 
-    console.log(result);
     conn.release();
     return "고정 공지글 등록 성공";
   } catch (error) {
@@ -69,9 +68,8 @@ export const deleteFixPostDAO = async (data) => {
       return -1;
     }
 
-    const result = await conn.query(changeFixedPostSQL, [null, data.userId]);
+    await conn.query(changeFixedPostSQL, [null, data.userId]);
 
-    console.log(result);
     conn.release();
     return "고정 공지글 삭제 성공";
   } catch (error) {
