@@ -91,9 +91,10 @@ export const getDetailedPost = async (req, res, next) => {
 export const getComments = async (req, res, next) => {
   try {
     const postId = req.params.postId;
+    const userId = req.user.userId;
     console.log("postId: ", postId);
 
-    const result = await getCommentsService(postId, req.query);
+    const result = await getCommentsService(postId, userId, req.query);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
