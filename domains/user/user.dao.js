@@ -257,3 +257,15 @@ export const findLatestPostInRoom = async (roomId) => {
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };
+
+export const findSubmitCountInRoom = async (roomId, userId) => {
+  try {
+    const conn = await pool.getConnection();
+    const [[{ submit_count }]] = await conn.query(getSubmitCountInRoom, [roomId, userId]);
+    conn.release();
+    return submit_count;
+  } catch (error) {
+    console.log("제출 개수 찾기 에러", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
