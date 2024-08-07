@@ -572,7 +572,7 @@ paths:
                           type: object
                           properties:
                             id:
-                              type: integer
+                              type: number
                               description: 공지방 ID
                             nickname:
                               type: string
@@ -589,6 +589,15 @@ paths:
                             latestPostTime:
                               type: string
                               description: 공지방의 최근 공지글 작성 시간
+                            submitCount:
+                              type: number
+                              description: 내가 제출한 요청 내역 개수 (NotComplete 제외)
+                            maxPenaltyCount:
+                              type: number
+                              description: 해당 공지방의 최대 페널티 개수
+                            penaltyCount:
+                              type: number
+                              description: 해당 공지방의 내 페널티 개수
                       isNext:
                         type: boolean
                         description: 다음 페이지가 있는지 여부

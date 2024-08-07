@@ -20,6 +20,7 @@ import {
   checkDuplicateNickname,
   getLatestPostInRoom,
   getAllRoomsCount,
+  getSubmitCountInRoom,
 } from "./user.sql.js";
 
 export const insertUser = async (data) => {
@@ -254,6 +255,18 @@ export const findLatestPostInRoom = async (roomId) => {
     return post[0];
   } catch (error) {
     console.log("가장 최근 공지글 찾기 에러", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const findSubmitCountInRoom = async (roomId, userId) => {
+  try {
+    const conn = await pool.getConnection();
+    const [[{ submit_count }]] = await conn.query(getSubmitCountInRoom, [roomId, userId]);
+    conn.release();
+    return submit_count;
+  } catch (error) {
+    console.log("제출 개수 찾기 에러", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };

@@ -103,9 +103,9 @@ export const getJoinRoomCount = `
   WHERE u.id = ? AND r.admin_id <> ?
 `;
 
-// 입장한 공지방 찾기
+// 내가 입장한 공지방 찾기
 export const getJoinRoom = `
-  SELECT room.id, ur.nickname as user_nickname, room.room_name, room.room_image, room.state, MAX(post.created_at) as latest_post_time
+  SELECT room.id as room_id, ur.nickname as user_nickname, room.room_name, room.room_image, room.state, room.max_penalty as max_penalty_count, ur.penalty_count, MAX(post.created_at) as latest_post_time
   FROM room
   JOIN \`user-room\` ur ON room.id = ur.room_id
   LEFT JOIN post ON room.id = post.room_id
@@ -129,4 +129,12 @@ export const getLatestPostInRoom = `
   WHERE p.room_id = ? AND p.state = 'EXIST'
   ORDER BY p.created_at DESC
   LIMIT 1
+`;
+
+// 공지방에 대한 내 submit (MISSION) 개수 찾기
+export const getSubmitCountInRoom = `
+  SELECT COUNT(*) as submit_count
+  FROM submit s
+  JOIN post p ON s.post_id = p.id
+  WHERE p.room_id = ? AND s.user_id = ? AND s.submit_state IN ('COMPLETE', 'PENDING', 'REJECT') AND p.type = 'MISSION'
 `;
