@@ -21,6 +21,8 @@ import {
   getLatestPostInRoom,
   getAllRoomsCount,
   getSubmitCountInRoom,
+  getSubmitListInRoom,
+  getSubmitImages,
 } from "./user.sql.js";
 
 export const insertUser = async (data) => {
@@ -267,6 +269,32 @@ export const findSubmitCountInRoom = async (roomId, userId) => {
     return submit_count;
   } catch (error) {
     console.log("제출 개수 찾기 에러", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const findSubmitListByRoomId = async (roomId) => {
+  try {
+    const conn = await pool.getConnection();
+    const [submits] = await conn.query(getSubmitListInRoom, [roomId]);
+
+    conn.release();
+    return submits;
+  } catch (error) {
+    console.log("Submit 목록 찾기 에러", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const findSubmitImagesBySubmitId = async (submitId) => {
+  try {
+    const conn = await pool.getConnection();
+    const [images] = await conn.query(getSubmitImages, [submitId]);
+
+    conn.release();
+    return images.map((image) => image.URL);
+  } catch (error) {
+    console.log("Submit 이미지 목록 찾기 에러", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };
