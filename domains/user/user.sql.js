@@ -130,3 +130,11 @@ export const getLatestPostInRoom = `
   ORDER BY p.created_at DESC
   LIMIT 1
 `;
+
+// 공지방에 대한 내 submit 개수 찾기
+export const getSubmitCountInRoom = `
+  SELECT COUNT(*) as submit_count
+  FROM submit s
+  JOIN post p ON s.post_id = p.id
+  WHERE p.room_id = ? AND s.user_id = ? AND s.submit_state IN ('COMPLETE', 'PENDING', 'REJECT')
+`;
