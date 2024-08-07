@@ -13,6 +13,7 @@ import {
   findLatestPostInRoom,
   findAllRooms,
   getRoomsCount,
+  findSubmitCountInRoom,
 } from "./user.dao.js";
 import { passwordHashing } from "../../utils/passwordHash.js";
 import { generateJWTToken } from "../../utils/generateToken.js";
@@ -216,16 +217,24 @@ export const getMyJoinRoom = async (userId, page, pageSize) => {
     return { rooms: null, isNext: false };
   }
 
-  const Myrooms = rooms.map((room) => ({
-    id: room.id,
-    nickname: room.user_nickname,
-    roomName: room.room_name,
-    roomImage: room.room_image,
-    state: room.state,
-    latestPostTime: getRelativeTime(room.latest_post_time),
-  }));
+  const Myrooms = rooms.map(async (room) => {
+    const submitCount = await findSubmitCountInRoom(room.room_id, userId);
+    return {
+      id: room.room_id,
+      nickname: room.user_nickname,
+      roomName: room.room_name,
+      roomImage: room.room_image,
+      state: room.state,
+      latestPostTime: getRelativeTime(room.latest_post_time),
+      submitCount,
+      maxPenaltyCount: room.max_penalty_count,
+      penaltyCount: room.penalty_count,
+    };
+  });
 
-  return { rooms: Myrooms, isNext };
+  const RoomDatas = await Promise.all(Myrooms);
+
+  return { rooms: RoomDatas, isNext };
 };
 
 export const checkRoomDuplicateNickname = async (roomId, nickname) => {
