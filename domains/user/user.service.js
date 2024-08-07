@@ -278,10 +278,10 @@ export const getSubmitList = async (roomId) => {
     const images = await findSubmitImages(submit.submit_id);
 
     return {
+      nickname: submit.user_nickname,
+      profileImage: submit.profile_image,
       submitState: submit.submit_state,
       content: submit.content,
-      userNickname: submit.user_nickname,
-      profileImage: submit.profile_image,
       images,
     };
   });
