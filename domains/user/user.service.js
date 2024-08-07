@@ -14,6 +14,8 @@ import {
   findAllRooms,
   getRoomsCount,
   findSubmitCountInRoom,
+  findSubmitList,
+  findSubmitImages,
 } from "./user.dao.js";
 import { passwordHashing } from "../../utils/passwordHash.js";
 import { generateJWTToken } from "../../utils/generateToken.js";
@@ -267,4 +269,23 @@ export const getLatestPostsInAllRooms = async (userId, page, pageSize) => {
   const isNext = page * pageSize < totalCount;
 
   return { recentPostList, isNext };
+};
+
+export const getSubmitList = async (roomId) => {
+  const submits = await findSubmitList(roomId);
+
+  const detailedSubmitsPromises = submits.map(async (submit) => {
+    const images = await findSubmitImages(submit.submit_id);
+
+    return {
+      submitState: submit.submit_state,
+      content: submit.content,
+      userNickname: submit.user_nickname,
+      profileImage: submit.profile_image,
+      images,
+    };
+  });
+
+  const detailedSubmits = await Promise.all(detailedSubmitsPromises);
+  return detailedSubmits;
 };
