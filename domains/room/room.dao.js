@@ -26,6 +26,7 @@ import {
   getSubmitIdByPostIdAndUserId,
   getRoomEntranceInfoByRoomId,
   checkRoomPasswordSQL,
+  createRoomEntranceSQL,
 } from "./room.sql.js";
 import { getUserById } from "../user/user.sql.js";
 
@@ -388,6 +389,25 @@ export const checkPasswordDAO = async (roomId, passwordInput) => {
     const [isValid] = await conn.query(checkRoomPasswordSQL, [passwordInput, roomId]);
     conn.release();
     return isValid[0].isValidResult;
+  } catch (err) {
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const postRoomEntranceDAO = async (roomId, userId, userNickname) => {
+  try {
+    const conn = await pool.getConnection();
+
+    const [room] = await conn.query(getRoomById, roomId);
+
+    if (room.length == 0) {
+      conn.release();
+      return -1;
+    }
+
+    await conn.query(createRoomEntranceSQL, [userId, roomId, userNickname]);
+    conn.release();
+    return true;
   } catch (err) {
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }

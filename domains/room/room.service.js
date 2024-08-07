@@ -11,6 +11,7 @@ import {
   postSubmitDAO,
   getRoomEntranceDAO,
   checkPasswordDAO,
+  postRoomEntranceDAO,
 } from "./room.dao.js";
 
 import {
@@ -181,4 +182,14 @@ export const checkPasswordService = async (roomId, passwordInput) => {
   if (roomData == 1) {
     return { isValid: true };
   }
+};
+
+export const postRoomEntranceService = async (roomId, userId, userNickname) => {
+  const userRoomData = await postRoomEntranceDAO(roomId, userId, userNickname);
+
+  if (userRoomData == -1) {
+    throw new Error("공지방을 찾을 수 없습니다.");
+  }
+
+  return { isSuccess: userRoomData };
 };
