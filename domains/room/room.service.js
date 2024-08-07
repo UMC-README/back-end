@@ -90,7 +90,7 @@ export const getDetailedPostService = async (postId, userId) => {
   return detailedPostDTO(roomData);
 };
 
-export const getCommentsService = async (postId, query) => {
+export const getCommentsService = async (postId, userId, query) => {
   const { commentId, size = 100 } = query;
 
   const postData = await getCommentsDAO(postId, commentId, size);
@@ -103,7 +103,7 @@ export const getCommentsService = async (postId, query) => {
     return null;
   }
 
-  return allCommentsInPostDTO(postData);
+  return allCommentsInPostDTO(postData, userId);
 };
 
 export const postCommentService = async (postId, userId, content) => {
