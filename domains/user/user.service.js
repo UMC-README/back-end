@@ -287,5 +287,6 @@ export const getSubmitList = async (roomId) => {
   });
 
   const detailedSubmits = await Promise.all(detailedSubmitsPromises);
+
   return detailedSubmits;
 };
