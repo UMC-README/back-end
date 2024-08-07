@@ -301,7 +301,7 @@ export const getLatestPosts = async (req, res, next) => {
   }
 };
 
-export const getSubmitListByRoom = async (req, res, next) => {
+export const getMySubmitList = async (req, res, next) => {
   try {
     console.log("미션 제출 목록 조회");
 
