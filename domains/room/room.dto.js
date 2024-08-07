@@ -80,9 +80,18 @@ export const detailedPostDTO = (data) => {
   return { post, imageURLs };
 };
 
-export const allCommentsInPostDTO = (data) => {
+export const allCommentsInPostDTO = (data, userId) => {
+  const isCommentMine = (myUserId, commentUserId) => {
+    if (myUserId === commentUserId) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   const comments = data.map((comment) => ({
     commentId: comment.id,
+    isCommentMine: isCommentMine(userId, comment.user_id),
     commentAuthorNickname: comment.nickname,
     commentBody: comment.content,
     createdAt: formatDate(comment.created_at),
