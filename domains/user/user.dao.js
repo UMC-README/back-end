@@ -273,7 +273,7 @@ export const findSubmitCountInRoom = async (roomId, userId) => {
   }
 };
 
-export const findSubmitListByRoomId = async (roomId) => {
+export const findSubmitList = async (roomId) => {
   try {
     const conn = await pool.getConnection();
     const [submits] = await conn.query(getSubmitListInRoom, [roomId]);
@@ -286,7 +286,7 @@ export const findSubmitListByRoomId = async (roomId) => {
   }
 };
 
-export const findSubmitImagesBySubmitId = async (submitId) => {
+export const findSubmitImages = async (submitId) => {
   try {
     const conn = await pool.getConnection();
     const [images] = await conn.query(getSubmitImages, [submitId]);
