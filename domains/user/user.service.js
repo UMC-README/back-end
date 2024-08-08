@@ -158,14 +158,14 @@ export const getMyFixedPost = async (userId) => {
   };
 };
 
-export const getMyRoomProfiles = async (userId) => {
+export const getMyRoomProfiles = async (userId, page, pageSize) => {
   const userData = await findUserById(userId);
 
   if (!userData) {
     throw new Error("사용자를 찾을 수 없습니다.");
   }
 
-  const rooms = await findRoomByUserId(userId);
+  const rooms = await findRoomByUserId(userId, page, pageSize);
 
   if (!rooms) {
     return {
@@ -182,11 +182,11 @@ export const getMyRoomProfiles = async (userId) => {
 };
 
 export const getMyCreateRoom = async (userId, page, pageSize) => {
-  const userData = await findUserById(userId);
+  // const userData = await findUserById(userId);
 
-  if (!userData) {
-    throw new Error("사용자를 찾을 수 없습니다.");
-  }
+  // if (!userData) {
+  //   throw new Error("사용자를 찾을 수 없습니다.");
+  // }
 
   const { rooms, isNext } = await findCreateRoomByUserId(userId, page, pageSize);
 
@@ -195,7 +195,7 @@ export const getMyCreateRoom = async (userId, page, pageSize) => {
   }
 
   const Myrooms = rooms.map((room) => ({
-    id: room.id,
+    id: room.room_id,
     nickname: room.user_nickname,
     roomName: room.room_name,
     roomImage: room.room_image,
@@ -207,11 +207,11 @@ export const getMyCreateRoom = async (userId, page, pageSize) => {
 };
 
 export const getMyJoinRoom = async (userId, page, pageSize) => {
-  const userData = await findUserById(userId);
+  // const userData = await findUserById(userId);
 
-  if (!userData) {
-    throw new Error("사용자를 찾을 수 없습니다.");
-  }
+  // if (!userData) {
+  //   throw new Error("사용자를 찾을 수 없습니다.");
+  // }
 
   const { rooms, isNext } = await findJoinRoomByUserId(userId, page, pageSize);
 

@@ -152,10 +152,11 @@ export const findFixedPostByUserId = async (userId) => {
   }
 };
 
-export const findRoomByUserId = async (userId) => {
+export const findRoomByUserId = async (userId, page, pageSize) => {
   try {
     const conn = await pool.getConnection();
-    const [rooms] = await conn.query(getAllRooms, [userId]);
+    const offset = (page - 1) * pageSize;
+    const [rooms] = await conn.query(getAllRooms, [userId, pageSize, offset]);
 
     if (rooms.length == 0) {
       conn.release();

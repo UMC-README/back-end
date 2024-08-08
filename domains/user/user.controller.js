@@ -156,8 +156,10 @@ export const getUserRoomProfiles = async (req, res, next) => {
     console.log("내 프로필 전체 조회");
 
     const userId = req.user.userId;
+    const page = parseInt(req.query.page, 10) || 1;
+    const pageSize = parseInt(req.query.pageSize, 10) || 6;
 
-    const result = await getMyRoomProfiles(userId);
+    const result = await getMyRoomProfiles(userId, page, pageSize);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
