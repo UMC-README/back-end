@@ -90,7 +90,6 @@ export const getAllPostInRoomDAO = async (roomId, userId, cursorId, size) => {
     }
 
     const isRoomAdmin = userId === room[0].admin_id;
-    console.log(isRoomAdmin);
 
     if (cursorId == "undefined" || typeof cursorId == "undefined" || cursorId == null) {
       const [posts] = await pool.query(getPostDetailsByRoomIdAtFirst, [+roomId, +userId, +size]);
