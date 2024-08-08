@@ -43,6 +43,15 @@ export const deletePostSQL = `
     UPDATE post SET updated_at = NOW(), state = 'deleted' WHERE id = ?;
 `;
 
+// 미확인 유저 조회 
+export const unreadUserListSQL = ` 
+SELECT ur.profile_image, ur.nickname
+FROM \`user-room\` ur
+JOIN post p ON p.room_id = ur.room_id AND p.id = 5
+WHERE ur.user_id NOT IN
+      (SELECT s.user_id FROM submit s WHERE s.submit_state = 'COMPLETE' AND s.post_id = p.id);
+`;
+
 // 유저 검색
 export const userListNameSQL = ` 
   SELECT nickname, profile_image FROM \`user-room\` WHERE nickname = ?;
