@@ -11,7 +11,7 @@ export const allPostInRoomDTO = ({ isRoomAdmin, posts }) => {
     submitState: formatSubmitState(post.submit_state),
   }));
 
-  return { isRoomAdmin, post: returnPosts, cursorId: posts[posts.length - 1].id };
+  return { isRoomAdmin, posts: returnPosts, cursorId: posts[posts.length - 1].id };
 };
 
 const formatSubmitState = (data) => {

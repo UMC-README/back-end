@@ -104,7 +104,7 @@ paths:
                     type: array
                     example: {
                       "isRoomAdmin": true,
-                      "post": [
+                      "posts": [
                         {
                           "postId": 3,
                           "postType": "Quiz",
