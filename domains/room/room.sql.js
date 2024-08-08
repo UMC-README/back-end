@@ -1,21 +1,21 @@
 // 고정 공지글 변경
 export const changeFixedPostSQL = `
-  UPDATE user SET fixed_post_id = ? WHERE id = ?
+  UPDATE user SET fixed_post_id = ? WHERE id = ? AND state = 'EXIST'
 `;
 
 // ID 값으로 공지글 찾기
 export const getPostById = `
-  SELECT * FROM post WHERE id = ?
+  SELECT * FROM post WHERE id = ? AND state = 'EXIST'
 `;
 
 // ID 값으로 공지방 찾기
 export const getRoomById = `
-  SELECT * FROM room WHERE id = ?
+  SELECT * FROM room WHERE id = ? AND state = 'EXIST'
 `;
 
 //ID 값으로 댓글 찾기
 export const getCommentById = `
-  SELECT * FROM comment WHERE id = ?
+  SELECT * FROM comment WHERE id = ? AND state = 'EXIST'
 `;
 
 //공지방 내 공지글 정보, 나의 제출상태 가져오기 (커서 존재)
@@ -56,12 +56,12 @@ export const getPostDetailsByRoomIdAtFirst = `
 
 //공지방 내 미확인 공지글 가져오기 (최신순 3개까지)
 export const getMyNotCheckedPostInRoom = `
-  SELECT p.id, r.room_name, p.title, TIMESTAMPDIFF(second, p.updated_at, CURRENT_TIMESTAMP) as updatedAtBeforeSec FROM post p
+  SELECT p.id, r.room_name, p.title, TIMESTAMPDIFF(second, p.created_at, CURRENT_TIMESTAMP) as createdAtBeforeSec FROM post p
   JOIN user u ON p.room_id = ? AND u.id = ?
   JOIN room r ON r.id = p.room_id
   LEFT JOIN submit s ON s.post_id = p.id AND s.user_id = u.id
   WHERE p.state = 'EXIST' AND (s.submit_state IS NULL OR s.submit_state = 'NOT_COMPLETE' OR s.submit_state = 'REJECT')
-  ORDER BY updatedAtBeforeSec ASC LIMIT 3
+  ORDER BY createdAtBeforeSec ASC LIMIT 3
 `;
 
 //개별 공지글 정보 가져오기
@@ -80,18 +80,18 @@ export const getPostImagesByPostId = `
 
 //공지글별 댓글 조회 (커서 없는 초기값)
 export const getCommentsByPostIdAtFirst = `
-  SELECT c.id, ur.nickname, c.content, c.updated_at FROM comment c
+  SELECT c.id, c.user_id, ur.nickname, c.content, c.created_at FROM comment c
   JOIN post p ON p.id = ? AND c.post_id = p.id
-  LEFT JOIN \`user-room\` ur ON c.user_id = ur.user_id
+  LEFT JOIN \`user-room\` ur ON c.user_id = ur.user_id AND p.room_id = ur.room_id
   WHERE c.state = 'EXIST'
   ORDER BY c.id ASC LIMIT ?
 `;
 
 //공지글별 댓글 조회 (커서 존재)
 export const getCommentsByPostId = `
-  SELECT c.id, ur.nickname, c.content, c.updated_at FROM comment c
+  SELECT c.id, c.user_id, ur.nickname, c.content, c.created_at FROM comment c
   JOIN post p ON p.id = ? AND c.post_id = p.id
-  LEFT JOIN \`user-room\` ur ON c.user_id = ur.user_id
+  LEFT JOIN \`user-room\` ur ON c.user_id = ur.user_id AND p.room_id = ur.room_id
   WHERE c.state = 'EXIST' AND c.id > ?
   ORDER BY c.id ASC LIMIT ?
 `;
@@ -164,4 +164,19 @@ export const deletePreviousSubmitImageSQL = `
 export const getSubmitIdByPostIdAndUserId = `
   SELECT id FROM submit s
   WHERE post_id = ? AND user_id = ?
+`;
+
+//공지방 최초 입장시 공지방 정보 가져오기
+export const getRoomEntranceInfoByRoomId = `
+  SELECT room_name, room_image, admin_nickname FROM room WHERE id = ? AND state = 'EXIST'
+`;
+
+//공지방 비밀번호가 일치하는지 여부 확인
+export const checkRoomPasswordSQL = `
+  SELECT BINARY r.room_password = ? AS isValidResult FROM room r WHERE r.id = ?
+`;
+
+//공지방에 유저를 입장 등록
+export const createRoomEntranceSQL = `
+  INSERT INTO \`user-room\` (user_id, room_id, nickname) VALUES (?, ?, ?)
 `;

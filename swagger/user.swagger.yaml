@@ -227,6 +227,9 @@ paths:
                       userId:
                         type: number
                         description: 유저 ID
+                      nickname:
+                        type: string
+                        description: 유저 닉네임
                       accessToken:
                         type: string
                         description: JWT 토큰
@@ -373,6 +376,76 @@ paths:
                       endDate:
                         type: string
                         description: 마감일
+  
+  /user/recent:
+    get:
+      tags:
+        - user
+      summary: 최근 공지글 목록 조회 조회
+      description: 최근 공지글 목록 조회 조회
+      operationId: recent
+      consumes:
+        - application/json
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: integer
+            example: 1
+            description: 페이지 번호 (기본값: 1)
+        - in: query
+          name: pageSize
+          required: false
+          schema:
+            type: integer
+            example: 5
+            description: 페이지 크기 (기본값: 5)
+      responses:
+        "200":
+          description: 최근 공지글 목록 조회 성공!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: object
+                    properties:
+                      recentPostList:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            roomId:
+                              type: integer
+                              description: 공지방 ID
+                            roomName:
+                              type: string
+                              description: 공지방 이름
+                            postId:
+                              type: string
+                              description: 공지글 ID
+                            title:
+                              type: string
+                              description: 공지글 제목
+                            createdAt:
+                              type: string
+                              description: 공지글 작성일
+                      isNext:
+                        type: boolean
+                        description: 다음 페이지가 있는지 여부
 
   /user/create-room:
     get:
@@ -499,7 +572,7 @@ paths:
                           type: object
                           properties:
                             id:
-                              type: integer
+                              type: number
                               description: 공지방 ID
                             nickname:
                               type: string
@@ -516,6 +589,15 @@ paths:
                             latestPostTime:
                               type: string
                               description: 공지방의 최근 공지글 작성 시간
+                            submitCount:
+                              type: number
+                              description: 내가 제출한 요청 내역 개수 (NotComplete 제외)
+                            maxPenaltyCount:
+                              type: number
+                              description: 해당 공지방의 최대 페널티 개수
+                            penaltyCount:
+                              type: number
+                              description: 해당 공지방의 내 페널티 개수
                       isNext:
                         type: boolean
                         description: 다음 페이지가 있는지 여부
@@ -678,6 +760,58 @@ paths:
                       isSuccess:
                         type: boolean
                         description: 수정 성공 여부
+
+  /user/profile/{roomId}/nickname:
+    post:
+      tags:
+        - user
+      summary: 공지방별 닉네임 중복 확인
+      description: 공지방별 닉네임 중복 확인
+      operationId: user-room-nickname
+      consumes:
+        - application/json
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: roomId
+          required: true
+          schema:
+            type: string
+            description: 닉네임 중복을 확인 할 공지방의 아이디
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nickname:
+                  type: string
+                  description: 닉네임
+      responses:
+        "200":
+          description: 공지방별 닉네임 중복 확인 성공!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: object
+                    properties:
+                      isDuplicate:
+                        type: boolean
+                        description: true (중복 발생) / false (중복 X)
   
   /user/password:
     post:
@@ -766,3 +900,61 @@ paths:
                       isSuccess:
                         type: boolean
                         description: 수정 성공 여부
+  
+  /user/rooms/missions/{roomId}:
+    get:
+      tags:
+        - user
+      summary: 공지방마다 제출한 미션 내역 조회
+      description: 공지방마다 제출한 미션 내역 조회
+      operationId: user-room-missions
+      consumes:
+        - application/json
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: roomId
+          required: true
+          schema:
+            type: integer
+            description: 미션 제출 내역을 확인 할 공지방의 아이디
+      responses:
+        "200":
+          description: 공지방마다 제출한 미션 내역 조회 성공!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        nickname:
+                          type: string
+                          description: 해당 공지방에서의 닉네임
+                        profileImage:
+                          type: string
+                          description: 해당 공지방에서의 프로필 사진
+                        submitState:
+                          type: string
+                          description: 해당 제출의 상태 (COMPLETE, PENDING, REJECT)
+                        content:
+                          type: string
+                          description: 해당 제출의 기타사항
+                        images:
+                          type: array
+                          items:
+                            type: string
+                            description: 이미지 URL

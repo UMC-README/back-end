@@ -12,6 +12,8 @@ import {
   updatePostSQL,
   deletePostImgSQL,
   deletePostSQL,
+  userListNameSQL,
+  userListSQL,
   userProfileSQL,
   userInviteSQL,
   checkUserInRoomSQL,
@@ -84,26 +86,25 @@ export const deleteRoomsDao = async (body) => {
   }
 };
 
-export const createPostDao = async ({ postData, imgURLs }) => {
+export const createPostDao = async ({body, imgURLs}, userId) => {
   const conn = await pool.getConnection();
   try {
     await conn.beginTransaction();
     // 특정 공지방의 전체 멤버 수 카운트
-    const [memberCountRows] = await conn.query(getMemberCountSQL, [postData.room_id]);
+    const [memberCountRows] = await conn.query(getMemberCountSQL, [body.room_id]);
     const initialUnreadCount = memberCountRows[0].user_count - 1;
 
     const [postResult] = await conn.query(createPostSQL, [
-      postData.room_id,
-      postData.type,
-      postData.title,
-      postData.content,
-      postData.start_date,
-      postData.end_date,
-      postData.question,
+      body.room_id,
+      body.type,
+      body.title,
+      body.content,
+      body.start_date,
+      body.end_date,
+      body.question,
       initialUnreadCount, // unread_count
-      postData.user_id,
+      userId, 
     ]);
-
     const result = postResult.insertId;
 
     imgURLs.forEach((url) => {
@@ -113,18 +114,17 @@ export const createPostDao = async ({ postData, imgURLs }) => {
         }
       });
     });
-
     await conn.commit(); // 트랜잭션 커밋(DB 반영)
     return {
       newPostId: result, // 생성된 공지글 ID
-      postType: postData.type,
-      postTitle: postData.title,
-      postContent: postData.content,
+      postType: body.type,
+      postTitle: body.title,
+      postContent: body.content,
       imgURLs: imgURLs,
-      startDate: postData.start_date,
-      endDate: postData.end_date,
-      question: postData.question,
-    };
+      startDate: body.start_date,
+      endDate: body.end_date,
+      question: body.question,
+    };  
   } catch (error) {
     await conn.rollback(); // 오류 발생 시 롤백
     console.error("공지글 생성 에러:", error);
@@ -182,6 +182,33 @@ export const deletePostDao = async (postId) => {
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };
+
+export const userListDao = async (nickname) => { 
+  try {
+    const conn = await pool.getConnection();
+
+    let userListSQLQuery;
+    let params = [];
+
+    if (nickname && nickname.trim() !== '') { // nickname 유효성 검사
+      userListSQLQuery = userListNameSQL;  
+      params = [nickname]; 
+    } else {
+      userListSQLQuery = userListSQL; // 모든 유저 조회 쿼리
+    }
+
+    const [result] = await conn.query(userListSQLQuery, params);
+    conn.release();
+    return result.map(user => ({
+      nickname: user.nickname,
+      profile_image: user.profile_image
+    })); 
+  } catch (error) {
+    console.log("User 검색 에러:", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
 
 export const userProfileDao = async (userId) => {
   try {

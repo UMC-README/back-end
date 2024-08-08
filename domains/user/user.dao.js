@@ -11,12 +11,18 @@ import {
   getJoinRoom,
   getCreateRoomCount,
   getJoinRoomCount,
-  getRoom,
+  getAllRooms,
   updateUserProfile,
   updateUserPassword,
   updateUserRoomProfile,
   selectAdminId,
   updateRoomAdminNickname,
+  checkDuplicateNickname,
+  getLatestPostInRoom,
+  getAllRoomsCount,
+  getSubmitCountInRoom,
+  getSubmitListInRoom,
+  getSubmitImages,
 } from "./user.sql.js";
 
 export const insertUser = async (data) => {
@@ -146,10 +152,11 @@ export const findFixedPostByUserId = async (userId) => {
   }
 };
 
-export const findRoomByUserId = async (userId) => {
+export const findRoomByUserId = async (userId, page, pageSize) => {
   try {
     const conn = await pool.getConnection();
-    const [rooms] = await conn.query(getRoom, [userId]);
+    const offset = (page - 1) * pageSize;
+    const [rooms] = await conn.query(getAllRooms, [userId, pageSize, offset]);
 
     if (rooms.length == 0) {
       conn.release();
@@ -201,6 +208,94 @@ export const findJoinRoomByUserId = async (userId, page, pageSize) => {
     return { rooms, isNext };
   } catch (error) {
     console.log("내가 입장한 공지방 찾기 에러", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const findDuplicateNickname = async (roomId, nickname) => {
+  try {
+    const conn = await pool.getConnection();
+    const [[{ count }]] = await conn.query(checkDuplicateNickname, [roomId, nickname]);
+
+    conn.release();
+    return count > 0;
+  } catch (error) {
+    console.log("중복 닉네임 확인 에러", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const findAllRooms = async (userId, page, pageSize) => {
+  try {
+    const conn = await pool.getConnection();
+    const offset = (page - 1) * pageSize;
+    const [rooms] = await conn.query(getAllRooms, [userId, pageSize, offset]);
+    conn.release();
+    return rooms;
+  } catch (error) {
+    console.log("모든 공지방 찾기 에러", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const getRoomsCount = async (userId) => {
+  try {
+    const conn = await pool.getConnection();
+    const [[{ count }]] = await conn.query(getAllRoomsCount, [userId]);
+    conn.release();
+    return count;
+  } catch (error) {
+    console.log("공지방 개수 찾기 에러", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const findLatestPostInRoom = async (roomId) => {
+  try {
+    const conn = await pool.getConnection();
+    const [post] = await conn.query(getLatestPostInRoom, [roomId]);
+    conn.release();
+    return post[0];
+  } catch (error) {
+    console.log("가장 최근 공지글 찾기 에러", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const findSubmitCountInRoom = async (roomId, userId) => {
+  try {
+    const conn = await pool.getConnection();
+    const [[{ submit_count }]] = await conn.query(getSubmitCountInRoom, [roomId, userId]);
+    conn.release();
+    return submit_count;
+  } catch (error) {
+    console.log("제출 개수 찾기 에러", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const findSubmitList = async (roomId) => {
+  try {
+    const conn = await pool.getConnection();
+    const [submits] = await conn.query(getSubmitListInRoom, [roomId]);
+
+    conn.release();
+    return submits;
+  } catch (error) {
+    console.log("Submit 목록 찾기 에러", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const findSubmitImages = async (submitId) => {
+  try {
+    const conn = await pool.getConnection();
+    const [images] = await conn.query(getSubmitImages, [submitId]);
+
+    conn.release();
+    return images.map((image) => image.URL);
+  } catch (error) {
+    console.log("Submit 이미지 목록 찾기 에러", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };

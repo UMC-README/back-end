@@ -17,6 +17,9 @@ import {
   getUserPassword,
   updateUserPassword,
   updateUserRoomProfile,
+  checkUserRoomNicknameDuplicate,
+  getLatestPosts,
+  getMySubmitList,
 } from "../domains/user/user.controller.js";
 import { tokenAuth } from "../middleware/token.auth.js";
 import { imageUploader } from "../middleware/image.uploader.js";
@@ -44,6 +47,8 @@ userRouter.get("/", tokenAuth, expressAsyncHandler(getMyProfile));
 
 userRouter.get("/fixed", tokenAuth, expressAsyncHandler(getUserFixedPost));
 
+userRouter.get("/recent", tokenAuth, expressAsyncHandler(getLatestPosts));
+
 userRouter.get("/create-room", tokenAuth, expressAsyncHandler(getUserCreateRoom));
 
 userRouter.get("/join-room", tokenAuth, expressAsyncHandler(getUserJoinRoom));
@@ -54,6 +59,14 @@ userRouter.patch("/profile", tokenAuth, expressAsyncHandler(updateUserBasicProfi
 
 userRouter.patch("/profile/:roomId", tokenAuth, expressAsyncHandler(updateUserRoomProfile));
 
+userRouter.post(
+  "/profile/:roomId/nickname",
+  tokenAuth,
+  expressAsyncHandler(checkUserRoomNicknameDuplicate)
+);
+
 userRouter.post("/password", tokenAuth, expressAsyncHandler(getUserPassword));
 
 userRouter.patch("/password", tokenAuth, expressAsyncHandler(updateUserPassword));
+
+userRouter.get("/rooms/missions/:roomId", tokenAuth, expressAsyncHandler(getMySubmitList));

@@ -24,6 +24,9 @@ import {
   postSubmitImageSQL,
   deletePreviousSubmitImageSQL,
   getSubmitIdByPostIdAndUserId,
+  getRoomEntranceInfoByRoomId,
+  checkRoomPasswordSQL,
+  createRoomEntranceSQL,
 } from "./room.sql.js";
 import { getUserById } from "../user/user.sql.js";
 
@@ -44,9 +47,8 @@ export const fixPostDAO = async (data) => {
       return -2;
     }
 
-    const result = await conn.query(changeFixedPostSQL, [data.postId, data.userId]);
+    await conn.query(changeFixedPostSQL, [data.postId, data.userId]);
 
-    console.log(result);
     conn.release();
     return "고정 공지글 등록 성공";
   } catch (error) {
@@ -66,9 +68,8 @@ export const deleteFixPostDAO = async (data) => {
       return -1;
     }
 
-    const result = await conn.query(changeFixedPostSQL, [null, data.userId]);
+    await conn.query(changeFixedPostSQL, [null, data.userId]);
 
-    console.log(result);
     conn.release();
     return "고정 공지글 삭제 성공";
   } catch (error) {
@@ -352,6 +353,60 @@ export const postSubmitDAO = async (postId, userId, content, imageURLs) => {
   } catch (error) {
     console.log("제출 에러", error);
     await conn.rollback();
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const getRoomEntranceDAO = async (roomId) => {
+  try {
+    const conn = await pool.getConnection();
+
+    const [roomInfo] = await conn.query(getRoomEntranceInfoByRoomId, roomId);
+    if (roomInfo.length == 0) {
+      conn.release();
+      return -1;
+    }
+    conn.release();
+    return roomInfo[0];
+  } catch (err) {
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const checkPasswordDAO = async (roomId, passwordInput) => {
+  try {
+    const conn = await pool.getConnection();
+
+    const [room] = await conn.query(getRoomById, roomId);
+
+    if (room.length == 0) {
+      conn.release();
+      return -1;
+    }
+
+    const [isValid] = await conn.query(checkRoomPasswordSQL, [passwordInput, roomId]);
+    conn.release();
+    return isValid[0].isValidResult;
+  } catch (err) {
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const postRoomEntranceDAO = async (roomId, userId, userNickname) => {
+  try {
+    const conn = await pool.getConnection();
+
+    const [room] = await conn.query(getRoomById, roomId);
+
+    if (room.length == 0) {
+      conn.release();
+      return -1;
+    }
+
+    await conn.query(createRoomEntranceSQL, [userId, roomId, userNickname]);
+    conn.release();
+    return true;
+  } catch (err) {
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };

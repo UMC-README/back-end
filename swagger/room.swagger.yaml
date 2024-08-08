@@ -183,19 +183,19 @@ paths:
                             "roomName": "README",
                             "postId": 6,
                             "postTitle": "test6",
-                            "updatedAtBefore": "1분 전",
+                            "createdAtBefore": "1분 전",
                         },
                         {
                             "roomName": "README",
                             "postId": 4,
                             "postTitle": "test4",
-                            "updatedAtBefore": "2개월 전",
+                            "createdAtBefore": "2개월 전",
                         },
                         {
                             "roomName": "README",
                             "postId": 3,
                             "postTitle": "test3",
-                            "updatedAtBefore": "4년 전",
+                            "createdAtBefore": "4년 전",
                         }
                       ]
                     }
@@ -246,7 +246,7 @@ paths:
                             "startDate": "24. 7. 25. 04:24",
                             "endDate": "24. 7. 25. 05:24",
                             "commentCount": 5,
-                            "submitState": "complete",
+                            "submitState": "COMPLETE",
                         }
                       ],
                       "imageURLs": [
@@ -308,37 +308,56 @@ paths:
                     example: {
                       "data": [
                         {
-                            "commentId": 1,
-                            "commentAuthorNickname": "kimroom1",
-                            "commentBody": "com.con.1",
-                            "updatedAt": "24. 7. 27. 18:08",
+                          "commentId": 1,
+                          "isCommentMine": false,
+                          "commentAuthorNickname": "kimroom1",
+                          "commentBody": "com.con.1",
+                          "createdAt": "24. 7. 27. 18:08",
                         },
                         {
-                            "commentId": 3,
-                            "commentAuthorNickname": "parkroom1",
-                            "commentBody": "com.con.3",
-                            "updatedAt": "24. 7. 27. 18:09",
+                          "commentId": 3,
+                          "isCommentMine": false,
+                          "commentAuthorNickname": "parkroom1",
+                          "commentBody": "com.con.3",
+                          "createdAt": "24. 7. 27. 18:09",
                         },
                         {
-                            "commentId": 4,
-                            "commentAuthorNickname": "leeroom1",
-                            "commentBody": "com.con.4",
-                            "updatedAt": "24. 7. 27. 18:09",
+                          "commentId": 4,
+                          "isCommentMine": true,
+                          "commentAuthorNickname": "leeroom1",
+                          "commentBody": "com.con.4",
+                          "createdAt": "24. 7. 27. 18:09",
                         },
                         {
-                            "commentId": 5,
-                            "commentAuthorNickname": null,
-                            "commentBody": "com.con.5",
-                            "updatedAt": "24. 7. 27. 18:10",
+                          "commentId": 5,
+                          "isCommentMine": false,
+                          "commentAuthorNickname": null,
+                          "commentBody": "com.con.5",
+                          "createdAt": "24. 7. 27. 18:10",
                         },
                         {
-                            "commentId": 7,
-                            "commentAuthorNickname": "leeroom1",
-                            "commentBody": "com.con.7",
-                            "updatedAt": "24. 7. 27. 18:11",
+                          "commentId": 7,
+                          "isCommentMine": true,
+                          "commentAuthorNickname": "leeroom1",
+                          "commentBody": "com.con.7",
+                          "createdAt": "24. 7. 27. 18:11",
+                        },
+                        {
+                          "commentId": 11,
+                          "isCommentMine": false,
+                          "commentAuthorNickname": "parkroom1",
+                          "commentBody": "testcontent",
+                          "createdAt": "24. 8. 1. 16:22",
+                        },
+                        {
+                          "commentId": 12,
+                          "isCommentMine": false,
+                          "commentAuthorNickname": "parkroom1",
+                          "commentBody": "testcontent",
+                          "createdAt": "24. 8. 1. 16:22",
                         }
                       ],
-                    "cursorId": 7,
+                      "cursorId": 12,
                     }
     post:
       tags:
@@ -534,3 +553,152 @@ paths:
                       submitState:
                         type: string
                         description: 제출 상태 (퀴즈의 경우 정답 여부에 따라 COMPLETE / NOT_COMPLETE, 미션의 경우 PENDING)
+
+  /room/enter/{roomId}:
+    get:
+      tags:
+        - room
+      summary: 공지방 최초 입장 화면 구현
+      description: 공지방 최초 입장시 공지방 정보 조회
+      operationId: getRoomEntrance
+      consumes:
+        - application/json  
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: roomId
+          in: path
+          schema:
+            type: number
+          required: true
+      responses:
+        "200":
+          description: 공지방 최초 입장시 공지방 정보 조회 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: number
+                    example: 200
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: object
+                    properties:
+                        room_name:
+                          type: string
+                          description: 해당 공지방 이름
+                        room_image:
+                          type: string
+                          description: 해당 공지방 이미지 URL
+                        admin_nickname:
+                          type: string
+                          description: 해당 공지방 관리자 닉네임
+    post:
+      tags:
+        - room
+      summary: 공지방 입장 등록
+      description: 공지방 최초 입장 확정하여 유저를 user-room 테이블에 등록
+      operationId: postRoomEntrance
+      consumes:
+        - application/json  
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: roomId
+          in: path
+          schema:
+            type: number
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nickname:
+                  type: string
+                  description: 해당 방에서 사용할 사용자가 입력한 닉네임
+      responses:
+        "200":
+          description: 공지방 입장 등록 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: number
+                    example: 200
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: object
+                    properties:
+                        isSuccess:
+                          type: boolean
+                          example: true
+                          description: 공지방에 유저 등록 성공
+
+  /room/{roomId}/checkPassword:
+    post:
+      tags:
+        - room
+      summary: 공지방 입장시 비밀번호 일치여부 확인
+      description: 공지방 입장시 비밀번호 일치여부 확인
+      operationId: checkRoomPassword
+      consumes:
+        - application/json  
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: roomId
+          in: path
+          schema:
+            type: number
+          required: true    
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                  description: 사용자가 입력한 비밀번호
+      responses:
+        "200":
+          description: 공지방 최초 입장시 공지방 정보 조회 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: number
+                    example: 200
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: object
+                    properties:
+                        isValid:
+                          type: boolean
+                          example: true
+                          description: 비밀번호 일치 여부

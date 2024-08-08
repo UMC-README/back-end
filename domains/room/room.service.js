@@ -9,6 +9,9 @@ import {
   deleteCommentDAO,
   getSubmitRequirementsDAO,
   postSubmitDAO,
+  getRoomEntranceDAO,
+  checkPasswordDAO,
+  postRoomEntranceDAO,
 } from "./room.dao.js";
 
 import {
@@ -87,7 +90,7 @@ export const getDetailedPostService = async (postId, userId) => {
   return detailedPostDTO(roomData);
 };
 
-export const getCommentsService = async (postId, query) => {
+export const getCommentsService = async (postId, userId, query) => {
   const { commentId, size = 100 } = query;
 
   const postData = await getCommentsDAO(postId, commentId, size);
@@ -100,7 +103,7 @@ export const getCommentsService = async (postId, query) => {
     return null;
   }
 
-  return allCommentsInPostDTO(postData);
+  return allCommentsInPostDTO(postData, userId);
 };
 
 export const postCommentService = async (postId, userId, content) => {
@@ -153,4 +156,40 @@ export const postSubmitService = async (postId, userId, content, imageURLs) => {
   }
 
   return submitData;
+};
+
+export const getRoomEntranceService = async (roomId) => {
+  const roomData = await getRoomEntranceDAO(roomId);
+
+  if (roomData == -1) {
+    throw new Error("공지방을 찾을 수 없습니다.");
+  }
+
+  return roomData;
+};
+
+export const checkPasswordService = async (roomId, passwordInput) => {
+  const roomData = await checkPasswordDAO(roomId, passwordInput);
+
+  if (roomData == -1) {
+    throw new Error("공지방을 찾을 수 없습니다.");
+  }
+
+  if (roomData == 0) {
+    return { isValid: false };
+  }
+
+  if (roomData == 1) {
+    return { isValid: true };
+  }
+};
+
+export const postRoomEntranceService = async (roomId, userId, userNickname) => {
+  const userRoomData = await postRoomEntranceDAO(roomId, userId, userNickname);
+
+  if (userRoomData == -1) {
+    throw new Error("공지방을 찾을 수 없습니다.");
+  }
+
+  return { isSuccess: userRoomData };
 };
