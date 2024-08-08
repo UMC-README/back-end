@@ -59,7 +59,7 @@ export const getFixedPost = `
 // 모든 공지방 찾기 (내가 개설한 공지방과 입장한 공지방)
 export const getAllRooms = `
   SELECT ur.nickname, ur.profile_image, r.room_name, r.id, r.admin_id
-  FROM \`user-room\` ur 
+  FROM \`user-room\` ur
   JOIN room r ON r.id = ur.room_id
   WHERE ur.user_id = ?
   LIMIT ?
@@ -77,19 +77,19 @@ export const getAllRoomsCount = `
 // 개설한 공지방 개수 구하기
 export const getCreateRoomCount = `
   SELECT COUNT(*) as count
-  FROM user u
-  JOIN room r ON u.id = r.admin_id
-  WHERE u.id = ?
+  FROM \`user-room\` ur
+  JOIN user u ON u.id = ur.user_id
+  JOIN room r ON r.id = ur.room_id
+  WHERE r.admin_id = ?
 `;
 
 // 개설한 공지방 찾기
 export const getCreateRoom = `
-  SELECT room.id, ur.nickname as user_nickname, room.room_name, room.room_image, room.state, MAX(post.created_at) as latest_post_time
-  FROM room
-  JOIN \`user-room\` ur ON room.id = ur.room_id AND ur.user_id = room.admin_id
-  LEFT JOIN post ON room.id = post.room_id
-  WHERE room.admin_id = ?
-  GROUP BY room.id, ur.nickname
+  SELECT r.id as room_id, r.admin_nickname as user_nickname, r.room_name, r.room_image, r.state, MAX(post.created_at) as latest_post_time
+  FROM room r
+  LEFT JOIN post ON r.id = post.room_id
+  WHERE  r.admin_id = ?
+  GROUP BY r.id
   LIMIT ?
   OFFSET ?
 `;
@@ -137,4 +137,20 @@ export const getSubmitCountInRoom = `
   FROM submit s
   JOIN post p ON s.post_id = p.id
   WHERE p.room_id = ? AND s.user_id = ? AND s.submit_state IN ('COMPLETE', 'PENDING', 'REJECT') AND p.type = 'MISSION'
+`;
+
+// 공지방에 대한 내 submit 목록 조회하기
+export const getSubmitListInRoom = `
+  SELECT s.id as submit_id, s.submit_state, s.content, ur.nickname as user_nickname, ur.profile_image
+  FROM submit s
+  JOIN post p ON s.post_id = p.id
+  JOIN \`user-room\` ur ON ur.user_id = s.user_id AND ur.room_id = p.room_id
+  WHERE p.room_id = ? AND p.type = 'MISSION'
+`;
+
+// Sumbit에 대한 Submit-Image 목록 조회하기
+export const getSubmitImages = `
+  SELECT si.URL
+  FROM \`submit-image\` si
+  WHERE si.submit_id = ?
 `;

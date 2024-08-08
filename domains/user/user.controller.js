@@ -18,6 +18,7 @@ import {
   updateRoomProfile,
   checkRoomDuplicateNickname,
   getLatestPostsInAllRooms,
+  getSubmitList,
 } from "./user.service.js";
 
 export const userSignUp = async (req, res, next) => {
@@ -155,8 +156,10 @@ export const getUserRoomProfiles = async (req, res, next) => {
     console.log("내 프로필 전체 조회");
 
     const userId = req.user.userId;
+    const page = parseInt(req.query.page, 10) || 1;
+    const pageSize = parseInt(req.query.pageSize, 10) || 6;
 
-    const result = await getMyRoomProfiles(userId);
+    const result = await getMyRoomProfiles(userId, page, pageSize);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
@@ -294,6 +297,20 @@ export const getLatestPosts = async (req, res, next) => {
     const pageSize = parseInt(req.query.pageSize, 10) || 5;
 
     const result = await getLatestPostsInAllRooms(userId, page, pageSize);
+
+    res.status(200).json(response(status.SUCCESS, result));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getMySubmitList = async (req, res, next) => {
+  try {
+    console.log("미션 제출 목록 조회");
+
+    const roomId = req.params.roomId;
+
+    const result = await getSubmitList(roomId);
 
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
