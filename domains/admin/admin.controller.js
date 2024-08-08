@@ -8,6 +8,7 @@ import {
   createPostService,
   updatePostService,
   deletePostService,
+  unreadUserListService,
   userListService,
   userProfileService,
   userInviteService,
@@ -62,6 +63,15 @@ export const updatePostController = async (req, res, next) => {
 export const deletePostController = async (req, res, next) => {
   try {
     const result = await deletePostService(req.body.id);
+    res.status(200).json(response(status.SUCCESS, result));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const unreadUserListController = async(req, res, next) => { 
+  try {
+    const result = await unreadUserListService(req.params.postId);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
