@@ -85,7 +85,7 @@ export const unreadUserListService = async (postId) => {
       throw new Error("공지글 ID가 필요합니다.");
     }
     const userData = await unreadUserListDao(postId);
-    return userData;
+    return userData || [];
   } catch (error) {
     console.error("미확인 유저 리스트 조회 에러 :", error);
     throw error;
