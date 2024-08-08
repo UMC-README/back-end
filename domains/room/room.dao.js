@@ -112,7 +112,7 @@ export const getAllPostInRoomDAO = async (roomId, userId, cursorId, size) => {
         return -2;
       }
       conn.release();
-      return posts;
+      return { isRoomAdmin, posts };
     }
   } catch (err) {
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
