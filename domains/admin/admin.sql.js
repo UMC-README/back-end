@@ -47,7 +47,7 @@ export const deletePostSQL = `
 export const unreadUserListSQL = ` 
 SELECT ur.profile_image, ur.nickname
 FROM \`user-room\` ur
-JOIN post p ON p.room_id = ur.room_id AND p.id = 5
+JOIN post p ON p.room_id = ur.room_id AND p.id = ?
 WHERE ur.user_id NOT IN
       (SELECT s.user_id FROM submit s WHERE s.submit_state = 'COMPLETE' AND s.post_id = p.id);
 `;
