@@ -80,7 +80,7 @@ export const getPostImagesByPostId = `
 
 //공지글별 댓글 조회 (커서 없는 초기값)
 export const getCommentsByPostIdAtFirst = `
-  SELECT c.id, c.user_id, ur.nickname, c.content, c.created_at FROM comment c
+  SELECT c.id, c.user_id, ur.nickname, ur.profile_image, c.content, c.created_at FROM comment c
   JOIN post p ON p.id = ? AND c.post_id = p.id
   LEFT JOIN \`user-room\` ur ON c.user_id = ur.user_id AND p.room_id = ur.room_id
   WHERE c.state = 'EXIST'
@@ -89,7 +89,7 @@ export const getCommentsByPostIdAtFirst = `
 
 //공지글별 댓글 조회 (커서 존재)
 export const getCommentsByPostId = `
-  SELECT c.id, c.user_id, ur.nickname, c.content, c.created_at FROM comment c
+  SELECT c.id, c.user_id, ur.nickname, ur.profile_image, c.content, c.created_at FROM comment c
   JOIN post p ON p.id = ? AND c.post_id = p.id
   LEFT JOIN \`user-room\` ur ON c.user_id = ur.user_id AND p.room_id = ur.room_id
   WHERE c.state = 'EXIST' AND c.id > ?
