@@ -207,12 +207,6 @@ export const getMyCreateRoom = async (userId, page, pageSize) => {
 };
 
 export const getMyJoinRoom = async (userId, page, pageSize) => {
-  // const userData = await findUserById(userId);
-
-  // if (!userData) {
-  //   throw new Error("사용자를 찾을 수 없습니다.");
-  // }
-
   const { rooms, isNext } = await findJoinRoomByUserId(userId, page, pageSize);
 
   if (!rooms) {
@@ -249,6 +243,8 @@ export const getLatestPostsInAllRooms = async (userId, page, pageSize) => {
   const rooms = await findAllRooms(userId, page, pageSize);
   const totalCount = await getRoomsCount(userId);
 
+  const totalPages = Math.ceil(totalCount / pageSize);
+
   const recentPostsPromises = rooms.map(async (room) => {
     const recentPost = await findLatestPostInRoom(room.id);
 
@@ -268,7 +264,7 @@ export const getLatestPostsInAllRooms = async (userId, page, pageSize) => {
   const recentPostList = (await Promise.all(recentPostsPromises)).filter((post) => post !== null);
   const isNext = page * pageSize < totalCount;
 
-  return { recentPostList, isNext };
+  return { recentPostList, isNext, totalPages };
 };
 
 export const getSubmitList = async (roomId) => {
