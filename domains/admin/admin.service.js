@@ -82,7 +82,7 @@ export const deletePostService = async (postId) => {
 export const unreadUserListService = async (postId) => {
   try {
     if (!postId) {
-      throw new Error("공지글 ID가 필요합니다.");
+      throw new Error("올바른 공지ID가 필요합니다.");
     }
     const userData = await unreadUserListDao(postId);
     return userData || [];
