@@ -446,6 +446,9 @@ paths:
                       isNext:
                         type: boolean
                         description: 다음 페이지가 있는지 여부
+                      totalPages:
+                        type: number
+                        description: 총 페이지 수
 
   /user/create-room:
     get:
@@ -519,6 +522,9 @@ paths:
                       isNext:
                         type: boolean
                         description: 다음 페이지가 있는지 여부
+                      totalPages:
+                        type: number
+                        description: 총 페이지 수
                       
   /user/join-room:
     get:
@@ -601,6 +607,9 @@ paths:
                       isNext:
                         type: boolean
                         description: 다음 페이지가 있는지 여부
+                      totalPages:
+                        type: number
+                        description: 총 페이지 수
 
   /user/profile:
     get:
