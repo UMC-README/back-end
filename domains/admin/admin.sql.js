@@ -54,10 +54,10 @@ WHERE ur.user_id NOT IN
 
 // 유저 검색
 export const userListNameSQL = ` 
-  SELECT nickname, profile_image FROM \`user-room\` WHERE nickname = ?;
+  SELECT nickname, profile_image FROM \`user-room\` WHERE nickname = ? AND room_id = ?; 
 `; 
 export const userListSQL = ` 
-  SELECT nickname, profile_image FROM \`user-room\`;
+  SELECT nickname, profile_image FROM \`user-room\` WHERE room_id = ?;
 `; 
 
 

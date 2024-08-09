@@ -92,9 +92,16 @@ export const unreadUserListService = async (postId) => {
   }
 };
 
-export const userListService = async (nickname) => {
+export const userListService = async (nickname, roomId) => {
   try {
-    return await userListDao(nickname);
+    if (!roomId) {
+      throw new Error("조회할 공지방의 ID가 필요합니다.");
+    }
+    const result = await userListDao(nickname, roomId);
+    return result.map(user => ({
+      nickname: user.nickname,
+      profile_image: user.profile_image
+    })); 
   } catch (error) {
     console.error("유저 목록 조회 에러:", error);
     throw error;
