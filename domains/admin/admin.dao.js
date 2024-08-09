@@ -12,6 +12,7 @@ import {
   updatePostSQL,
   deletePostImgSQL,
   deletePostSQL,
+  unreadUserListSQL, 
   userListNameSQL,
   userListSQL,
   userProfileSQL,
@@ -179,6 +180,24 @@ export const deletePostDao = async (postId) => {
     return { deletedPostId: postId };
   } catch (error) {
     console.error("공지글 삭제하기 에러:", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const unreadUserListDao = async (postId) => { 
+  try{ 
+    const conn = await pool.getConnection(); 
+    const [users] = await conn.query(unreadUserListSQL, [postId]); 
+    console.log(users)
+
+    if (users.length == 0) {
+      conn.release();
+      return null;
+    }
+    conn.release();
+    return users;
+  } catch (error) {
+    console.error("미확인 유저 조회 에러:", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };

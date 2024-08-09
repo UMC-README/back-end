@@ -5,6 +5,7 @@ import {
   createPostDao,
   updatePostDao,
   deletePostDao,
+  unreadUserListDao,
   userListDao,
   userProfileDao,
   userInviteDao,
@@ -74,6 +75,19 @@ export const deletePostService = async (postId) => {
     return deleteRoomsData;
   } catch (error) {
     console.error("공지글 삭제 에러:", error);
+    throw error;
+  }
+};
+
+export const unreadUserListService = async (postId) => {
+  try {
+    if (!postId) {
+      throw new Error("올바른 공지ID가 필요합니다.");
+    }
+    const userData = await unreadUserListDao(postId);
+    return userData || [];
+  } catch (error) {
+    console.error("미확인 유저 리스트 조회 에러 :", error);
     throw error;
   }
 };
