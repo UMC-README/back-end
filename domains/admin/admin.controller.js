@@ -80,7 +80,7 @@ export const unreadUserListController = async(req, res, next) => {
 
 export const userListController = async (req,res,next) => { 
   try{ 
-    const result = await userListService(req.query.nickname);
+    const result = await userListService(req.query.nickname, req.query.roomId);
     res.status(200).json(response(status.SUCCESS, result));
   }catch (error){
     next(error); 
