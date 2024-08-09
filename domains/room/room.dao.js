@@ -89,6 +89,8 @@ export const getAllPostInRoomDAO = async (roomId, userId, cursorId, size) => {
       return -1;
     }
 
+    const isRoomAdmin = userId === room[0].admin_id;
+
     if (cursorId == "undefined" || typeof cursorId == "undefined" || cursorId == null) {
       const [posts] = await pool.query(getPostDetailsByRoomIdAtFirst, [+roomId, +userId, +size]);
       if (posts.length == 0) {
@@ -96,7 +98,7 @@ export const getAllPostInRoomDAO = async (roomId, userId, cursorId, size) => {
         return -2;
       }
       conn.release();
-      return posts;
+      return { isRoomAdmin, posts };
     } else {
       const [posts] = await pool.query(getPostDetailsByRoomId, [
         +roomId,
@@ -109,7 +111,7 @@ export const getAllPostInRoomDAO = async (roomId, userId, cursorId, size) => {
         return -2;
       }
       conn.release();
-      return posts;
+      return { isRoomAdmin, posts };
     }
   } catch (err) {
     throw new BaseError(status.INTERNAL_SERVER_ERROR);

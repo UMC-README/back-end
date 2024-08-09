@@ -1,20 +1,17 @@
-export const allPostInRoomDTO = (data) => {
-  const posts = [];
+export const allPostInRoomDTO = ({ isRoomAdmin, posts }) => {
+  const returnPosts = posts.map((post) => ({
+    postId: post.id,
+    postType: post.type,
+    postTitle: post.title,
+    postBody: post.content,
+    postImage: post.URL,
+    startDate: formatDate(post.start_date),
+    endDate: formatDate(post.end_date),
+    commentCount: post.comment_count,
+    submitState: formatSubmitState(post.submit_state),
+  }));
 
-  for (let i = 0; i < data.length; i++) {
-    posts.push({
-      postId: data[i].id,
-      postType: data[i].type,
-      postTitle: data[i].title,
-      postBody: data[i].content,
-      postImage: data[i].URL,
-      startDate: formatDate(data[i].start_date),
-      endDate: formatDate(data[i].end_date),
-      commentCount: data[i].comment_count,
-      submitState: formatSubmitState(data[i].submit_state),
-    });
-  }
-  return { data: posts, cursorId: data[data.length - 1].id };
+  return { isRoomAdmin, posts: returnPosts, cursorId: posts[posts.length - 1].id };
 };
 
 const formatSubmitState = (data) => {
@@ -93,6 +90,7 @@ export const allCommentsInPostDTO = (data, userId) => {
     commentId: comment.id,
     isCommentMine: isCommentMine(userId, comment.user_id),
     commentAuthorNickname: comment.nickname,
+    commentAuthorProfileImage: comment.profile_image,
     commentBody: comment.content,
     createdAt: formatDate(comment.created_at),
   }));
