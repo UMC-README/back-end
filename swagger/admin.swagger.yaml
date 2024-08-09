@@ -73,6 +73,51 @@ paths:
                       roomInviteUrl:
                         type: string
                         description: 초대 url
+                        
+    patch:
+      tags:
+        - admin
+      summary: 공지방 삭제
+      description: 공지방 삭제
+      operationId: deleteRooms
+      consumes:
+        - application/json
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:  
+                roomId:
+                  type: integer
+                  description: 삭제할 공지방 아이디 
+      responses:
+        "200":
+          description: 공지방 삭제 성공!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: object
+                    properties: 
+                      roomId : 
+                        type : number 
+                        description : 삭제된 공지방의 Id
+
   /admin/rooms/{room_id}:
     patch:
       tags:
@@ -152,50 +197,7 @@ paths:
                       maxPenalty:
                         type: number
                         description: 최대 패널티 개수
-  /admin/rooms:
-    delete:
-      tags:
-        - admin
-      summary: 공지방 삭제
-      description: 공지방 삭제
-      operationId: deleteRooms
-      consumes:
-        - application/json
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                roomId:
-                  type: integer
-                  description: 삭제할 공지방 아이디 
-      responses:
-        "200":
-          description: 공지방 삭제 성공!
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  isSuccess:
-                    type: boolean
-                    example: true
-                  code:
-                    type: integer
-                    example: 200
-                  message:
-                    type: string
-                    example: "success!"
-                  result:
-                    type: object
-                    properties: 
-                      roomId : 
-                        type : number 
-                        description : 삭제된 공지방의 Id
+
   /admin/post:
     post:
       tags:
@@ -285,6 +287,51 @@ paths:
                       question: 
                         type : string 
                         description: 퀴즈/미션 질문 
+
+    patch:
+      tags:
+        - admin
+      summary: 공지글 삭제
+      description: 공지글 삭제
+      operationId: deletePost
+      consumes:
+        - application/json
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: 삭제할 공지글 아이디 
+      responses:
+        "200":
+          description: 공지글 삭제 성공!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: object
+                    properties: 
+                      postId : 
+                        type : number 
+                        description : 삭제된 공지글의 Id
+
   /admin/post/{post_id}:
     patch:
       tags:
@@ -380,30 +427,27 @@ paths:
                       question: 
                         type : string 
                         description: 퀴즈/미션 질문 
-  /admin/post:
-    delete:
+
+  /admin/post/{postId}/unread:
+    get:
       tags:
         - admin
-      summary: 공지글 삭제
-      description: 공지글 삭제
-      operationId: deletePost
+      summary: 공지 미확인 유저 조회
+      description: 유저 미확인 유저 조회
+      operationId: unReadUserList
       consumes:
         - application/json
       security:
         - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                id:
-                  type: integer
-                  description: 삭제할 공지글 아이디 
+      parameters:
+        - name: postId
+          in: path
+          schema:
+            type: integer
+          required: true
       responses:
         "200":
-          description: 공지글 삭제 성공!
+          description: 공지 미확인 유저 조회 성공!
           content:
             application/json:
               schema:
@@ -421,9 +465,65 @@ paths:
                   result:
                     type: object
                     properties: 
-                      postId : 
-                        type : number 
-                        description : 삭제된 공지글의 Id
+                      profile_image : 
+                        type : string
+                        description : 유저 프로필 사진 
+                      nickname : 
+                        type : string
+                        description : 유저 닉네임
+
+  /admin/users:
+    get:
+      tags:
+        - admin
+      summary: 유저 검색(특정/전체)
+      description: 유저 검색(특정/전체)
+      operationId: userSearch
+      consumes:
+        - application/json
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: nickname
+          required: false  
+          description: 사용자의 닉네임
+          schema:
+            type: string
+            example : 제이
+        - in: query
+          name: roomId
+          required: true  
+          description: 사용자가 속한 room의 ID
+          schema:
+            type: integer
+            example : 1
+      responses:
+        "200":
+          description: 유저 검색 성공!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: object
+                    properties: 
+                      nickname : 
+                        type : string
+                        description : 유저 닉네임
+                      profile_image : 
+                        type : string
+                        description : 유저 프로필 사진 
 
   /admin/profile/{userId}:
     get:
@@ -471,3 +571,106 @@ paths:
                       penalty_count : 
                         type : integer 
                         description : 패널티 개수
+
+  /admin/invitation/{roomId} :
+    get:
+      tags:
+        - admin
+      summary: 유저 초대
+      description: 유저 초대
+      operationId: userInvite
+      consumes:
+        - application/json
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: roomId 
+          in: path
+          schema:
+            type: integer
+          required: true
+      responses:
+        "200":
+          description: 유저 초대하기 성공!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: object
+                    properties: 
+                      room_image : 
+                        type : string 
+                        description : 공지방 이미지 
+                      room_invite_url : 
+                        type : string 
+                        description : 공지방 초대 url 
+                      room_name : 
+                        type : string 
+                        description : 공지방 이름
+                      room_password : 
+                        type : string  
+                        description : 공지방 비밀번호
+                      admin_nickname : 
+                        type : string
+                        description : 관리자 닉네임
+              
+  /admin/rooms/user-Ban:
+    delete:
+      tags:
+        - admin
+      summary: 유저 강퇴하기
+      description: 유저 강퇴하기
+      operationId: userDelete
+      consumes:
+        - application/json
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nickname:
+                  type: string
+                  description: 강퇴할 유저 닉네임
+                room_id: 
+                  type: integer
+                  description : 강퇴할 유저가 속한 공지방 id
+      responses:
+        "200":
+          description: 유저 강퇴 성공!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: object
+                    properties: 
+                      message : 
+                        type: string
+                        example : 유저 강퇴에 성공하였습니다.
+                      
+
