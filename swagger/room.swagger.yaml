@@ -115,6 +115,7 @@ paths:
                           "endDate": "24. 7. 27. 19:05",
                           "commentCount": 1,
                           "submitState": "NOT_COMPLETE",
+                          "unreadCount": 200,
                         },
                         {
                           "postId": 2,
@@ -126,6 +127,7 @@ paths:
                           "endDate": "24. 7. 27. 19:01",
                           "commentCount": 0,
                           "submitState": "NOT_COMPLETE",
+                          "unreadCount": 18,
                         },
                         {
                           "postId": 1,
@@ -137,6 +139,7 @@ paths:
                           "endDate": "24. 7. 25. 05:24",
                           "commentCount": 5,
                           "submitState": "COMPLETE",
+                          "unreadCount": 6,
                         }
                     ],
                     "cursorId": 1,
@@ -248,6 +251,7 @@ paths:
                             "endDate": "24. 7. 25. 05:24",
                             "commentCount": 5,
                             "submitState": "COMPLETE",
+                            "unreadCount": 183,
                         }
                       ],
                       "imageURLs": [
