@@ -54,10 +54,10 @@ WHERE ur.user_id NOT IN
 
 // 유저 검색
 export const userListNameSQL = ` 
-  SELECT nickname, profile_image FROM \`user-room\` WHERE nickname = ? AND room_id = ?; 
+  SELECT user_id, nickname, profile_image FROM \`user-room\` WHERE nickname LIKE ? AND room_id = ?; 
 `; 
 export const userListSQL = ` 
-  SELECT nickname, profile_image FROM \`user-room\` WHERE room_id = ?;
+  SELECT user_id, nickname, profile_image FROM \`user-room\` WHERE room_id = ?;
 `; 
 
 
@@ -84,3 +84,28 @@ export const checkUserInRoomSQL = `
 export const deleteUserSQL = ` 
   DELETE FROM  \`user-room\` WHERE nickname = ? AND room_id;
 `;
+
+// 패널티 부여하기 (제출 이력 유무 고려)
+export const penaltySQL = `
+  UPDATE \`user-room\` ur
+  SET ur.penalty_count = ur.penalty_count + (
+      SELECT
+          COUNT(p.id) - COUNT(CASE WHEN s.submit_state IN ('COMPLETE') THEN 1 END)
+      FROM post p
+      LEFT JOIN submit s ON s.post_id = p.id AND s.user_id = ur.user_id
+      WHERE p.room_id = ur.room_id
+      AND NOW() > DATE_ADD(p.end_date, INTERVAL 1 SECOND)
+  )  
+  WHERE ur.room_id = ?;
+`; 
+
+export const penaltyStateSQL = `
+  UPDATE submit s
+  SET s.penalty_state = true
+  WHERE s.user_id IN (
+      SELECT ur.user_id
+      FROM \`user-room\` ur
+      WHERE ur.room_id = ?
+      AND ur.penalty_count > 0
+  );
+`; 

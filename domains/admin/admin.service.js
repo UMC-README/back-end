@@ -10,6 +10,7 @@ import {
   userProfileDao,
   userInviteDao,
   deleteUserDao,
+  penaltyDao
 } from "./admin.dao.js";
 import { createShortUUID } from "./uuid.js";
 import { createRoomsDTO, updateRoomsDTO, createPostDTO, updatePostDTO } from "./admin.dto.js";
@@ -98,9 +99,12 @@ export const userListService = async (nickname, roomId) => {
       throw new Error("조회할 공지방의 ID가 필요합니다.");
     }
     const result = await userListDao(nickname, roomId);
+
+    if (!result.length) return [];
     return result.map(user => ({
+      userId : user.user_id,
       nickname: user.nickname,
-      profileImage: user.profile_image
+      profileImage: user.profile_image, 
     })); 
   } catch (error) {
     console.error("유저 목록 조회 에러:", error);
@@ -140,3 +144,16 @@ export const deleteUserService = async (body) => {
     throw error;
   }
 };
+
+export const penaltyService = async (body) => { 
+  try {
+    if (!body.roomId)  throw new Error("패널티 부여를 위한 Id가 필요합니다.");
+    
+    const result = await penaltyDao(body);
+    if (result.length === 0)  return "패널티를 부여할 대상이 없습니다.";
+
+    return "패널티 부여에 성공하였습니다.";
+  } catch (error) {
+    throw error;
+  }
+}

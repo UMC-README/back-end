@@ -17,9 +17,6 @@ paths:
             schema:
               type: object
               properties:
-                admin_id:
-                  type: string
-                  description: 관리자 id
                 room_image:
                   type: string
                   description: 공지방 이미지 url
@@ -55,6 +52,9 @@ paths:
                   result:
                     type: object
                     properties:
+                      postId : 
+                        type : number
+                        description : 생성된 공지방ID
                       roomImage:
                         type: string
                         description: 공지방 이미지 url
@@ -267,7 +267,7 @@ paths:
                     properties:
                       postType:
                         type: string
-                        enum : [Quiz,Mission]
+                        enum : [QUIZ,MISSION]
                         description: 공지글 타입(퀴즈/미션) 
                       postTitle:
                         type: string
@@ -518,6 +518,9 @@ paths:
                   result:
                     type: object
                     properties: 
+                      userId : 
+                        type : number 
+                        description : 유저 아이디
                       nickname : 
                         type : string
                         description : 유저 닉네임
