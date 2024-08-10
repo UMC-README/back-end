@@ -1,4 +1,3 @@
-import { MAX } from "uuid";
 import { pool } from "../../config/db.config.js";
 import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
@@ -21,7 +20,11 @@ import {
   userInviteSQL,
   checkUserInRoomSQL,
   deleteUserSQL,
+  penaltySQL, 
+  penaltyStateSQL
 } from "./admin.sql.js";
+
+ 
 
 export const createRoomsDao = async (body, userId, roomInviteUrl) => {
   try {
@@ -239,12 +242,13 @@ export const userListDao = async (nickname, roomId) => {
     if (nickname && nickname.trim() !== '') { // nickname 유효성 검사
       userListSQLQuery = userListNameSQL;  
       params = [nickname, roomId]; 
-    } else {
+    } else {  
       userListSQLQuery = userListSQL; // 모든 유저 조회 쿼리
       params = [roomId]; 
     }
 
     const [result] = await conn.query(userListSQLQuery, params);
+    result.map(user => user.user_id);
     conn.release();
     return result; 
   } catch (error) {
@@ -293,6 +297,21 @@ export const deleteUserDao = async (body) => {
     return "유저 강퇴에 성공하였습니다.";
   } catch (error) {
     console.log("유저 강퇴하기 에러");
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const penaltyDao = async (body) => { 
+  try {
+    const conn = await pool.getConnection();
+
+    const [result] = await conn.query(penaltySQL, [body.roomId]); 
+    await conn.query(penaltyStateSQL, [body.roomId]);   // penalty_state 
+
+    conn.release();
+    return result.affectedRows; 
+  } catch (error) {
+    console.log("패널티 부여하기 에러");
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };
