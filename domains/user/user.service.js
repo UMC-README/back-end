@@ -186,7 +186,7 @@ export const getMyCreateRoom = async (userId, page, pageSize) => {
   const { rooms, isNext, totalCount } = await findCreateRoomByUserId(userId, page, pageSize);
 
   if (!rooms) {
-    return { rooms: null, isNext: false, totalPages: 0 };
+    return { rooms: [], isNext: false, totalPages: 0 };
   }
 
   const totalPages = Math.ceil(totalCount / pageSize);
