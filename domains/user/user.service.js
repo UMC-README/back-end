@@ -277,7 +277,7 @@ export const getSubmitList = async (roomId) => {
       profileImage: submit.profile_image,
       submitState: submit.submit_state,
       content: submit.content,
-      images,
+      images: images.length > 0 ? images : [],
     };
   });
 
