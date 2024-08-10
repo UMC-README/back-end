@@ -103,7 +103,8 @@ paths:
                   result:
                     type: array
                     example: {
-                      "postData": [
+                      "isRoomAdmin": true,
+                      "posts": [
                         {
                           "postId": 3,
                           "postType": "Quiz",
@@ -114,6 +115,7 @@ paths:
                           "endDate": "24. 7. 27. 19:05",
                           "commentCount": 1,
                           "submitState": "NOT_COMPLETE",
+                          "unreadCount": 200,
                         },
                         {
                           "postId": 2,
@@ -125,6 +127,7 @@ paths:
                           "endDate": "24. 7. 27. 19:01",
                           "commentCount": 0,
                           "submitState": "NOT_COMPLETE",
+                          "unreadCount": 18,
                         },
                         {
                           "postId": 1,
@@ -136,6 +139,7 @@ paths:
                           "endDate": "24. 7. 25. 05:24",
                           "commentCount": 5,
                           "submitState": "COMPLETE",
+                          "unreadCount": 6,
                         }
                     ],
                     "cursorId": 1,
@@ -247,6 +251,7 @@ paths:
                             "endDate": "24. 7. 25. 05:24",
                             "commentCount": 5,
                             "submitState": "COMPLETE",
+                            "unreadCount": 183,
                         }
                       ],
                       "imageURLs": [
@@ -311,6 +316,7 @@ paths:
                           "commentId": 1,
                           "isCommentMine": false,
                           "commentAuthorNickname": "kimroom1",
+                          "commentAuthorProfileImage": null,
                           "commentBody": "com.con.1",
                           "createdAt": "24. 7. 27. 18:08",
                         },
@@ -318,6 +324,7 @@ paths:
                           "commentId": 3,
                           "isCommentMine": false,
                           "commentAuthorNickname": "parkroom1",
+                          "commentAuthorProfileImage": "parkroom1image.com",
                           "commentBody": "com.con.3",
                           "createdAt": "24. 7. 27. 18:09",
                         },
@@ -325,6 +332,7 @@ paths:
                           "commentId": 4,
                           "isCommentMine": true,
                           "commentAuthorNickname": "leeroom1",
+                          "commentAuthorProfileImage": "leeroom1image.com",
                           "commentBody": "com.con.4",
                           "createdAt": "24. 7. 27. 18:09",
                         },
@@ -332,6 +340,7 @@ paths:
                           "commentId": 5,
                           "isCommentMine": false,
                           "commentAuthorNickname": null,
+                          "commentAuthorProfileImage": null,
                           "commentBody": "com.con.5",
                           "createdAt": "24. 7. 27. 18:10",
                         },
@@ -339,6 +348,7 @@ paths:
                           "commentId": 7,
                           "isCommentMine": true,
                           "commentAuthorNickname": "leeroom1",
+                          "commentAuthorProfileImage": "leeroom1image.com",
                           "commentBody": "com.con.7",
                           "createdAt": "24. 7. 27. 18:11",
                         },
@@ -346,6 +356,7 @@ paths:
                           "commentId": 11,
                           "isCommentMine": false,
                           "commentAuthorNickname": "parkroom1",
+                          "commentAuthorProfileImage": "parkroom1image.com",
                           "commentBody": "testcontent",
                           "createdAt": "24. 8. 1. 16:22",
                         },
@@ -353,6 +364,7 @@ paths:
                           "commentId": 12,
                           "isCommentMine": false,
                           "commentAuthorNickname": "parkroom1",
+                          "commentAuthorProfileImage": "parkroom1image.com",
                           "commentBody": "testcontent",
                           "createdAt": "24. 8. 1. 16:22",
                         }

@@ -5,6 +5,7 @@ import {
   createPostDao,
   updatePostDao,
   deletePostDao,
+  unreadUserListDao,
   userListDao,
   userProfileDao,
   userInviteDao,
@@ -78,9 +79,29 @@ export const deletePostService = async (postId) => {
   }
 };
 
-export const userListService = async (nickname) => {
+export const unreadUserListService = async (postId) => {
   try {
-    return await userListDao(nickname);
+    if (!postId) {
+      throw new Error("올바른 공지ID가 필요합니다.");
+    }
+    const userData = await unreadUserListDao(postId);
+    return userData || [];
+  } catch (error) {
+    console.error("미확인 유저 리스트 조회 에러 :", error);
+    throw error;
+  }
+};
+
+export const userListService = async (nickname, roomId) => {
+  try {
+    if (!roomId) {
+      throw new Error("조회할 공지방의 ID가 필요합니다.");
+    }
+    const result = await userListDao(nickname, roomId);
+    return result.map(user => ({
+      nickname: user.nickname,
+      profileImage: user.profile_image
+    })); 
   } catch (error) {
     console.error("유저 목록 조회 에러:", error);
     throw error;

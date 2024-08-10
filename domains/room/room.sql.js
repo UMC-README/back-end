@@ -20,7 +20,7 @@ export const getCommentById = `
 
 //공지방 내 공지글 정보, 나의 제출상태 가져오기 (커서 존재)
 export const getPostDetailsByRoomId = `
-  SELECT p.id, p.type, p.title, p.content, pi.URL, p.start_date, p.end_date, p.comment_count, s.submit_state FROM post p
+  SELECT p.id, p.type, p.title, p.content, pi.URL, p.start_date, p.end_date, p.comment_count, s.submit_state, p.unread_count FROM post p
   JOIN user u ON p.room_id = ? AND u.id = ?
   LEFT JOIN submit s ON s.post_id = p.id AND s.user_id = u.id
   LEFT JOIN (
@@ -38,7 +38,7 @@ export const getPostDetailsByRoomId = `
 
 //공지방 내 공지글 정보, 나의 제출상태 가져오기 (커서 없는 초기값)
 export const getPostDetailsByRoomIdAtFirst = `
-  SELECT p.id, p.type, p.title, p.content, pi.URL, p.start_date, p.end_date, p.comment_count, s.submit_state FROM post p
+  SELECT p.id, p.type, p.title, p.content, pi.URL, p.start_date, p.end_date, p.comment_count, s.submit_state, p.unread_count FROM post p
   JOIN user u ON p.room_id = ? AND u.id = ?
   LEFT JOIN submit s ON s.post_id = p.id AND s.user_id = u.id
   LEFT JOIN (
@@ -66,7 +66,7 @@ export const getMyNotCheckedPostInRoom = `
 
 //개별 공지글 정보 가져오기
 export const getDetailedPostSQL = `
-  SELECT p.id, p.type, p.title, p.content, p.start_date, p.end_date, p.comment_count, s.submit_state FROM post p
+  SELECT p.id, p.type, p.title, p.content, p.start_date, p.end_date, p.comment_count, s.submit_state, p.unread_count FROM post p
   JOIN user u ON u.id = ?
   LEFT JOIN submit s ON s.post_id = p.id AND s.user_id = u.id
   WHERE p.id = ? AND p.state = 'EXIST'
@@ -80,7 +80,7 @@ export const getPostImagesByPostId = `
 
 //공지글별 댓글 조회 (커서 없는 초기값)
 export const getCommentsByPostIdAtFirst = `
-  SELECT c.id, c.user_id, ur.nickname, c.content, c.created_at FROM comment c
+  SELECT c.id, c.user_id, ur.nickname, ur.profile_image, c.content, c.created_at FROM comment c
   JOIN post p ON p.id = ? AND c.post_id = p.id
   LEFT JOIN \`user-room\` ur ON c.user_id = ur.user_id AND p.room_id = ur.room_id
   WHERE c.state = 'EXIST'
@@ -89,7 +89,7 @@ export const getCommentsByPostIdAtFirst = `
 
 //공지글별 댓글 조회 (커서 존재)
 export const getCommentsByPostId = `
-  SELECT c.id, c.user_id, ur.nickname, c.content, c.created_at FROM comment c
+  SELECT c.id, c.user_id, ur.nickname, ur.profile_image, c.content, c.created_at FROM comment c
   JOIN post p ON p.id = ? AND c.post_id = p.id
   LEFT JOIN \`user-room\` ur ON c.user_id = ur.user_id AND p.room_id = ur.room_id
   WHERE c.state = 'EXIST' AND c.id > ?

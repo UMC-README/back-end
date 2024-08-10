@@ -8,6 +8,7 @@ import {
   createPostService,
   updatePostService,
   deletePostService,
+  unreadUserListService,
   userListService,
   userProfileService,
   userInviteService,
@@ -68,9 +69,18 @@ export const deletePostController = async (req, res, next) => {
   }
 };
 
+export const unreadUserListController = async(req, res, next) => { 
+  try {
+    const result = await unreadUserListService(req.params.postId);
+    res.status(200).json(response(status.SUCCESS, result));
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const userListController = async (req,res,next) => { 
   try{ 
-    const result = await userListService(req.query.nickname);
+    const result = await userListService(req.query.nickname, req.query.roomId);
     res.status(200).json(response(status.SUCCESS, result));
   }catch (error){
     next(error); 

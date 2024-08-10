@@ -1,20 +1,22 @@
-export const allPostInRoomDTO = (data) => {
-  const posts = [];
-
-  for (let i = 0; i < data.length; i++) {
-    posts.push({
-      postId: data[i].id,
-      postType: data[i].type,
-      postTitle: data[i].title,
-      postBody: data[i].content,
-      postImage: data[i].URL,
-      startDate: formatDate(data[i].start_date),
-      endDate: formatDate(data[i].end_date),
-      commentCount: data[i].comment_count,
-      submitState: formatSubmitState(data[i].submit_state),
-    });
+export const allPostInRoomDTO = ({ isRoomAdmin, posts }) => {
+  if (posts.length == 0) {
+    return { isRoomAdmin, posts, cursorId: null };
   }
-  return { data: posts, cursorId: data[data.length - 1].id };
+
+  const returnPosts = posts.map((post) => ({
+    postId: post.id,
+    postType: post.type,
+    postTitle: post.title,
+    postBody: post.content,
+    postImage: post.URL,
+    startDate: formatDate(post.start_date),
+    endDate: formatDate(post.end_date),
+    commentCount: post.comment_count,
+    submitState: formatSubmitState(post.submit_state),
+    unreadCount: post.unread_count,
+  }));
+
+  return { isRoomAdmin, posts: returnPosts, cursorId: posts[posts.length - 1].id };
 };
 
 const formatSubmitState = (data) => {
@@ -73,6 +75,7 @@ export const detailedPostDTO = (data) => {
     endDate: formatDate(result.end_date),
     commentCount: result.comment_count,
     submitState: formatSubmitState(result.submit_state),
+    unreadCount: result.unread_count,
   }));
 
   const imageURLs = data.postImages.map((result) => result.URL);
@@ -81,6 +84,10 @@ export const detailedPostDTO = (data) => {
 };
 
 export const allCommentsInPostDTO = (data, userId) => {
+  if (data.length == 0) {
+    return { data, cursorId: null };
+  }
+
   const isCommentMine = (myUserId, commentUserId) => {
     if (myUserId === commentUserId) {
       return true;
@@ -93,6 +100,7 @@ export const allCommentsInPostDTO = (data, userId) => {
     commentId: comment.id,
     isCommentMine: isCommentMine(userId, comment.user_id),
     commentAuthorNickname: comment.nickname,
+    commentAuthorProfileImage: comment.profile_image,
     commentBody: comment.content,
     createdAt: formatDate(comment.created_at),
   }));

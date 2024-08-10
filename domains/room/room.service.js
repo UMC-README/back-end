@@ -59,10 +59,6 @@ export const getAllPostInRoom = async (roomId, userId, query) => {
     throw new Error("공지방을 찾을 수 없습니다.");
   }
 
-  if (roomData == -2) {
-    return null;
-  }
-
   return allPostInRoomDTO(roomData);
 };
 
@@ -71,10 +67,6 @@ export const getNotCheckedPostInRoom = async (roomId, userId) => {
 
   if (roomData == -1) {
     throw new Error("공지방을 찾을 수 없습니다.");
-  }
-
-  if (roomData == -2) {
-    return null;
   }
 
   return notCheckedPostInRoomDTO(roomData);
@@ -91,16 +83,12 @@ export const getDetailedPostService = async (postId, userId) => {
 };
 
 export const getCommentsService = async (postId, userId, query) => {
-  const { commentId, size = 100 } = query;
+  const { commentId, size = 20 } = query;
 
   const postData = await getCommentsDAO(postId, commentId, size);
 
   if (postData == -1) {
     throw new Error("공지글을 찾을 수 없습니다.");
-  }
-
-  if (postData == -2) {
-    return null;
   }
 
   return allCommentsInPostDTO(postData, userId);
