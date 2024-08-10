@@ -171,6 +171,7 @@ export const getMyRoomProfiles = async (userId, page, pageSize) => {
     return {
       nickname: userData.nickname,
       profileImage: userData.profile_image,
+      profiles: [],
     };
   }
 
@@ -185,7 +186,7 @@ export const getMyCreateRoom = async (userId, page, pageSize) => {
   const { rooms, isNext, totalCount } = await findCreateRoomByUserId(userId, page, pageSize);
 
   if (!rooms) {
-    return { rooms: null, isNext: false, totalPages: 0 };
+    return { rooms: [], isNext: false, totalPages: 0 };
   }
 
   const totalPages = Math.ceil(totalCount / pageSize);
@@ -206,7 +207,7 @@ export const getMyJoinRoom = async (userId, page, pageSize) => {
   const { rooms, isNext, totalCount } = await findJoinRoomByUserId(userId, page, pageSize);
 
   if (!rooms) {
-    return { rooms: null, isNext: false, totalPages: 0 };
+    return { rooms: [], isNext: false, totalPages: 0 };
   }
 
   const totalPages = Math.ceil(totalCount / pageSize);
@@ -276,7 +277,7 @@ export const getSubmitList = async (roomId) => {
       profileImage: submit.profile_image,
       submitState: submit.submit_state,
       content: submit.content,
-      images,
+      images: images.length > 0 ? images : [],
     };
   });
 
