@@ -1,4 +1,8 @@
 export const allPostInRoomDTO = ({ isRoomAdmin, posts }) => {
+  if (posts.length == 0) {
+    return { isRoomAdmin, posts };
+  }
+
   const returnPosts = posts.map((post) => ({
     postId: post.id,
     postType: post.type,
@@ -9,6 +13,7 @@ export const allPostInRoomDTO = ({ isRoomAdmin, posts }) => {
     endDate: formatDate(post.end_date),
     commentCount: post.comment_count,
     submitState: formatSubmitState(post.submit_state),
+    unreadCount: post.unread_count,
   }));
 
   return { isRoomAdmin, posts: returnPosts, cursorId: posts[posts.length - 1].id };
@@ -70,6 +75,7 @@ export const detailedPostDTO = (data) => {
     endDate: formatDate(result.end_date),
     commentCount: result.comment_count,
     submitState: formatSubmitState(result.submit_state),
+    unreadCount: result.unread_count,
   }));
 
   const imageURLs = data.postImages.map((result) => result.URL);
@@ -78,6 +84,10 @@ export const detailedPostDTO = (data) => {
 };
 
 export const allCommentsInPostDTO = (data, userId) => {
+  if (data.length == 0) {
+    return { data, cursorId: null };
+  }
+
   const isCommentMine = (myUserId, commentUserId) => {
     if (myUserId === commentUserId) {
       return true;
