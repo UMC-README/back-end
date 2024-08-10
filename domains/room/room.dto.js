@@ -1,6 +1,6 @@
 export const allPostInRoomDTO = ({ isRoomAdmin, posts }) => {
   if (posts.length == 0) {
-    return { isRoomAdmin, posts };
+    return { isRoomAdmin, posts, cursorId: null };
   }
 
   const returnPosts = posts.map((post) => ({
