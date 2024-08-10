@@ -171,6 +171,7 @@ export const getMyRoomProfiles = async (userId, page, pageSize) => {
     return {
       nickname: userData.nickname,
       profileImage: userData.profile_image,
+      profiles: [],
     };
   }
 
