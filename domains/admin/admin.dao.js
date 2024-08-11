@@ -240,10 +240,10 @@ export const userListDao = async (nickname, roomId) => {
 };
 
 
-export const userProfileDao = async (userId) => {
+export const userProfileDao = async (roomId, userId) => {
   try {
     const conn = await pool.getConnection();
-    const [result] = await conn.query(userProfileSQL, userId);
+    const [result] = await conn.query(userProfileSQL,[roomId, userId]);
     conn.release();
     return result[0];
   } catch (error) {
