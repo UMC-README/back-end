@@ -97,6 +97,7 @@ export const createPostDao = async (body, userId) => {
   const conn = await pool.getConnection();
   try {
     await conn.beginTransaction();
+
     // 특정 공지방의 전체 멤버 수 카운트
     const [memberCountRows] = await conn.query(getMemberCountSQL, [body.room_id]);
     const initialUnreadCount = memberCountRows[0].user_count - 1;
@@ -104,18 +105,29 @@ export const createPostDao = async (body, userId) => {
     const quizAnswer = body.type === 'QUIZ' ? body.quiz_answer : null;
 
     const datePatternTest = /^(\d{2}\.(0[1-9]|1[0-2])\.(0[1-9]|[12][0-9]|3[01]))$/;
-    if (!datePatternTest.test(body.start_date))  throw new Error("start_date는 YY.MM.DD 형식이어야 합니다."); 
-    if (!datePatternTest.test(body.end_date))  throw new Error("end_date는 YY.MM.DD 형식이어야 합니다."); 
+    if (!datePatternTest.test(body.start_date))  throw new Error("YY.MM.DD 형식을 지키지 못하였거나, 범위가 벗어났습니다."); 
+    if (!datePatternTest.test(body.end_date))  throw new Error("YY.MM.DD 형식을 지키지 못하였거나, 범위가 벗어났습니다."); 
 
-    const formatStartDate = body.start_date + " 00:00";
-    const formatEndDate = body.end_date + " 23:59";
+    const dateForm = new Date(new Date().setHours(new Date().getHours()));
+    
+    const current = dateForm.toISOString().slice(0, 10).replace(/-/g, '.').substring(2) + ' ' + 
+                String(dateForm.getHours()).padStart(2, '0') + ':' + 
+                String(dateForm.getMinutes()).padStart(2, '0');
+
+    const nowDate = `${current}`; 
+    const StartDate = `${body.start_date} 00:00`;
+    const EndDate = `${body.end_date} 23:59`;
+       
+    if (StartDate <= nowDate) throw new Error("start_date는 현재보다 미래여야 합니다.");
+    if (EndDate <= StartDate) throw new Error("end_date는 start_date보다 미래여야 합니다.");
+
     const [postResult] = await conn.query(createPostSQL, [
       body.room_id,
       body.type,
       body.title,
       body.content,
-      formatStartDate, 
-      formatEndDate,
+      StartDate, 
+      EndDate,
       body.question,
       quizAnswer, 
       initialUnreadCount, // unread_count
@@ -138,8 +150,8 @@ export const createPostDao = async (body, userId) => {
       postTitle: body.title,
       postContent: body.content,
       imgURLs: body.imgURLs,
-      startDate: formatStartDate,
-      endDate: formatEndDate,
+      startDate: StartDate,
+      endDate: EndDate,
       question: body.question,
       quizAnswer : body.quiz_answer
     };  
