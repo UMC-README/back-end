@@ -101,18 +101,21 @@ export const createPostDao = async (body, userId) => {
     const [memberCountRows] = await conn.query(getMemberCountSQL, [body.room_id]);
     const initialUnreadCount = memberCountRows[0].user_count - 1;
 
-
     const quizAnswer = body.type === 'QUIZ' ? body.quiz_answer : null;
 
-    const datePattern = /^\d{2}\.\d{2}\.\d{2}$/;
-    if (!datePattern.test(body.end_date))  throw new Error("end_date는 YY.MM.DD 형식이어야 합니다."); 
+    const datePatternStartTest = /^(\d{2}\.(0[1-9]|1[0-2])\.(0[1-9]|[12][0-9]|3[01]))$/;
+    if (!datePatternStartTest.test(body.end_date))  throw new Error("start_date는 YY.MM.DD HH:MM 형식이어야 합니다."); 
+    const datePatternEndTest = /^(\d{2}\.(0[1-9]|1[0-2])\.(0[1-9]|[12][0-9]|3[01]))$/;
+    if (!datePatternEndTest.test(body.end_date))  throw new Error("end_date는 YY.MM.DD 형식이어야 합니다."); 
+
+    const formatStartDate = body.start_date + " 00:00";
     const formatEndDate = body.end_date + " 23:59";
     const [postResult] = await conn.query(createPostSQL, [
       body.room_id,
       body.type,
       body.title,
       body.content,
-      body.start_date, 
+      formatStartDate, 
       formatEndDate,
       body.question,
       quizAnswer, 
@@ -136,7 +139,7 @@ export const createPostDao = async (body, userId) => {
       postTitle: body.title,
       postContent: body.content,
       imgURLs: body.imgURLs,
-      startDate: body.start_date,
+      startDate: formatStartDate,
       endDate: formatEndDate,
       question: body.question,
       quizAnswer : body.quiz_answer

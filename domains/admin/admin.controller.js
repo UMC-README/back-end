@@ -45,7 +45,6 @@ export const deleteRoomsController = async (req, res, next) => {
 export const createPostController = async (req, res, next) => {
   try {
     const result = await createPostService(req.body, req.user.userId);
-    console.log(req.user.userId);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
