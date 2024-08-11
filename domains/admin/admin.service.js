@@ -48,8 +48,8 @@ export const deleteRoomsService = async (body) => {
 
 export const createPostService = async (body, userId) => {
   try {
-    if(!body.room_id || !userId){
-      throw new Error("ID가 필요합니다.");
+    if(!body.room_id){
+      throw new Error("공지방 ID가 필요합니다.");
     }
     const postData = await createPostDao(body, userId);
     return createPostDTO(postData);
