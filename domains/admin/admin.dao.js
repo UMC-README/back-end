@@ -103,10 +103,9 @@ export const createPostDao = async (body, userId) => {
 
     const quizAnswer = body.type === 'QUIZ' ? body.quiz_answer : null;
 
-    const datePatternStartTest = /^(\d{2}\.(0[1-9]|1[0-2])\.(0[1-9]|[12][0-9]|3[01]))$/;
-    if (!datePatternStartTest.test(body.start_date))  throw new Error("start_date는 YY.MM.DD HH:MM 형식이어야 합니다."); 
-    const datePatternEndTest = /^(\d{2}\.(0[1-9]|1[0-2])\.(0[1-9]|[12][0-9]|3[01]))$/;
-    if (!datePatternEndTest.test(body.end_date))  throw new Error("end_date는 YY.MM.DD 형식이어야 합니다."); 
+    const datePatternTest = /^(\d{2}\.(0[1-9]|1[0-2])\.(0[1-9]|[12][0-9]|3[01]))$/;
+    if (!datePatternTest.test(body.start_date))  throw new Error("start_date는 YY.MM.DD 형식이어야 합니다."); 
+    if (!datePatternTest.test(body.end_date))  throw new Error("end_date는 YY.MM.DD 형식이어야 합니다."); 
 
     const formatStartDate = body.start_date + " 00:00";
     const formatEndDate = body.end_date + " 23:59";
