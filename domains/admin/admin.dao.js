@@ -4,10 +4,12 @@ import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
 import {
   createRoomsSQL,
+  userRoomSQL,
   updateRoomsSQL,
   deleteRoomsSQL,
   createPostSQL,
   getMemberCountSQL,
+  quizAnswerSQL,
   createPostImgSQL,
   updatePostSQL,
   deletePostImgSQL,
@@ -34,8 +36,12 @@ export const createRoomsDao = async (body, userId, roomInviteUrl) => {
       body.max_penalty,
     ]);
     const roomId = result.insertId; // 생성된 roomId 가져오기
+
+    // user-room 연결
+    await conn.query(userRoomSQL,[userId, roomId, body.admin_nickname]);
+
     conn.release();
-    return {
+    return { 
       roomId: roomId, // 생성된 방 Id 반환
       roomImage: body.room_image,
       adminNickname: body.admin_nickname,
@@ -87,29 +93,51 @@ export const deleteRoomsDao = async (body) => {
   }
 };
 
-export const createPostDao = async ({body, imgURLs}, userId) => {
+export const createPostDao = async (body, userId) => {
   const conn = await pool.getConnection();
   try {
     await conn.beginTransaction();
+
     // 특정 공지방의 전체 멤버 수 카운트
     const [memberCountRows] = await conn.query(getMemberCountSQL, [body.room_id]);
     const initialUnreadCount = memberCountRows[0].user_count - 1;
+
+    const quizAnswer = body.type === 'QUIZ' ? body.quiz_answer : null;
+
+    const datePatternTest = /^(\d{2}\.(0[1-9]|1[0-2])\.(0[1-9]|[12][0-9]|3[01]))$/;
+    if (!datePatternTest.test(body.start_date))  throw new Error("YY.MM.DD 형식을 지키지 못하였거나, 범위가 벗어났습니다."); 
+    if (!datePatternTest.test(body.end_date))  throw new Error("YY.MM.DD 형식을 지키지 못하였거나, 범위가 벗어났습니다."); 
+
+    const dateForm = new Date(new Date().setHours(new Date().getHours()));
+    
+    const current = dateForm.toISOString().slice(0, 10).replace(/-/g, '.').substring(2) + ' ' + 
+                String(dateForm.getHours()).padStart(2, '0') + ':' + 
+                String(dateForm.getMinutes()).padStart(2, '0');
+
+    const nowDate = `${current}`; 
+    const StartDate = `${body.start_date} 00:00`;
+    const EndDate = `${body.end_date} 23:59`;
+       
+    if (StartDate <= nowDate) throw new Error("start_date는 현재보다 미래여야 합니다.");
+    if (EndDate <= StartDate) throw new Error("end_date는 start_date보다 미래여야 합니다.");
 
     const [postResult] = await conn.query(createPostSQL, [
       body.room_id,
       body.type,
       body.title,
       body.content,
-      body.start_date,
-      body.end_date,
+      StartDate, 
+      EndDate,
       body.question,
+      quizAnswer, 
       initialUnreadCount, // unread_count
       userId, 
     ]);
-    const result = postResult.insertId;
+    const newPostId = postResult.insertId;
+    await conn.query(quizAnswerSQL, [quizAnswer, newPostId]);
 
-    imgURLs.forEach((url) => {
-      conn.query(createPostImgSQL, [url, result], (error) => {
+    body.imgURLs.forEach((url) => {
+      conn.query(createPostImgSQL, [url, newPostId], (error) => {
         if (error) {
           throw error;
         }
@@ -117,14 +145,15 @@ export const createPostDao = async ({body, imgURLs}, userId) => {
     });
     await conn.commit(); // 트랜잭션 커밋(DB 반영)
     return {
-      newPostId: result, // 생성된 공지글 ID
+      newPostId: newPostId, // 생성된 공지글 ID
       postType: body.type,
       postTitle: body.title,
       postContent: body.content,
-      imgURLs: imgURLs,
-      startDate: body.start_date,
-      endDate: body.end_date,
+      imgURLs: body.imgURLs,
+      startDate: StartDate,
+      endDate: EndDate,
       question: body.question,
+      quizAnswer : body.quiz_answer
     };  
   } catch (error) {
     await conn.rollback(); // 오류 발생 시 롤백
@@ -225,10 +254,10 @@ export const userListDao = async (nickname, roomId) => {
 };
 
 
-export const userProfileDao = async (userId) => {
+export const userProfileDao = async (roomId, userId) => {
   try {
     const conn = await pool.getConnection();
-    const [result] = await conn.query(userProfileSQL, userId);
+    const [result] = await conn.query(userProfileSQL,[roomId, userId]);
     conn.release();
     return result[0];
   } catch (error) {
