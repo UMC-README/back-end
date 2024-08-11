@@ -4,6 +4,11 @@ export const createRoomsSQL = `
   VALUES (?, ?, ?, ?, ?, ?, ?) 
 `;
 
+export const userRoomSQL = `
+  INSERT INTO \`user-room\` (user_id, room_id, nickname)
+  VALUES (?, ?, ?);
+`;
+
 // 공지방 수정
 export const updateRoomsSQL = `
    UPDATE room SET admin_nickname = ?, room_name = ?, room_password = ?, room_image = ?, max_penalty = ?
@@ -17,13 +22,18 @@ export const deleteRoomsSQL = `
 
 // 공지글 생성 & 공지방 이미지
 export const createPostSQL = `
-  INSERT INTO post (room_id, type, title, content, start_date, end_date, question, unread_count, user_id)
-  VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);  
+  INSERT INTO post (room_id, type, title, content, start_date, end_date, question, quiz_answer, unread_count, user_id)
+  VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);  
 `;
 export const getMemberCountSQL = `
   SELECT COUNT(*) AS user_count
   FROM \`user-room\` WHERE room_id = ?;
 `;
+
+export const quizAnswerSQL = `
+  UPDATE post set quiz_answer = ? WHERE id = ?;
+`;
+
 export const createPostImgSQL = `
   INSERT INTO \`post-image\` (URL, post_id) VALUES(?,?);  
 `;

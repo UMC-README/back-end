@@ -48,7 +48,11 @@ export const deleteRoomsService = async (body) => {
 
 export const createPostService = async (body, userId) => {
   try {
+    if(!body.room_id || !userId){
+      throw new Error("ID가 필요합니다.");
+    }
     const postData = await createPostDao(body, userId);
+    console.log(body.room_id);
     return createPostDTO(postData);
   } catch (error) {
     console.error("공지글 생성하기 에러:", error);

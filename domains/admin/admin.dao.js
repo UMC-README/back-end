@@ -4,10 +4,12 @@ import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
 import {
   createRoomsSQL,
+  userRoomSQL,
   updateRoomsSQL,
   deleteRoomsSQL,
   createPostSQL,
   getMemberCountSQL,
+  quizAnswerSQL,
   createPostImgSQL,
   updatePostSQL,
   deletePostImgSQL,
@@ -34,8 +36,12 @@ export const createRoomsDao = async (body, userId, roomInviteUrl) => {
       body.max_penalty,
     ]);
     const roomId = result.insertId; // 생성된 roomId 가져오기
+
+    // user-room 연결
+    await conn.query(userRoomSQL,[userId, roomId, body.admin_nickname]);
+
     conn.release();
-    return {
+    return { 
       roomId: roomId, // 생성된 방 Id 반환
       roomImage: body.room_image,
       adminNickname: body.admin_nickname,
@@ -87,7 +93,7 @@ export const deleteRoomsDao = async (body) => {
   }
 };
 
-export const createPostDao = async ({body, imgURLs}, userId) => {
+export const createPostDao = async (body, userId) => {
   const conn = await pool.getConnection();
   try {
     await conn.beginTransaction();
@@ -95,21 +101,29 @@ export const createPostDao = async ({body, imgURLs}, userId) => {
     const [memberCountRows] = await conn.query(getMemberCountSQL, [body.room_id]);
     const initialUnreadCount = memberCountRows[0].user_count - 1;
 
+
+    const quizAnswer = body.type === 'QUIZ' ? body.quiz_answer : null;
+
+    const datePattern = /^\d{2}\.\d{2}\.\d{2}$/;
+    if (!datePattern.test(body.end_date))  throw new Error("end_date는 YY.MM.DD 형식이어야 합니다."); 
+    const formatEndDate = body.end_date + " 23:59";
     const [postResult] = await conn.query(createPostSQL, [
       body.room_id,
       body.type,
       body.title,
       body.content,
-      body.start_date,
-      body.end_date,
+      body.start_date, 
+      formatEndDate,
       body.question,
+      quizAnswer, 
       initialUnreadCount, // unread_count
       userId, 
     ]);
-    const result = postResult.insertId;
+    const newPostId = postResult.insertId;
+    await conn.query(quizAnswerSQL, [quizAnswer, newPostId]);
 
-    imgURLs.forEach((url) => {
-      conn.query(createPostImgSQL, [url, result], (error) => {
+    body.imgURLs.forEach((url) => {
+      conn.query(createPostImgSQL, [url, newPostId], (error) => {
         if (error) {
           throw error;
         }
@@ -117,14 +131,15 @@ export const createPostDao = async ({body, imgURLs}, userId) => {
     });
     await conn.commit(); // 트랜잭션 커밋(DB 반영)
     return {
-      newPostId: result, // 생성된 공지글 ID
+      newPostId: newPostId, // 생성된 공지글 ID
       postType: body.type,
       postTitle: body.title,
       postContent: body.content,
-      imgURLs: imgURLs,
+      imgURLs: body.imgURLs,
       startDate: body.start_date,
-      endDate: body.end_date,
+      endDate: formatEndDate,
       question: body.question,
+      quizAnswer : body.quiz_answer
     };  
   } catch (error) {
     await conn.rollback(); // 오류 발생 시 롤백

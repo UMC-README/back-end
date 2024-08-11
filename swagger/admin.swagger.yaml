@@ -217,7 +217,7 @@ paths:
               type: object
               properties:
                 room_id:
-                  type: string
+                  type: integer 
                   description: 공지방 id
                 title:
                   type: string
@@ -237,9 +237,9 @@ paths:
                 question:
                   type: string
                   description: 퀴즈/미션 질문
-                user_id:
-                  type: integer
-                  description: 유저(관리자) 아이디
+                quiz_answer:
+                  type: string 
+                  description: 퀴즈 답 
                 imgURLs : 
                   type : array
                   items : 
@@ -265,9 +265,12 @@ paths:
                   result:
                     type: object
                     properties:
+                      newPostId:
+                        type : integer 
+                        description : 생성된 공지글 ID
                       postType:
                         type: string
-                        enum : [Quiz,Mission]
+                        enum : [QUIZ,MISSION]
                         description: 공지글 타입(퀴즈/미션) 
                       postTitle:
                         type: string
@@ -287,6 +290,9 @@ paths:
                       question: 
                         type : string 
                         description: 퀴즈/미션 질문 
+                      quiz_answer: 
+                        type: string 
+                        description: 퀴즈 답 
 
     patch:
       tags:
