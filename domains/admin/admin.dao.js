@@ -301,9 +301,8 @@ export const deleteUserDao = async (body) => {
 };
 
 export const penaltyDao = async (body) => { 
-  schedule.scheduleJob('*/1 * * *', async function() {
+  schedule.scheduleJob('0 15 * * *', async function() {
     let conn;
-    console.log("test");
     try{ 
         conn = await pool.getConnection();
         await conn.query(penaltySQL, [body.roomId]);  
