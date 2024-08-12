@@ -31,6 +31,6 @@ roomRouter.post("/post/:postId/comment", tokenAuth, expressAsyncHandler(postComm
 roomRouter.delete("/post/comment/:commentId", tokenAuth, expressAsyncHandler(deleteComment));
 roomRouter.get("/post/:postId/submit", tokenAuth, expressAsyncHandler(getSubmitRequirements));
 roomRouter.post("/post/:postId/submit", tokenAuth, expressAsyncHandler(postSubmit));
-roomRouter.get("/enter/:uuid", tokenAuth, expressAsyncHandler(getRoomEntrance));
+roomRouter.get("/enter/:url", tokenAuth, expressAsyncHandler(getRoomEntrance));
 roomRouter.post("/enter/:roomId", tokenAuth, expressAsyncHandler(postRoomEntrance));
 roomRouter.post("/:roomId/checkPassword", tokenAuth, expressAsyncHandler(checkPassword));

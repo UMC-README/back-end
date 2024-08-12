@@ -161,11 +161,11 @@ export const postSubmit = async (req, res, next) => {
 
 export const getRoomEntrance = async (req, res, next) => {
   try {
-    const uuid = req.params.uuid;
+    const url = req.params.url;
     const userId = req.user.userId;
     console.log("최초 입장시 공지방 정보 조회");
 
-    const result = await getRoomEntranceService(uuid, userId);
+    const result = await getRoomEntranceService(url, userId);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);

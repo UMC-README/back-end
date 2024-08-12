@@ -150,8 +150,8 @@ export const postSubmitService = async (postId, userId, content, imageURLs) => {
   return submitData;
 };
 
-export const getRoomEntranceService = async (uuid, userId) => {
-  const roomData = await getRoomEntranceDAO(uuid, userId);
+export const getRoomEntranceService = async (url, userId) => {
+  const roomData = await getRoomEntranceDAO(url, userId);
   if (roomData == -1) {
     throw new Error("공지방을 찾을 수 없습니다.");
   }
