@@ -566,7 +566,7 @@ paths:
                         type: string
                         description: 제출 상태 (퀴즈의 경우 정답 여부에 따라 COMPLETE / NOT_COMPLETE, 미션의 경우 PENDING)
 
-  /room/enter/{uuid}:
+  /room/enter/{url}:
     get:
       tags:
         - room
@@ -578,7 +578,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: uuid
+        - name: url
           in: path
           schema:
             type: string
@@ -618,7 +618,7 @@ paths:
                         adminNickname:
                           type: string
                           description: 해당 공지방 관리자 닉네임
-                          
+
   /room/enter/{roomId}:
     post:
       tags:
