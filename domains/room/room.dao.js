@@ -24,7 +24,7 @@ import {
   postSubmitImageSQL,
   deletePreviousSubmitImageSQL,
   getSubmitIdByPostIdAndUserId,
-  getRoomEntranceInfoByRoomId,
+  getRoomEntranceInfoByUUID,
   checkUserRoomExistenceSQL,
   checkRoomPasswordSQL,
   createRoomEntranceSQL,
@@ -349,17 +349,20 @@ export const postSubmitDAO = async (postId, userId, content, imageURLs) => {
   }
 };
 
-export const getRoomEntranceDAO = async (roomId, userId) => {
+export const getRoomEntranceDAO = async (uuid, userId) => {
   try {
     const conn = await pool.getConnection();
 
-    const [roomInfo] = await conn.query(getRoomEntranceInfoByRoomId, roomId);
+    const [roomInfo] = await conn.query(getRoomEntranceInfoByUUID, uuid);
     if (roomInfo.length == 0) {
       conn.release();
       return -1;
     }
 
-    const [isAlreadyJoinedRoom] = await conn.query(checkUserRoomExistenceSQL, [userId, roomId]);
+    const [isAlreadyJoinedRoom] = await conn.query(checkUserRoomExistenceSQL, [
+      userId,
+      roomInfo[0].roomId,
+    ]);
     conn.release();
     return { isAlreadyJoinedRoom: !!isAlreadyJoinedRoom[0].userRoomExistence, ...roomInfo[0] };
   } catch (err) {
