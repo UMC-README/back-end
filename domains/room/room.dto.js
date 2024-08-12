@@ -107,3 +107,24 @@ export const allCommentsInPostDTO = (data, userId) => {
 
   return { data: comments, cursorId: data[data.length - 1].id };
 };
+
+export const searchPostInRoomDTO = (posts) => {
+  if (posts.length == 0) {
+    return { posts, cursorId: null };
+  }
+
+  const returnPosts = posts.map((post) => ({
+    postId: post.id,
+    postType: post.type,
+    postTitle: post.title,
+    postBody: post.content,
+    postImage: post.URL,
+    startDate: formatDate(post.start_date),
+    endDate: formatDate(post.end_date),
+    commentCount: post.comment_count,
+    submitState: formatSubmitState(post.submit_state),
+    unreadCount: post.unread_count,
+  }));
+
+  return { posts: returnPosts, cursorId: posts[posts.length - 1].id };
+};
