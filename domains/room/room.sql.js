@@ -167,8 +167,18 @@ export const getSubmitIdByPostIdAndUserId = `
 `;
 
 //공지방 최초 입장시 공지방 정보 가져오기
-export const getRoomEntranceInfoByRoomId = `
-  SELECT room_name, room_image, admin_nickname FROM room WHERE id = ? AND state = 'EXIST'
+export const getRoomEntranceInfoByURL = `
+  SELECT id as roomId, room_name as roomName, room_image as roomImage, admin_nickname as adminNickname
+  FROM room WHERE room_invite_url = ? AND state = 'EXIST'
+`;
+
+//공지방에 유저가 입장되어있는지 여부 확인
+export const checkUserRoomExistenceSQL = `
+  SELECT EXISTS (
+  SELECT user_id, room_id
+  FROM \`user-room\`
+  WHERE user_id = ? AND room_id = ? LIMIT 1
+  ) AS userRoomExistence
 `;
 
 //공지방 비밀번호가 일치하는지 여부 확인

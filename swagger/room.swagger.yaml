@@ -107,7 +107,7 @@ paths:
                       "posts": [
                         {
                           "postId": 3,
-                          "postType": "Quiz",
+                          "postType": "QUIZ",
                           "postTitle": "test3",
                           "postBody": "testcontent3",
                           "postImage": "url31.com",
@@ -119,7 +119,7 @@ paths:
                         },
                         {
                           "postId": 2,
-                          "postType": "Mission",
+                          "postType": "MISSION",
                           "postTitle": "test2",
                           "postBody": "testcontent2",
                           "postImage": null,
@@ -131,7 +131,7 @@ paths:
                         },
                         {
                           "postId": 1,
-                          "postType": "Quiz",
+                          "postType": "QUIZ",
                           "postTitle": "TEST",
                           "postBody": "TESTCONTENT",
                           "postImage": "url11.com",
@@ -244,7 +244,7 @@ paths:
                       "post": [
                         {
                             "postId": 1,
-                            "postType": "Quiz",
+                            "postType": "QUIZ",
                             "postTitle": "TEST",
                             "postBody": "TESTCONTENT",
                             "startDate": "24. 7. 25. 04:24",
@@ -566,7 +566,7 @@ paths:
                         type: string
                         description: 제출 상태 (퀴즈의 경우 정답 여부에 따라 COMPLETE / NOT_COMPLETE, 미션의 경우 PENDING)
 
-  /room/enter/{roomId}:
+  /room/enter/{url}:
     get:
       tags:
         - room
@@ -578,10 +578,10 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: roomId
+        - name: url
           in: path
           schema:
-            type: number
+            type: string
           required: true
       responses:
         "200":
@@ -603,15 +603,23 @@ paths:
                   result:
                     type: object
                     properties:
-                        room_name:
+                        isAlreadyJoinedRoom:
+                          type: boolean
+                          description: 해당 공지방에 이미 입장되어있는지 여부
+                        roomId:
+                          type: number
+                          description: 해당 공지방 ID
+                        roomName:
                           type: string
                           description: 해당 공지방 이름
-                        room_image:
+                        roomImage:
                           type: string
                           description: 해당 공지방 이미지 URL
-                        admin_nickname:
+                        adminNickname:
                           type: string
                           description: 해당 공지방 관리자 닉네임
+
+  /room/enter/{roomId}:
     post:
       tags:
         - room
