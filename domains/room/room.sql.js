@@ -171,6 +171,15 @@ export const getRoomEntranceInfoByRoomId = `
   SELECT room_name, room_image, admin_nickname FROM room WHERE id = ? AND state = 'EXIST'
 `;
 
+//공지방에 유저가 입장되어있는지 여부 확인
+export const checkUserRoomExistenceSQL = `
+  SELECT EXISTS (
+  SELECT user_id, room_id
+  FROM \`user-room\`
+  WHERE user_id = ? AND room_id = ? LIMIT 1
+  ) AS userRoomExistence
+`;
+
 //공지방 비밀번호가 일치하는지 여부 확인
 export const checkRoomPasswordSQL = `
   SELECT BINARY r.room_password = ? AS isValidResult FROM room r WHERE r.id = ?
