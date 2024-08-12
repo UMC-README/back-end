@@ -248,9 +248,8 @@ export const userListDao = async (nickname, roomId) => {
     }
 
     const [result] = await conn.query(userListSQLQuery, params);
-    result.map(user => user.user_id);
     conn.release();
-    return result; 
+    return result.map(user => user.user_id);
   } catch (error) {
     console.log("User 검색 에러:", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
@@ -311,6 +310,7 @@ export const penaltyDao = async (body) => {
         await conn.query(penaltyStateSQL, [body.roomId]);
         conn.release(); 
     }catch(error){
+        if(conn)  conn.release();
         throw new Error("쿼리 실행에 실패하였습니다.");
     }
   });  
