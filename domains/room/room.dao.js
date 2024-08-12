@@ -28,6 +28,8 @@ import {
   checkUserRoomExistenceSQL,
   checkRoomPasswordSQL,
   createRoomEntranceSQL,
+  searchPostInRoomSQL,
+  searchPostInRoomSQLAtFirst,
 } from "./room.sql.js";
 import { getUserById } from "../user/user.sql.js";
 
@@ -403,6 +405,52 @@ export const postRoomEntranceDAO = async (roomId, userId, userNickname) => {
     await conn.query(createRoomEntranceSQL, [userId, roomId, userNickname]);
     conn.release();
     return true;
+  } catch (err) {
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const searchPostInRoomDAO = async (roomId, userId, query, cursorId, size) => {
+  try {
+    const conn = await pool.getConnection();
+
+    const [room] = await conn.query(getRoomById, roomId);
+
+    if (room.length == 0) {
+      conn.release();
+      return -1;
+    }
+
+    const [checkJoinedRoom] = await conn.query(checkUserRoomExistenceSQL, [userId, roomId]);
+    if (checkJoinedRoom[0].userRoomExistence == 0) {
+      conn.release();
+      return -2;
+    }
+
+    if (cursorId == "undefined" || typeof cursorId == "undefined" || cursorId == null) {
+      const [posts] = await pool.query(searchPostInRoomSQLAtFirst, [
+        +roomId,
+        +userId,
+        "%" + query + "%",
+        "%" + query + "%",
+        +size,
+      ]);
+
+      conn.release();
+      return posts;
+    } else {
+      const [posts] = await pool.query(searchPostInRoomSQL, [
+        +roomId,
+        +userId,
+        +cursorId,
+        "%" + query + "%",
+        "%" + query + "%",
+        +size,
+      ]);
+
+      conn.release();
+      return posts;
+    }
   } catch (err) {
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
