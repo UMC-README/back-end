@@ -722,3 +722,90 @@ paths:
                           type: boolean
                           example: true
                           description: 비밀번호 일치 여부
+
+  /room/{roomId}/search:
+    get:
+      tags:
+        - room
+      summary: 공지방 내 공지글 검색
+      description: 공지방 내 공지글들의 제목과 내용을 대상으로 검색색, 커서 페이지네이션
+      operationId: searchPostInRoom
+      consumes:
+        - application/json  
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: roomId
+          in: path
+          schema:
+            type: number
+          required: true
+        - name: q
+          in: query
+          required: false
+          schema:
+            properties:
+              q:
+                type: string
+        - name: postId
+          in: query
+          required: false
+          schema:
+            properties:
+              postId:
+                type: number
+        - name: size
+          in: query
+          required: false
+          schema:
+            properties:
+              size:
+                type: number
+      responses:
+        "200":
+          description: 공지글 검색 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: number
+                    example: 200
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: array
+                    example: {
+                      "posts": [
+                        {
+                          "postId": 22,
+                          "postType": "QUIZ",
+                          "postTitle": "test3apple",
+                          "postBody": "testcontent3",
+                          "postImage": "url31.com",
+                          "startDate": "24. 7. 27. 19:05",
+                          "endDate": "24. 7. 27. 19:05",
+                          "commentCount": 1,
+                          "submitState": "NOT_COMPLETE",
+                          "unreadCount": 200,
+                        },
+                        {
+                          "postId": 17,
+                          "postType": "MISSION",
+                          "postTitle": "TEST",
+                          "postBody": "TESTappleCONTENT",
+                          "postImage": "url11.com",
+                          "startDate": "24. 7. 25. 04:24",
+                          "endDate": "24. 7. 25. 05:24",
+                          "commentCount": 5,
+                          "submitState": "COMPLETE",
+                          "unreadCount": 6,
+                        }
+                    ],
+                    "cursorId": 17,
+                    }
