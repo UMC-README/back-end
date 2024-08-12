@@ -24,7 +24,7 @@ import {
   penaltyStateSQL
 } from "./admin.sql.js";
 
- 
+import schedule from 'node-schedule';
 
 export const createRoomsDao = async (body, userId, roomInviteUrl) => {
   try {
@@ -302,16 +302,16 @@ export const deleteUserDao = async (body) => {
 };
 
 export const penaltyDao = async (body) => { 
-  try {
-    const conn = await pool.getConnection();
-
-    const [result] = await conn.query(penaltySQL, [body.roomId]); 
-    await conn.query(penaltyStateSQL, [body.roomId]);   // penalty_state 
-
-    conn.release();
-    return result.affectedRows; 
-  } catch (error) {
-    console.log("패널티 부여하기 에러");
-    throw new BaseError(status.INTERNAL_SERVER_ERROR);
-  }
+  schedule.scheduleJob('*/1 * * *', async function() {
+    let conn;
+    console.log("test");
+    try{ 
+        conn = await pool.getConnection();
+        await conn.query(penaltySQL, [body.roomId]);  
+        await conn.query(penaltyStateSQL, [body.roomId]);
+        conn.release(); 
+    }catch(error){
+        throw new Error("쿼리 실행에 실패하였습니다.");
+    }
+  });  
 };

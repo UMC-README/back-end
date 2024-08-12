@@ -153,10 +153,8 @@ export const penaltyService = async (body) => {
   try {
     if (!body.roomId)  throw new Error("패널티 부여를 위한 Id가 필요합니다.");
     
-    const result = await penaltyDao(body);
-    if (result.length === 0)  return "패널티를 부여할 대상이 없습니다.";
-
-    return "패널티 부여에 성공하였습니다.";
+    await penaltyDao(body);
+    return "패널티 부여 작업이 예약되었습니다. 지정된 시간에 실행됩니다.";
   } catch (error) {
     throw error;
   }

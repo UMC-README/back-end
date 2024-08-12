@@ -219,15 +219,15 @@ paths:
                 room_id:
                   type: integer 
                   description: 공지방 id
+                type:
+                  type: string
+                  description: 공지글 타입(퀴즈/미션)
                 title:
                   type: string
                   description: 공지글 제목
                 content:
                   type: string
                   description: 공지글 본문
-                type:
-                  type: string
-                  description: 공지글 타입(퀴즈/미션)
                 start_date:
                   type: string
                   description: 시작 기한 
@@ -498,7 +498,7 @@ paths:
             type: string
             example : 제이
         - in: query
-          name: roomId
+          name: room-id
           required: true  
           description: 사용자가 속한 room의 ID
           schema:
@@ -534,7 +534,7 @@ paths:
                         type : string
                         description : 유저 프로필 사진 
 
-  /admin/profile/{userId}:
+  /admin/profile:
     get:
       tags:
         - admin
@@ -546,11 +546,20 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: userId
-          in: path
+        - in: query
+          name: room-id
+          required: true
+          description: 공지방 ID
+          schema:
+            type: integer 
+            example : 6
+        - in: query
+          name: user-id
+          required: true  
+          description: 유저 ID
           schema:
             type: integer
-          required: true
+            example : 1240
       responses:
         "200":
           description: 프로필 조회 성공!

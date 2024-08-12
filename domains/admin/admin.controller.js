@@ -81,7 +81,7 @@ export const unreadUserListController = async(req, res, next) => {
 
 export const userListController = async (req,res,next) => { 
   try{ 
-    const result = await userListService(req.query.nickname, req.query.roomId);
+    const result = await userListService(req.query.nickname, req.query["room-id"]);
     res.status(200).json(response(status.SUCCESS, result));
   }catch (error){
     next(error); 
