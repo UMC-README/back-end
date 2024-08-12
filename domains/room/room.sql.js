@@ -190,3 +190,39 @@ export const checkRoomPasswordSQL = `
 export const createRoomEntranceSQL = `
   INSERT INTO \`user-room\` (user_id, room_id, nickname) VALUES (?, ?, ?)
 `;
+
+//공지방 내 공지글 제목, 내용 대상으로 검색 (커서 존재)
+export const searchPostInRoomSQL = `
+  SELECT p.id, p.type, p.title, p.content, pi.URL, p.start_date, p.end_date, p.comment_count, s.submit_state, p.unread_count FROM post p
+  JOIN user u ON p.room_id = ? AND u.id = ?
+  LEFT JOIN submit s ON s.post_id = p.id AND s.user_id = u.id
+  LEFT JOIN (
+    SELECT pi.post_id, pi.URL
+    FROM \`post-image\` pi
+    JOIN (
+      SELECT post_id, MIN(id) AS min_id
+      FROM \`post-image\`
+      GROUP BY post_id
+    ) min_pi ON pi.id = min_pi.min_id
+  ) pi ON pi.post_id = p.id
+  WHERE p.state = 'EXIST' AND p.id < ? AND (p.title LIKE ? OR p.content LIKE ?)
+  ORDER BY p.id DESC LIMIT ?
+`;
+
+//공지방 내 공지글 제목, 내용 대상으로 검색 (커서 없는 초기값)
+export const searchPostInRoomSQLAtFirst = `
+  SELECT p.id, p.type, p.title, p.content, pi.URL, p.start_date, p.end_date, p.comment_count, s.submit_state, p.unread_count FROM post p
+  JOIN user u ON p.room_id = ? AND u.id = ?
+  LEFT JOIN submit s ON s.post_id = p.id AND s.user_id = u.id
+  LEFT JOIN (
+    SELECT pi.post_id, pi.URL
+    FROM \`post-image\` pi
+    JOIN (
+      SELECT post_id, MIN(id) AS min_id
+      FROM \`post-image\`
+      GROUP BY post_id
+    ) min_pi ON pi.id = min_pi.min_id
+  ) pi ON pi.post_id = p.id
+  WHERE p.state = 'EXIST' AND (p.title LIKE ? OR p.content LIKE ?)
+  ORDER BY p.id DESC LIMIT ?
+`;
