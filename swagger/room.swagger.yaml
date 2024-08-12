@@ -107,7 +107,7 @@ paths:
                       "posts": [
                         {
                           "postId": 3,
-                          "postType": "Quiz",
+                          "postType": "QUIZ",
                           "postTitle": "test3",
                           "postBody": "testcontent3",
                           "postImage": "url31.com",
@@ -119,7 +119,7 @@ paths:
                         },
                         {
                           "postId": 2,
-                          "postType": "Mission",
+                          "postType": "MISSION",
                           "postTitle": "test2",
                           "postBody": "testcontent2",
                           "postImage": null,
@@ -131,7 +131,7 @@ paths:
                         },
                         {
                           "postId": 1,
-                          "postType": "Quiz",
+                          "postType": "QUIZ",
                           "postTitle": "TEST",
                           "postBody": "TESTCONTENT",
                           "postImage": "url11.com",
@@ -244,7 +244,7 @@ paths:
                       "post": [
                         {
                             "postId": 1,
-                            "postType": "Quiz",
+                            "postType": "QUIZ",
                             "postTitle": "TEST",
                             "postBody": "TESTCONTENT",
                             "startDate": "24. 7. 25. 04:24",
@@ -603,6 +603,9 @@ paths:
                   result:
                     type: object
                     properties:
+                        isAlreadyJoinedRoom:
+                          type: boolean
+                          description: 해당 공지방에 이미 입장되어있는지 여부
                         room_name:
                           type: string
                           description: 해당 공지방 이름
