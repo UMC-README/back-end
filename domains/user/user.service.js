@@ -171,6 +171,7 @@ export const getMyRoomProfiles = async (userId, page, pageSize) => {
     return {
       nickname: userData.nickname,
       profileImage: userData.profile_image,
+      profiles: [],
     };
   }
 
@@ -182,17 +183,13 @@ export const getMyRoomProfiles = async (userId, page, pageSize) => {
 };
 
 export const getMyCreateRoom = async (userId, page, pageSize) => {
-  // const userData = await findUserById(userId);
-
-  // if (!userData) {
-  //   throw new Error("사용자를 찾을 수 없습니다.");
-  // }
-
-  const { rooms, isNext } = await findCreateRoomByUserId(userId, page, pageSize);
+  const { rooms, isNext, totalCount } = await findCreateRoomByUserId(userId, page, pageSize);
 
   if (!rooms) {
-    return { rooms: null, isNext: false };
+    return { rooms: [], isNext: false, totalPages: 0 };
   }
+
+  const totalPages = Math.ceil(totalCount / pageSize);
 
   const Myrooms = rooms.map((room) => ({
     id: room.room_id,
@@ -203,21 +200,17 @@ export const getMyCreateRoom = async (userId, page, pageSize) => {
     latestPostTime: getRelativeTime(room.latest_post_time),
   }));
 
-  return { rooms: Myrooms, isNext };
+  return { rooms: Myrooms, isNext, totalPages };
 };
 
 export const getMyJoinRoom = async (userId, page, pageSize) => {
-  // const userData = await findUserById(userId);
-
-  // if (!userData) {
-  //   throw new Error("사용자를 찾을 수 없습니다.");
-  // }
-
-  const { rooms, isNext } = await findJoinRoomByUserId(userId, page, pageSize);
+  const { rooms, isNext, totalCount } = await findJoinRoomByUserId(userId, page, pageSize);
 
   if (!rooms) {
-    return { rooms: null, isNext: false };
+    return { rooms: [], isNext: false, totalPages: 0 };
   }
+
+  const totalPages = Math.ceil(totalCount / pageSize);
 
   const Myrooms = rooms.map(async (room) => {
     const submitCount = await findSubmitCountInRoom(room.room_id, userId);
@@ -236,7 +229,7 @@ export const getMyJoinRoom = async (userId, page, pageSize) => {
 
   const RoomDatas = await Promise.all(Myrooms);
 
-  return { rooms: RoomDatas, isNext };
+  return { rooms: RoomDatas, isNext, totalPages };
 };
 
 export const checkRoomDuplicateNickname = async (roomId, nickname) => {
@@ -248,6 +241,8 @@ export const checkRoomDuplicateNickname = async (roomId, nickname) => {
 export const getLatestPostsInAllRooms = async (userId, page, pageSize) => {
   const rooms = await findAllRooms(userId, page, pageSize);
   const totalCount = await getRoomsCount(userId);
+
+  const totalPages = Math.ceil(totalCount / pageSize);
 
   const recentPostsPromises = rooms.map(async (room) => {
     const recentPost = await findLatestPostInRoom(room.id);
@@ -268,7 +263,7 @@ export const getLatestPostsInAllRooms = async (userId, page, pageSize) => {
   const recentPostList = (await Promise.all(recentPostsPromises)).filter((post) => post !== null);
   const isNext = page * pageSize < totalCount;
 
-  return { recentPostList, isNext };
+  return { recentPostList, isNext, totalPages };
 };
 
 export const getSubmitList = async (roomId) => {
@@ -282,7 +277,7 @@ export const getSubmitList = async (roomId) => {
       profileImage: submit.profile_image,
       submitState: submit.submit_state,
       content: submit.content,
-      images,
+      images: images.length > 0 ? images : [],
     };
   });
 

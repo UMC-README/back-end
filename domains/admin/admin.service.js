@@ -48,6 +48,9 @@ export const deleteRoomsService = async (body) => {
 
 export const createPostService = async (body, userId) => {
   try {
+    if(!body.room_id){
+      throw new Error("공지방 ID가 필요합니다.");
+    }
     const postData = await createPostDao(body, userId);
     return createPostDTO(postData);
   } catch (error) {
@@ -109,12 +112,13 @@ export const userListService = async (nickname, roomId) => {
 };
 
 
-export const userProfileService = async (userId) => {
+export const userProfileService = async (roomId, userId) => {
   try {
-    if (!userId) {
-      throw new Error("삭제할 공지글의 ID가 필요합니다.");
+    if (!roomId || !userId) {
+      throw new Error("공지방 혹은 사용자 ID가 필요합니다.");
     }
-    return await userProfileDao(userId);
+    const userProfileData = await userProfileDao(roomId, userId);
+    return userProfileData || [];
   } catch (error) {
     throw error;
   }

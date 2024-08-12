@@ -59,6 +59,10 @@ export const getAllPostInRoom = async (roomId, userId, query) => {
     throw new Error("공지방을 찾을 수 없습니다.");
   }
 
+  if (roomData == -2) {
+    throw new Error("입장되어있는 공지방이 아닙니다.");
+  }
+
   return allPostInRoomDTO(roomData);
 };
 
@@ -146,9 +150,8 @@ export const postSubmitService = async (postId, userId, content, imageURLs) => {
   return submitData;
 };
 
-export const getRoomEntranceService = async (roomId) => {
-  const roomData = await getRoomEntranceDAO(roomId);
-
+export const getRoomEntranceService = async (url, userId) => {
+  const roomData = await getRoomEntranceDAO(url, userId);
   if (roomData == -1) {
     throw new Error("공지방을 찾을 수 없습니다.");
   }

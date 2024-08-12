@@ -24,7 +24,8 @@ import {
   postSubmitImageSQL,
   deletePreviousSubmitImageSQL,
   getSubmitIdByPostIdAndUserId,
-  getRoomEntranceInfoByRoomId,
+  getRoomEntranceInfoByURL,
+  checkUserRoomExistenceSQL,
   checkRoomPasswordSQL,
   createRoomEntranceSQL,
 } from "./room.sql.js";
@@ -87,6 +88,12 @@ export const getAllPostInRoomDAO = async (roomId, userId, cursorId, size) => {
     if (room.length == 0) {
       conn.release();
       return -1;
+    }
+
+    const [checkJoinedRoom] = await conn.query(checkUserRoomExistenceSQL, [userId, roomId]);
+    if (checkJoinedRoom[0].userRoomExistence == 0) {
+      conn.release();
+      return -2;
     }
 
     const isRoomAdmin = userId === room[0].admin_id;
@@ -342,17 +349,22 @@ export const postSubmitDAO = async (postId, userId, content, imageURLs) => {
   }
 };
 
-export const getRoomEntranceDAO = async (roomId) => {
+export const getRoomEntranceDAO = async (url, userId) => {
   try {
     const conn = await pool.getConnection();
 
-    const [roomInfo] = await conn.query(getRoomEntranceInfoByRoomId, roomId);
+    const [roomInfo] = await conn.query(getRoomEntranceInfoByURL, url);
     if (roomInfo.length == 0) {
       conn.release();
       return -1;
     }
+
+    const [isAlreadyJoinedRoom] = await conn.query(checkUserRoomExistenceSQL, [
+      userId,
+      roomInfo[0].roomId,
+    ]);
     conn.release();
-    return roomInfo[0];
+    return { isAlreadyJoinedRoom: !!isAlreadyJoinedRoom[0].userRoomExistence, ...roomInfo[0] };
   } catch (err) {
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }

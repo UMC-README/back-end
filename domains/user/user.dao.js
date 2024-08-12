@@ -187,7 +187,7 @@ export const findCreateRoomByUserId = async (userId, page, pageSize) => {
     const isNext = offset + pageSize < count;
 
     conn.release();
-    return { rooms, isNext };
+    return { rooms, isNext, totalCount: count };
   } catch (error) {
     console.log("내가 생성한 공지방 찾기 에러", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
@@ -205,7 +205,7 @@ export const findJoinRoomByUserId = async (userId, page, pageSize) => {
     const isNext = offset + pageSize < count;
 
     conn.release();
-    return { rooms, isNext };
+    return { rooms, isNext, totalCount: count };
   } catch (error) {
     console.log("내가 입장한 공지방 찾기 에러", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
