@@ -15,6 +15,7 @@ import {
   getRoomEntrance,
   postRoomEntrance,
   checkPassword,
+  searchPostInRoom,
 } from "../domains/room/room.controller.js";
 
 import { tokenAuth } from "../middleware/token.auth.js";
@@ -34,3 +35,4 @@ roomRouter.post("/post/:postId/submit", tokenAuth, expressAsyncHandler(postSubmi
 roomRouter.get("/enter/:url", tokenAuth, expressAsyncHandler(getRoomEntrance));
 roomRouter.post("/enter/:roomId", tokenAuth, expressAsyncHandler(postRoomEntrance));
 roomRouter.post("/:roomId/checkPassword", tokenAuth, expressAsyncHandler(checkPassword));
+roomRouter.get("/:roomId/search", tokenAuth, expressAsyncHandler(searchPostInRoom));
