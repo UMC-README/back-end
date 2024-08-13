@@ -12,6 +12,7 @@ import {
   getRoomEntranceDAO,
   checkPasswordDAO,
   postRoomEntranceDAO,
+  searchPostInRoomDAO,
 } from "./room.dao.js";
 
 import {
@@ -19,6 +20,7 @@ import {
   notCheckedPostInRoomDTO,
   detailedPostDTO,
   allCommentsInPostDTO,
+  searchPostInRoomDTO,
 } from "./room.dto.js";
 
 export const postFix = async (postId, userId) => {
@@ -183,4 +185,20 @@ export const postRoomEntranceService = async (roomId, userId, userNickname) => {
   }
 
   return { isSuccess: userRoomData };
+};
+
+export const searchPostInRoomService = async (roomId, userId, query) => {
+  const { q, postId, size = 10 } = query;
+
+  const roomData = await searchPostInRoomDAO(roomId, userId, q, postId, size);
+
+  if (roomData == -1) {
+    throw new Error("공지방을 찾을 수 없습니다.");
+  }
+
+  if (roomData == -2) {
+    throw new Error("입장되어있는 공지방이 아닙니다.");
+  }
+
+  return searchPostInRoomDTO(roomData);
 };
