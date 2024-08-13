@@ -73,10 +73,11 @@ export const userListSQL = `
 
 // 유저 프로필 조회
 export const userProfileSQL = `
-  SELECT ur.nickname, ur.profile_image, ur.penalty_count
+  SELECT ur.nickname, ur.profile_image, ur.penalty_count, r.max_penalty
   FROM \`user-room\` ur
   JOIN user u ON u.id = ur.user_id
-  WHERE u.id = ?
+  JOIN room r ON r.id = ur.room_id  
+  WHERE u.id = ? AND ur.room_id = ?
 `;
 
 // 유저 초대하기 (=공지방 조회)
@@ -95,35 +96,45 @@ export const deleteUserSQL = `
   DELETE FROM  \`user-room\` WHERE nickname = ? AND room_id;
 `;
 
-// 패널티 부여하기 (제출 이력 유무 고려)
+// 패널티 부여하기 (제출 이력 유무 고려 / 중복 부과 x)
+export const allRoomsSQL = ` 
+  SELECT room_id FROM \`user-room\` 
+  ORDER BY room_id; 
+`;
+
 export const penaltySQL = `
   UPDATE \`user-room\` ur
   SET ur.penalty_count = ur.penalty_count + (
-      SELECT
-          COUNT(p.id) - COUNT(CASE WHEN s.submit_state IN ('COMPLETE') THEN 1 END)
-      FROM post p
-      LEFT JOIN submit s ON s.post_id = p.id AND s.user_id = ur.user_id
-      WHERE p.room_id = ur.room_id
-      AND NOW() > DATE_ADD(p.end_date, INTERVAL 1 SECOND)
-  )  
+    SELECT
+        COUNT(p.id) - COUNT(CASE WHEN s.submit_state IN ('COMPLETE') THEN 1 END)
+    FROM post p
+    LEFT JOIN submit s ON s.post_id = p.id AND s.user_id = ur.user_id
+    WHERE p.room_id = ur.room_id
+    AND NOW() > DATE_ADD(p.end_date, INTERVAL 1 SECOND)
+    AND NOT EXISTS (
+        SELECT 1
+        FROM submit s2
+        WHERE s2.post_id = p.id AND s2.user_id = ur.user_id AND s2.penalty_state = true
+    )
+  )
   WHERE ur.room_id = ?;
 `; 
 
 // 패널티가 부과된 공지글에 대해서만 penalty_state 변경 
 export const penaltyStateSQL = `
   UPDATE submit s
-    JOIN (
-        SELECT ur.user_id, ur.room_id
-        FROM \`user-room\` ur
-        WHERE ur.room_id = ?
-    ) AS ur ON s.user_id = ur.user_id
-    SET s.penalty_state = true
-    WHERE s.post_id IN (
-        SELECT p.id
-        FROM post p
-        WHERE p.room_id = ur.room_id
-    )
-    AND s.submit_state != 'COMPLETE';
+  JOIN (
+      SELECT ur.user_id, ur.room_id
+      FROM \`user-room\` ur
+      WHERE ur.room_id = ? 
+  ) AS ur ON s.user_id = ur.user_id
+  SET s.penalty_state = true
+  WHERE s.post_id IN (
+      SELECT p.id
+      FROM post p
+      WHERE p.room_id = ur.room_id
+  )
+  AND s.submit_state != 'COMPLETE';
 `; 
 
 // 패널티 부과 & 제출 이력 없던 유저들 submit에 추가
@@ -132,7 +143,7 @@ export const addUserSubmitSQL  = `
   SELECT p.id, ur.user_id, 'NOT_COMPLETE', true
   FROM \`user-room\` ur
   JOIN post p ON p.room_id = ur.room_id
-  WHERE ur.room_id = ?
+  WHERE ur.room_id = ? 
   AND NOT EXISTS (
       SELECT 1
       FROM submit s2

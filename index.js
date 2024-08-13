@@ -9,6 +9,7 @@ import { response } from "./config/response.js";
 import { userRouter } from "./routes/user.route.js";
 import { roomRouter } from "./routes/room.route.js";
 import { adminRouter } from "./routes/admin.route.js";
+import { penaltyDao } from "./domains/admin/admin.dao.js";
 
 dotenv.config();
 
@@ -31,6 +32,7 @@ app.use((err, req, res, next) => {
 
 app.listen(app.get("port"), () => {
   console.log(`Example app listening on port ${app.get("port")}`);
+  penaltyDao();
 });
 
 app.get("/", (req, res) => {

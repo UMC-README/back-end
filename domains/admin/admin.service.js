@@ -10,7 +10,6 @@ import {
   userProfileDao,
   userInviteDao,
   deleteUserDao,
-  penaltyDao
 } from "./admin.dao.js";
 import { createShortUUID } from "./uuid.js";
 import { createRoomsDTO, updateRoomsDTO, createPostDTO, updatePostDTO } from "./admin.dto.js";
@@ -148,14 +147,3 @@ export const deleteUserService = async (body) => {
     throw error;
   }
 };
-
-export const penaltyService = async (body) => { 
-  try {
-    if (!body.roomId)  throw new Error("패널티 부여를 위한 공지방 Id가 필요합니다.");
-    
-    await penaltyDao(body);
-    return "패널티 부여 작업이 예약되었습니다. 지정된 시간에 실행됩니다.";
-  } catch (error) {
-    throw error;
-  }
-}

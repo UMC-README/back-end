@@ -13,7 +13,6 @@ import {
   userProfileController,
   userInviteController,
   deleteUserController,
-  penaltyController
 } from "../domains/admin/admin.controller.js";
 
 export const adminRouter = express.Router();
@@ -29,4 +28,3 @@ adminRouter.get("/users", tokenAuth, expressAsyncHandler(userListController));
 adminRouter.get("/profile", tokenAuth, expressAsyncHandler(userProfileController));
 adminRouter.get("/invitation/:roomId", tokenAuth, expressAsyncHandler(userInviteController));
 adminRouter.delete("/user-ban", tokenAuth, expressAsyncHandler(deleteUserController));
-adminRouter.patch("/penalty", tokenAuth, expressAsyncHandler(penaltyController));

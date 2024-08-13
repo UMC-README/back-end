@@ -20,9 +20,10 @@ import {
   userInviteSQL,
   checkUserInRoomSQL,
   deleteUserSQL,
+  allRoomsSQL, 
   penaltySQL, 
   penaltyStateSQL,
-  addUserSubmitSQL
+  addUserSubmitSQL,
 } from "./admin.sql.js";
 
 import schedule from 'node-schedule';
@@ -301,17 +302,23 @@ export const deleteUserDao = async (body) => {
   }
 };
 
-export const penaltyDao = async (body) => { 
+export const penaltyDao = async () => { 
   // UTC 기준 15시, 한국 기준 00시 정각 
   schedule.scheduleJob('0 15 * * *', async function() {
     let conn;
-    try{ 
+    try{  
         conn = await pool.getConnection();
-        await conn.query(penaltySQL, [body.roomId]);  
-        await conn.query(penaltyStateSQL, [body.roomId]);
-        await conn.query(addUserSubmitSQL, [body.roomId]);
+        console.log("test");
+        const [roomIds] = await conn.query(allRoomsSQL);
+        for(const row of roomIds){
+          const roomId = row.room_id; 
+          
+          await conn.query(penaltySQL, [roomId]);  
+          await conn.query(penaltyStateSQL, [roomId]);
+          await conn.query(addUserSubmitSQL, [roomId]);
+        } 
         conn.release(); 
-    }catch(error){
+    } catch(error){
         if(conn)  conn.release();
         throw new Error("쿼리 실행에 실패하였습니다.");
     }
