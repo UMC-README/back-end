@@ -155,10 +155,10 @@ export const getSubmitImages = `
   WHERE si.submit_id = ?
 `;
 
-// 페널티를 받은 submit에 대한 목록 조회하기
+// 페널티를 받은 post 대한 목록 조회하기
 export const getPenaltySubmit = `
   SELECT p.*
   FROM post p
   JOIN submit s ON p.id = s.post_id
-  WHERE p.room_id = ? AND s.penalty_state = 1
+  WHERE p.room_id = ? AND s.user_id = ? AND s.penalty_state = 1
 `;
