@@ -101,9 +101,12 @@ export const userListService = async (nickname, roomId) => {
       throw new Error("조회할 공지방의 ID가 필요합니다.");
     }
     const result = await userListDao(nickname, roomId);
+
+    if (!result.length) return [];
     return result.map(user => ({
+      userId : user.user_id,
       nickname: user.nickname,
-      profileImage: user.profile_image
+      profileImage: user.profile_image, 
     })); 
   } catch (error) {
     console.error("유저 목록 조회 에러:", error);

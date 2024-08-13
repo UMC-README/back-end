@@ -27,4 +27,4 @@ adminRouter.get("/post/:postId/unread", tokenAuth, expressAsyncHandler(unreadUse
 adminRouter.get("/users", tokenAuth, expressAsyncHandler(userListController));
 adminRouter.get("/profile", tokenAuth, expressAsyncHandler(userProfileController));
 adminRouter.get("/invitation/:roomId", tokenAuth, expressAsyncHandler(userInviteController));
-adminRouter.delete("/user-Ban", tokenAuth, expressAsyncHandler(deleteUserController));
+adminRouter.delete("/user-ban", tokenAuth, expressAsyncHandler(deleteUserController));

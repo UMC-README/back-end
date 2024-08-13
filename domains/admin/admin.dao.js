@@ -1,4 +1,3 @@
-import { MAX } from "uuid";
 import { pool } from "../../config/db.config.js";
 import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
@@ -21,7 +20,13 @@ import {
   userInviteSQL,
   checkUserInRoomSQL,
   deleteUserSQL,
+  allRoomsSQL, 
+  penaltySQL, 
+  penaltyStateSQL,
+  addUserSubmitSQL,
 } from "./admin.sql.js";
+
+import schedule from 'node-schedule';
 
 export const createRoomsDao = async (body, userId, roomInviteUrl) => {
   try {
@@ -239,14 +244,14 @@ export const userListDao = async (nickname, roomId) => {
     if (nickname && nickname.trim() !== '') { // nickname 유효성 검사
       userListSQLQuery = userListNameSQL;  
       params = [nickname, roomId]; 
-    } else {
+    } else {  
       userListSQLQuery = userListSQL; // 모든 유저 조회 쿼리
       params = [roomId]; 
     }
 
     const [result] = await conn.query(userListSQLQuery, params);
     conn.release();
-    return result; 
+    return result.map(user => user.user_id);
   } catch (error) {
     console.log("User 검색 에러:", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
@@ -295,4 +300,27 @@ export const deleteUserDao = async (body) => {
     console.log("유저 강퇴하기 에러");
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
+};
+
+export const penaltyDao = async () => { 
+  // UTC 기준 15시, 한국 기준 00시 정각 
+  schedule.scheduleJob('0 15 * * *', async function() {
+    let conn;
+    try{  
+        conn = await pool.getConnection();
+        console.log("test");
+        const [roomIds] = await conn.query(allRoomsSQL);
+        for(const row of roomIds){
+          const roomId = row.room_id; 
+          
+          await conn.query(penaltySQL, [roomId]);  
+          await conn.query(penaltyStateSQL, [roomId]);
+          await conn.query(addUserSubmitSQL, [roomId]);
+        } 
+        conn.release(); 
+    } catch(error){
+        if(conn)  conn.release();
+        throw new Error("쿼리 실행에 실패하였습니다.");
+    }
+  });  
 };
