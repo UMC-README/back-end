@@ -427,7 +427,7 @@ export const searchPostInRoomDAO = async (roomId, userId, query, cursorId, size)
       return -2;
     }
 
-    if (cursorId == "undefined" || typeof cursorId == "undefined" || cursorId == null) {
+    if (!cursorId) {
       const [posts] = await pool.query(searchPostInRoomSQLAtFirst, [
         +roomId,
         +userId,
