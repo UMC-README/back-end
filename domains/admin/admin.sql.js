@@ -109,6 +109,7 @@ export const penaltySQL = `
   WHERE ur.room_id = ?;
 `; 
 
+// 패널티가 부과된 공지글에 대해서만 penalty_state 변경 
 export const penaltyStateSQL = `
   UPDATE submit s
     JOIN (
@@ -124,3 +125,18 @@ export const penaltyStateSQL = `
     )
     AND s.submit_state != 'COMPLETE';
 `; 
+
+// 패널티 부과 & 제출 이력 없던 유저들 submit에 추가
+export const addUserSubmitSQL  = ` 
+  INSERT INTO submit (post_id, user_id, submit_state, penalty_state)
+  SELECT p.id, ur.user_id, 'NOT_COMPLETE', true
+  FROM \`user-room\` ur
+  JOIN post p ON p.room_id = ur.room_id
+  WHERE ur.room_id = ?
+  AND NOT EXISTS (
+      SELECT 1
+      FROM submit s2
+      WHERE s2.user_id = ur.user_id AND s2.post_id = p.id
+  )
+  AND NOW() > DATE_ADD(p.end_date, INTERVAL 1 SECOND);
+`;

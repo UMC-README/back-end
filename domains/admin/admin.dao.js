@@ -21,7 +21,8 @@ import {
   checkUserInRoomSQL,
   deleteUserSQL,
   penaltySQL, 
-  penaltyStateSQL
+  penaltyStateSQL,
+  addUserSubmitSQL
 } from "./admin.sql.js";
 
 import schedule from 'node-schedule';
@@ -308,6 +309,7 @@ export const penaltyDao = async (body) => {
         conn = await pool.getConnection();
         await conn.query(penaltySQL, [body.roomId]);  
         await conn.query(penaltyStateSQL, [body.roomId]);
+        await conn.query(addUserSubmitSQL, [body.roomId]);
         conn.release(); 
     }catch(error){
         if(conn)  conn.release();
