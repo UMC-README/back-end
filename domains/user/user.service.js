@@ -16,6 +16,7 @@ import {
   findSubmitCountInRoom,
   findSubmitList,
   findSubmitImages,
+  findPenaltyPost,
 } from "./user.dao.js";
 import { passwordHashing } from "../../utils/passwordHash.js";
 import { generateJWTToken } from "../../utils/generateToken.js";
@@ -284,4 +285,10 @@ export const getSubmitList = async (roomId) => {
   const detailedSubmits = await Promise.all(detailedSubmitsPromises);
 
   return detailedSubmits;
+};
+
+export const getPenaltyPostList = async (roomId, userId) => {
+  const submit = await findPenaltyPost(roomId, userId);
+
+  return { submit: submit };
 };
