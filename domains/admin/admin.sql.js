@@ -22,8 +22,8 @@ export const deleteRoomsSQL = `
 
 // 공지글 생성 & 공지방 이미지
 export const createPostSQL = `
-  INSERT INTO post (room_id, type, title, content, start_date, end_date, question, quiz_answer, unread_count, user_id)
-  VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);  
+  INSERT INTO post (room_id, type, title, content, start_date, end_date, question, unread_count, user_id)
+  VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);  
 `;
 export const getMemberCountSQL = `
   SELECT COUNT(*) AS user_count
@@ -76,8 +76,7 @@ export const userProfileSQL = `
   SELECT ur.nickname, ur.profile_image, ur.penalty_count
   FROM \`user-room\` ur
   JOIN user u ON u.id = ur.user_id
-  JOIN room r ON r.id = ur.room_id
-  WHERE r.id = ? AND u.id = ? 
+  WHERE u.id = ?
 `;
 
 // 유저 초대하기 (=공지방 조회)
@@ -112,11 +111,16 @@ export const penaltySQL = `
 
 export const penaltyStateSQL = `
   UPDATE submit s
-  SET s.penalty_state = true
-  WHERE s.user_id IN (
-      SELECT ur.user_id
-      FROM \`user-room\` ur
-      WHERE ur.room_id = ?
-      AND ur.penalty_count > 0
-  );
+    JOIN (
+        SELECT ur.user_id, ur.room_id
+        FROM \`user-room\` ur
+        WHERE ur.room_id = ?
+    ) AS ur ON s.user_id = ur.user_id
+    SET s.penalty_state = true
+    WHERE s.post_id IN (
+        SELECT p.id
+        FROM post p
+        WHERE p.room_id = ur.room_id
+    )
+    AND s.submit_state != 'COMPLETE';
 `; 

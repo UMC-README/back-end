@@ -301,6 +301,7 @@ export const deleteUserDao = async (body) => {
 };
 
 export const penaltyDao = async (body) => { 
+  // UTC 기준 15시, 한국 기준 00시 정각 
   schedule.scheduleJob('0 15 * * *', async function() {
     let conn;
     try{ 
