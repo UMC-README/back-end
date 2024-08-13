@@ -434,7 +434,7 @@ paths:
                         type : string 
                         description: 퀴즈/미션 질문 
 
-  /admin/post/{postId}/unread:
+  /admin/post/{post-id}/unread:
     get:
       tags:
         - admin
@@ -446,7 +446,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: postId
+        - name: post-id
           in: path
           schema:
             type: integer
@@ -590,7 +590,7 @@ paths:
                         type : integer 
                         description : 패널티 개수
 
-  /admin/invitation/{roomId} :
+  /admin/invitation/{room-id} :
     get:
       tags:
         - admin
@@ -602,7 +602,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: roomId 
+        - name: room-id 
           in: path
           schema:
             type: integer
