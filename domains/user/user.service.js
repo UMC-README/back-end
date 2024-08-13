@@ -17,10 +17,15 @@ import {
   findSubmitList,
   findSubmitImages,
   findPenaltyPost,
+  findPenaltyCount,
 } from "./user.dao.js";
 import { passwordHashing } from "../../utils/passwordHash.js";
 import { generateJWTToken } from "../../utils/generateToken.js";
-import { getRelativeTime, getYearMonthDay } from "../../utils/timeChange.js";
+import {
+  getRelativeTime,
+  getYearMonthDay,
+  getYearMonthDayHourMinute,
+} from "../../utils/timeChange.js";
 
 export const signupUser = async (userInfo, token) => {
   // 비밀번호 해싱
@@ -288,7 +293,28 @@ export const getSubmitList = async (roomId) => {
 };
 
 export const getPenaltyPostList = async (roomId, userId) => {
-  const submit = await findPenaltyPost(roomId, userId);
+  const penaltyCount = await findPenaltyCount(roomId, userId);
+  const posts = await findPenaltyPost(roomId, userId);
 
-  return { submit: submit };
+  const postLists = posts.map((post) => {
+    const imagesArray = post.images ? post.images.split(",") : [];
+
+    return {
+      postId: post.id,
+      type: post.type,
+      submitState: post.submit_state,
+      title: post.title,
+      content: post.content,
+      startDate: getYearMonthDayHourMinute(post.start_date),
+      endDate: getYearMonthDayHourMinute(post.end_date),
+      image: imagesArray[0] || null,
+    };
+  });
+
+  return {
+    roomId: roomId,
+    penaltyCount: penaltyCount.myPenaltyCount,
+    maxPenalty: penaltyCount.maxPenalty,
+    posts: postLists,
+  };
 };

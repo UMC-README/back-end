@@ -155,10 +155,20 @@ export const getSubmitImages = `
   WHERE si.submit_id = ?
 `;
 
+// 해당 공지방에 대한 내 페널티 개수 및 최대 페널티 개수 구하기
+export const getPenaltyCount = `
+  SELECT r.max_penalty as maxPenalty, ur.penalty_count as myPenaltyCount
+  FROM room r
+  JOIN \`user-room\` ur ON r.id = ur.room_id
+  WHERE r.id = ? AND ur.user_id = ?
+`;
+
 // 페널티를 받은 post 대한 목록 조회하기
-export const getPenaltySubmit = `
-  SELECT p.*
+export const getPenaltyPost = `
+  SELECT p.*, s.submit_state, GROUP_CONCAT(pi.URL ORDER BY pi.id ASC) as images
   FROM post p
   JOIN submit s ON p.id = s.post_id
+  LEFT JOIN \`post-image\` pi ON pi.post_id = p.id
   WHERE p.room_id = ? AND s.user_id = ? AND s.penalty_state = 1
+  GROUP BY p.id
 `;

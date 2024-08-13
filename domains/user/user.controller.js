@@ -19,6 +19,7 @@ import {
   checkRoomDuplicateNickname,
   getLatestPostsInAllRooms,
   getSubmitList,
+  getPenaltyPostList,
 } from "./user.service.js";
 
 export const userSignUp = async (req, res, next) => {

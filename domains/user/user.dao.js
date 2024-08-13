@@ -23,7 +23,8 @@ import {
   getSubmitCountInRoom,
   getSubmitListInRoom,
   getSubmitImages,
-  getPenaltySubmit,
+  getPenaltyPost,
+  getPenaltyCount,
 } from "./user.sql.js";
 
 export const insertUser = async (data) => {
@@ -301,10 +302,23 @@ export const findSubmitImages = async (submitId) => {
   }
 };
 
+export const findPenaltyCount = async (roomId, userId) => {
+  try {
+    const conn = await pool.getConnection();
+    const [count] = await conn.query(getPenaltyCount, [roomId, userId]);
+    conn.release();
+
+    return count[0];
+  } catch (error) {
+    console.error("페널티 개수 찾기 에러", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
 export const findPenaltyPost = async (roomId, userId) => {
   try {
     const conn = await pool.getConnection();
-    const [posts] = await conn.query(getPenaltySubmit, [roomId, userId]);
+    const [posts] = await conn.query(getPenaltyPost, [roomId, userId]);
 
     conn.release();
     return posts;

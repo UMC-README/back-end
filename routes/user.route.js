@@ -20,6 +20,7 @@ import {
   checkUserRoomNicknameDuplicate,
   getLatestPosts,
   getMySubmitList,
+  getMyPenaltyPostList,
 } from "../domains/user/user.controller.js";
 import { tokenAuth } from "../middleware/token.auth.js";
 import { imageUploader } from "../middleware/image.uploader.js";
@@ -70,3 +71,5 @@ userRouter.post("/password", tokenAuth, expressAsyncHandler(getUserPassword));
 userRouter.patch("/password", tokenAuth, expressAsyncHandler(updateUserPassword));
 
 userRouter.get("/rooms/missions/:roomId", tokenAuth, expressAsyncHandler(getMySubmitList));
+
+userRouter.get("/rooms/penalty/:roomId", tokenAuth, expressAsyncHandler(getMyPenaltyPostList));
