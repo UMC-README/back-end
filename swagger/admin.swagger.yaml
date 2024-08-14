@@ -17,9 +17,6 @@ paths:
             schema:
               type: object
               properties:
-                admin_id:
-                  type: string
-                  description: 관리자 id
                 room_image:
                   type: string
                   description: 공지방 이미지 url
@@ -55,6 +52,9 @@ paths:
                   result:
                     type: object
                     properties:
+                      postId : 
+                        type : number
+                        description : 생성된 공지방ID
                       roomImage:
                         type: string
                         description: 공지방 이미지 url
@@ -219,15 +219,15 @@ paths:
                 room_id:
                   type: integer 
                   description: 공지방 id
+                type:
+                  type: string
+                  description: 공지글 타입(퀴즈/미션)
                 title:
                   type: string
                   description: 공지글 제목
                 content:
                   type: string
                   description: 공지글 본문
-                type:
-                  type: string
-                  description: 공지글 타입(퀴즈/미션)
                 start_date:
                   type: string
                   description: 시작 기한 
@@ -434,7 +434,7 @@ paths:
                         type : string 
                         description: 퀴즈/미션 질문 
 
-  /admin/post/{postId}/unread:
+  /admin/post/{post-id}/unread:
     get:
       tags:
         - admin
@@ -446,7 +446,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: postId
+        - name: post-id
           in: path
           schema:
             type: integer
@@ -498,7 +498,7 @@ paths:
             type: string
             example : 제이
         - in: query
-          name: roomId
+          name: room-id
           required: true  
           description: 사용자가 속한 room의 ID
           schema:
@@ -524,6 +524,9 @@ paths:
                   result:
                     type: object
                     properties: 
+                      userId : 
+                        type : number 
+                        description : 유저 아이디
                       nickname : 
                         type : string
                         description : 유저 닉네임
@@ -531,7 +534,7 @@ paths:
                         type : string
                         description : 유저 프로필 사진 
 
-  /admin/profile/{userId}:
+  /admin/profile:
     get:
       tags:
         - admin
@@ -543,11 +546,20 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: userId
-          in: path
+        - in: query
+          name: room-id
+          required: true
+          description: 공지방 ID
+          schema:
+            type: integer 
+            example : 6
+        - in: query
+          name: user-id
+          required: true  
+          description: 유저 ID
           schema:
             type: integer
-          required: true
+            example : 1240
       responses:
         "200":
           description: 프로필 조회 성공!
@@ -578,7 +590,7 @@ paths:
                         type : integer 
                         description : 패널티 개수
 
-  /admin/invitation/{roomId} :
+  /admin/invitation/{room-id} :
     get:
       tags:
         - admin
@@ -590,7 +602,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: roomId 
+        - name: room-id 
           in: path
           schema:
             type: integer
