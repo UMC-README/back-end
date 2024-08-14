@@ -25,6 +25,9 @@ import {
   penaltySQL,
   penaltyStateSQL,
   addUserSubmitSQL,
+  getPostCountSQL,
+  userSubmitSQL,
+  getSubmitStateSQL, 
 } from "./admin.sql.js";
 
 import schedule from "node-schedule";
@@ -248,7 +251,8 @@ export const userListDao = async (nickname, roomId) => {
 
     const [result] = await conn.query(userListSQLQuery, params);
     conn.release();
-    return result.map((user) => user.user_id);
+    return result;
+
   } catch (error) {
     console.log("User 검색 에러:", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
@@ -258,7 +262,7 @@ export const userListDao = async (nickname, roomId) => {
 export const userProfileDao = async (roomId, userId) => {
   try {
     const conn = await pool.getConnection();
-    const [result] = await conn.query(userProfileSQL, [roomId, userId]);
+    const [result] = await conn.query(userProfileSQL, [userId, roomId]);
     conn.release();
     return result[0];
   } catch (error) {
@@ -320,3 +324,23 @@ export const penaltyDao = async () => {
     }
   });
 };
+
+export const userSubmitDao = async (roomId) => {
+  try{
+    const conn = await pool.getConnection();
+  
+    const [rows] = await conn.query(getPostCountSQL);
+    const countPost = rows[0]?.count || 0; 
+    if(countPost.length === 0)  return {massage : "공지가 없습니다."};
+
+    const [userSubmissions] = await conn.query(userSubmitSQL, roomId);
+    const [submitStates] = await conn.query(getSubmitStateSQL, roomId);
+    console.log(submitStates);
+    conn.release();
+    return { userSubmissions, submitStates } ;
+  }catch(error){
+    console.log("확인 요청 조회 에러");
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+}
+
