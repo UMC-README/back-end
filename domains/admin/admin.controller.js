@@ -69,7 +69,7 @@ export const deletePostController = async (req, res, next) => {
   }
 };
 
-export const unreadUserListController = async(req, res, next) => { 
+export const unreadUserListController = async (req, res, next) => {
   try {
     const result = await unreadUserListService(req.params["post-id"]);
     res.status(200).json(response(status.SUCCESS, result));
@@ -78,12 +78,12 @@ export const unreadUserListController = async(req, res, next) => {
   }
 };
 
-export const userListController = async (req,res,next) => { 
-  try{ 
+export const userListController = async (req, res, next) => {
+  try {
     const result = await userListService(req.query.nickname, req.query["room-id"]);
     res.status(200).json(response(status.SUCCESS, result));
-  }catch (error){
-    next(error); 
+  } catch (error) {
+    next(error);
   }
 };
 
