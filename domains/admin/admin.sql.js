@@ -22,8 +22,8 @@ export const deleteRoomsSQL = `
 
 // 공지글 생성 & 공지방 이미지
 export const createPostSQL = `
-  INSERT INTO post (room_id, type, title, content, start_date, end_date, question, unread_count, user_id)
-  VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);  
+  INSERT INTO post (room_id, type, title, content, start_date, end_date, question, quiz_answer, unread_count, user_id)
+  VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);  
 `;
 export const getMemberCountSQL = `
   SELECT COUNT(*) AS user_count
@@ -53,7 +53,7 @@ export const deletePostSQL = `
     UPDATE post SET updated_at = NOW(), state = 'deleted' WHERE id = ?;
 `;
 
-// 미확인 유저 조회 
+// 미확인 유저 조회
 export const unreadUserListSQL = ` 
 SELECT ur.profile_image, ur.nickname
 FROM \`user-room\` ur
@@ -65,11 +65,10 @@ WHERE ur.user_id NOT IN
 // 유저 검색
 export const userListNameSQL = ` 
   SELECT user_id, nickname, profile_image FROM \`user-room\` WHERE nickname LIKE ? AND room_id = ?; 
-`; 
+`;
 export const userListSQL = ` 
   SELECT user_id, nickname, profile_image FROM \`user-room\` WHERE room_id = ?;
-`; 
-
+`;
 
 // 유저 프로필 조회
 export const userProfileSQL = `
@@ -118,9 +117,9 @@ export const penaltySQL = `
     )
   )
   WHERE ur.room_id = ?;
-`; 
+`;
 
-// 패널티가 부과된 공지글에 대해서만 penalty_state 변경 
+// 패널티가 부과된 공지글에 대해서만 penalty_state 변경
 export const penaltyStateSQL = `
   UPDATE submit s
   JOIN (
@@ -135,10 +134,10 @@ export const penaltyStateSQL = `
       WHERE p.room_id = ur.room_id
   )
   AND s.submit_state != 'COMPLETE';
-`; 
+`;
 
 // 패널티 부과 & 제출 이력 없던 유저들 submit에 추가
-export const addUserSubmitSQL  = ` 
+export const addUserSubmitSQL = ` 
   INSERT INTO submit (post_id, user_id, submit_state, penalty_state)
   SELECT p.id, ur.user_id, 'NOT_COMPLETE', true
   FROM \`user-room\` ur
