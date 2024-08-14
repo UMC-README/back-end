@@ -19,6 +19,7 @@ import {
   checkRoomDuplicateNickname,
   getLatestPostsInAllRooms,
   getSubmitList,
+  getPenaltyPostList,
 } from "./user.service.js";
 
 export const userSignUp = async (req, res, next) => {
@@ -311,6 +312,21 @@ export const getMySubmitList = async (req, res, next) => {
     const roomId = req.params.roomId;
 
     const result = await getSubmitList(roomId);
+
+    res.status(200).json(response(status.SUCCESS, result));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getMyPenaltyPostList = async (req, res, next) => {
+  try {
+    console.log("공지방마다 페널티 내역 조회");
+
+    const userId = req.user.userId;
+    const roomId = req.params.roomId;
+
+    const result = await getPenaltyPostList(roomId, userId);
 
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
