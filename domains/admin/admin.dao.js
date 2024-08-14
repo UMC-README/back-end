@@ -24,6 +24,8 @@ import {
   penaltySQL, 
   penaltyStateSQL,
   addUserSubmitSQL,
+  userSubmitSQL,
+  getSubmitStateSQL, 
 } from "./admin.sql.js";
 
 import schedule from 'node-schedule';
@@ -252,6 +254,7 @@ export const userListDao = async (nickname, roomId) => {
     const [result] = await conn.query(userListSQLQuery, params);
     conn.release();
     return result.map(user => user.user_id);
+    // return result;
   } catch (error) {
     console.log("User 검색 에러:", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
@@ -324,3 +327,19 @@ export const penaltyDao = async () => {
     }
   });  
 };
+
+export const userSubmitDao = async (roomId, state) => {
+  try{
+    const conn = await pool.getConnection();
+    const [submitPost] = await conn.query(userSubmitSQL,[roomId]);
+    if(submitPost.length === 0)  return {massage : "공지가 없습니다."};
+
+    await conn.query(getSubmitStateSQL, [state, roomId]);
+
+    conn.release();
+    return ;
+  }catch(error){
+    console.log("확인 요청 조회 에러");
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+}
