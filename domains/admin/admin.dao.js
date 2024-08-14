@@ -21,10 +21,9 @@ import {
   userInviteSQL,
   checkUserInRoomSQL,
   deleteUserSQL,
-  allRoomsSQL,
-  penaltySQL,
-  penaltyStateSQL,
-  addUserSubmitSQL,
+  imposePenaltyByPostSQL,
+  initializeSubmitByPostSQL,
+  getPostsBeforeEndDate,
 } from "./admin.sql.js";
 
 import schedule from "node-schedule";
@@ -112,7 +111,7 @@ export const createPostDao = async (body, userId) => {
     const quizAnswer = body.type === "QUIZ" ? body.quiz_answer : null;
 
     const startDate = `${body.start_date} 00:00`;
-    const endDate = `${body.end_date} 23:59`;
+    const endDate = `${body.end_date} 00:23`;
 
     if (isInvalidDate(body.start_date, body.end_date))
       throw new Error("날짜 형식이 올바르지 않습니다.");
@@ -144,6 +143,7 @@ export const createPostDao = async (body, userId) => {
       });
     });
     await conn.commit(); // 트랜잭션 커밋(DB 반영)
+
     return {
       newPostId: newPostId, // 생성된 공지글 ID
       postType: body.type,
@@ -164,6 +164,7 @@ export const createPostDao = async (body, userId) => {
 
 export const updatePostDao = async ({ postData, imgURLs, imgToDelete }) => {
   const conn = await pool.getConnection();
+  console.log(postData, imgURLs, imgToDelete);
   try {
     await conn.beginTransaction();
     await conn.query(updatePostSQL, [
@@ -298,25 +299,64 @@ export const deleteUserDao = async (body) => {
   }
 };
 
-export const penaltyDao = async () => {
-  // UTC 기준 15시, 한국 기준 00시 정각
-  schedule.scheduleJob("0 15 * * *", async function () {
-    let conn;
-    try {
-      conn = await pool.getConnection();
-      console.log("test");
-      const [roomIds] = await conn.query(allRoomsSQL);
-      for (const row of roomIds) {
-        const roomId = row.room_id;
+export const initializeSubmitByPostDAO = async (postId) => {
+  try {
+    const conn = await pool.getConnection();
+    await conn.query(initializeSubmitByPostSQL, [postId]);
+    console.log("제출 모두 초기화 완료");
+    conn.release();
+    return true;
+  } catch (error) {
+    console.log("공지글에 모든 제출 초기화 에러");
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
 
-        await conn.query(penaltySQL, [roomId]);
-        await conn.query(penaltyStateSQL, [roomId]);
-        await conn.query(addUserSubmitSQL, [roomId]);
-      }
-      conn.release();
-    } catch (error) {
-      if (conn) conn.release();
-      throw new Error("쿼리 실행에 실패하였습니다.");
-    }
-  });
+export const reserveImposePenaltyByPostDAO = async (postId, endDate) => {
+  try {
+    const conn = await pool.getConnection();
+    const date = new Date(`20${endDate}`);
+    const jobName = `#${postId}PostPenalty`;
+    console.log(date.toString());
+    console.log(postId, "번 공지글 페널티 부여 예약");
+    schedule.scheduleJob(jobName, date, async function () {
+      await conn.query(imposePenaltyByPostSQL, [postId]);
+      console.log(postId, "번 공지글 페널티 부여 실행");
+      const jobList = schedule.scheduledJobs;
+      console.log(jobList);
+    });
+    const jobList = schedule.scheduledJobs;
+    console.log(jobList);
+    conn.release();
+    return true;
+  } catch (error) {
+    console.log("페널티 부여 에러");
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const reserveImposePenaltyForEveryValidPostDAO = async () => {
+  try {
+    const conn = await pool.getConnection();
+    const [posts] = await conn.query(getPostsBeforeEndDate);
+
+    posts.forEach((post) => {
+      const postId = post.id;
+      const date = new Date(post.end_date);
+      const jobName = `#${postId}PostPenalty`;
+      console.log(postId, "번 공지글 마감기한: ", date.toString());
+      schedule.scheduleJob(jobName, date, async function () {
+        await conn.query(imposePenaltyByPostSQL, [postId]);
+        console.log(postId, "번 공지글 페널티 부여 실행");
+      });
+    });
+    const jobList = schedule.scheduledJobs;
+    console.log(jobList);
+    console.log("마감기한이 지나지 않은 모든 공지글에 대한 페널티 부여 예약 성공");
+    conn.release();
+    return true;
+  } catch (error) {
+    console.log("마감기한이 지나지 않은 모든 공지글에 대한 페널티 부여 예약 에러");
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
 };
