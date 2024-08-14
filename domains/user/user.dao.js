@@ -23,6 +23,8 @@ import {
   getSubmitCountInRoom,
   getSubmitListInRoom,
   getSubmitImages,
+  getPenaltyPost,
+  getPenaltyCount,
 } from "./user.sql.js";
 
 export const insertUser = async (data) => {
@@ -296,6 +298,32 @@ export const findSubmitImages = async (submitId) => {
     return images.map((image) => image.URL);
   } catch (error) {
     console.log("Submit 이미지 목록 찾기 에러", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const findPenaltyCount = async (roomId, userId) => {
+  try {
+    const conn = await pool.getConnection();
+    const [count] = await conn.query(getPenaltyCount, [roomId, userId]);
+    conn.release();
+
+    return count[0];
+  } catch (error) {
+    console.error("페널티 개수 찾기 에러", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const findPenaltyPost = async (roomId, userId) => {
+  try {
+    const conn = await pool.getConnection();
+    const [posts] = await conn.query(getPenaltyPost, [roomId, userId]);
+
+    conn.release();
+    return posts;
+  } catch (error) {
+    console.log("페널티 받은 공지글 목록 찾기 에러", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };

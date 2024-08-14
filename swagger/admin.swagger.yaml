@@ -118,7 +118,7 @@ paths:
                         type : number 
                         description : 삭제된 공지방의 Id
 
-  /admin/rooms/{room_id}:
+  /admin/rooms/{roomId}:
     patch:
       tags:
         - admin
@@ -131,12 +131,12 @@ paths:
         - bearerAuth: []
       parameters:
         - in: path
-          name: room_id
+          name: roomId
           required: true
           schema:
             type: integer
             example: 1
-            description: room_Id
+            description: roomId
       requestBody:
         required: true
         content:
@@ -216,7 +216,7 @@ paths:
             schema:
               type: object
               properties:
-                room_id:
+                roomId:
                   type: integer 
                   description: 공지방 id
                 type:
@@ -338,7 +338,7 @@ paths:
                         type : number 
                         description : 삭제된 공지글의 Id
 
-  /admin/post/{post_id}:
+  /admin/post/{postId}:
     patch:
       tags:
         - admin
@@ -351,12 +351,12 @@ paths:
         - bearerAuth: []
       parameters:
         - in: path
-          name: post_id
+          name: postId
           required: true
           schema:
             type: integer
             example: 1
-            description: post_Id
+            description: postId
       requestBody:
         required: true
         content:
@@ -434,7 +434,7 @@ paths:
                         type : string 
                         description: 퀴즈/미션 질문 
 
-  /admin/post/{post-id}/unread:
+  /admin/post/{postId}/unread:
     get:
       tags:
         - admin
@@ -446,7 +446,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: post-id
+        - name: postId
           in: path
           schema:
             type: integer
@@ -498,7 +498,7 @@ paths:
             type: string
             example : 제이
         - in: query
-          name: room-id
+          name: roomId
           required: true  
           description: 사용자가 속한 room의 ID
           schema:
@@ -547,14 +547,14 @@ paths:
         - bearerAuth: []
       parameters:
         - in: query
-          name: room-id
+          name: roomId
           required: true
           description: 공지방 ID
           schema:
             type: integer 
             example : 6
         - in: query
-          name: user-id
+          name: userId
           required: true  
           description: 유저 ID
           schema:
@@ -590,7 +590,7 @@ paths:
                         type : integer 
                         description : 패널티 개수
 
-  /admin/invitation/{room-id} :
+  /admin/invitation/{roomId} :
     get:
       tags:
         - admin
@@ -602,7 +602,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: room-id 
+        - name: roomId 
           in: path
           schema:
             type: integer

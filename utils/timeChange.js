@@ -42,3 +42,15 @@ export const getYearMonthDay = (timestamp) => {
 
   return `${year}.${month}.${day}`;
 };
+
+export const getYearMonthDayHourMinute = (timestamp) => {
+  const date = new Date(timestamp);
+
+  const year = date.getUTCFullYear().toString().slice(-2);
+  const month = (date.getUTCMonth() + 1).toString().padStart(2, "0");
+  const day = date.getUTCDate().toString().padStart(2, "0");
+  const hour = date.getUTCHours().toString().padStart(2, "0");
+  const minute = date.getUTCMinutes().toString().padStart(2, "0");
+
+  return `${year}.${month}.${day} ${hour}:${minute}`;
+};
