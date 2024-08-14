@@ -18,10 +18,10 @@ import {
 export const adminRouter = express.Router();
 
 adminRouter.post("/rooms", tokenAuth, expressAsyncHandler(createRoomsController));
-adminRouter.patch("/rooms/:room_id", tokenAuth, expressAsyncHandler(updateRoomsController));
+adminRouter.patch("/rooms/:roomId", tokenAuth, expressAsyncHandler(updateRoomsController));
 adminRouter.patch("/rooms", tokenAuth, expressAsyncHandler(deleteRoomsController));
 adminRouter.post("/post", tokenAuth, expressAsyncHandler(createPostController));
-adminRouter.patch("/post/:post_id", tokenAuth, expressAsyncHandler(updatePostController));
+adminRouter.patch("/post/:postId", tokenAuth, expressAsyncHandler(updatePostController));
 adminRouter.patch("/post", tokenAuth, expressAsyncHandler(deletePostController));
 adminRouter.get("/post/:postId/unread", tokenAuth, expressAsyncHandler(unreadUserListController));
 adminRouter.get("/users", tokenAuth, expressAsyncHandler(userListController));
