@@ -1,6 +1,7 @@
 import { pool } from "../../config/db.config.js";
 import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
+import { getDate, getToday, isInvalidDate } from "../../utils/date.js";
 import {
   createRoomsSQL,
   userRoomSQL,
@@ -13,20 +14,20 @@ import {
   updatePostSQL,
   deletePostImgSQL,
   deletePostSQL,
-  unreadUserListSQL, 
+  unreadUserListSQL,
   userListNameSQL,
   userListSQL,
   userProfileSQL,
   userInviteSQL,
   checkUserInRoomSQL,
   deleteUserSQL,
-  allRoomsSQL, 
-  penaltySQL, 
+  allRoomsSQL,
+  penaltySQL,
   penaltyStateSQL,
   addUserSubmitSQL,
 } from "./admin.sql.js";
 
-import schedule from 'node-schedule';
+import schedule from "node-schedule";
 
 export const createRoomsDao = async (body, userId, roomInviteUrl) => {
   try {
@@ -43,10 +44,10 @@ export const createRoomsDao = async (body, userId, roomInviteUrl) => {
     const roomId = result.insertId; // 생성된 roomId 가져오기
 
     // user-room 연결
-    await conn.query(userRoomSQL,[userId, roomId, body.admin_nickname]);
+    await conn.query(userRoomSQL, [userId, roomId, body.admin_nickname]);
 
     conn.release();
-    return { 
+    return {
       roomId: roomId, // 생성된 방 Id 반환
       roomImage: body.room_image,
       adminNickname: body.admin_nickname,
@@ -100,6 +101,7 @@ export const deleteRoomsDao = async (body) => {
 
 export const createPostDao = async (body, userId) => {
   const conn = await pool.getConnection();
+
   try {
     await conn.beginTransaction();
 
@@ -107,36 +109,29 @@ export const createPostDao = async (body, userId) => {
     const [memberCountRows] = await conn.query(getMemberCountSQL, [body.room_id]);
     const initialUnreadCount = memberCountRows[0].user_count - 1;
 
-    const quizAnswer = body.type === 'QUIZ' ? body.quiz_answer : null;
+    const quizAnswer = body.type === "QUIZ" ? body.quiz_answer : null;
 
-    const datePatternTest = /^(\d{2}\.(0[1-9]|1[0-2])\.(0[1-9]|[12][0-9]|3[01]))$/;
-    if (!datePatternTest.test(body.start_date))  throw new Error("YY.MM.DD 형식을 지키지 못하였거나, 범위가 벗어났습니다."); 
-    if (!datePatternTest.test(body.end_date))  throw new Error("YY.MM.DD 형식을 지키지 못하였거나, 범위가 벗어났습니다."); 
+    const startDate = `${body.start_date} 00:00`;
+    const endDate = `${body.end_date} 23:59`;
 
-    const dateForm = new Date(new Date().setHours(new Date().getHours()));
-    
-    const current = dateForm.toISOString().slice(0, 10).replace(/-/g, '.').substring(2) + ' ' + 
-                String(dateForm.getHours()).padStart(2, '0') + ':' + 
-                String(dateForm.getMinutes()).padStart(2, '0');
+    if (isInvalidDate(body.start_date, body.end_date))
+      throw new Error("날짜 형식이 올바르지 않습니다.");
 
-    const nowDate = `${current}`; 
-    const StartDate = `${body.start_date} 00:00`;
-    const EndDate = `${body.end_date} 23:59`;
-       
-    if (StartDate <= nowDate) throw new Error("start_date는 현재보다 미래여야 합니다.");
-    if (EndDate <= StartDate) throw new Error("end_date는 start_date보다 미래여야 합니다.");
+    if (getDate(startDate) < getToday()) throw new Error("start_date는 현재보다 미래여야 합니다.");
+    if (getDate(endDate) <= getDate(startDate))
+      throw new Error("end_date는 start_date보다 미래여야 합니다.");
 
     const [postResult] = await conn.query(createPostSQL, [
       body.room_id,
       body.type,
       body.title,
       body.content,
-      StartDate, 
-      EndDate,
+      startDate,
+      endDate,
       body.question,
-      quizAnswer, 
+      quizAnswer,
       initialUnreadCount, // unread_count
-      userId, 
+      userId,
     ]);
     const newPostId = postResult.insertId;
     await conn.query(quizAnswerSQL, [quizAnswer, newPostId]);
@@ -155,11 +150,11 @@ export const createPostDao = async (body, userId) => {
       postTitle: body.title,
       postContent: body.content,
       imgURLs: body.imgURLs,
-      startDate: StartDate,
-      endDate: EndDate,
+      startDate,
+      endDate,
       question: body.question,
-      quizAnswer : body.quiz_answer
-    };  
+      quizAnswer: body.quiz_answer,
+    };
   } catch (error) {
     await conn.rollback(); // 오류 발생 시 롤백
     console.error("공지글 생성 에러:", error);
@@ -218,11 +213,11 @@ export const deletePostDao = async (postId) => {
   }
 };
 
-export const unreadUserListDao = async (postId) => { 
-  try{ 
-    const conn = await pool.getConnection(); 
-    const [users] = await conn.query(unreadUserListSQL, [postId]); 
-    console.log(users)
+export const unreadUserListDao = async (postId) => {
+  try {
+    const conn = await pool.getConnection();
+    const [users] = await conn.query(unreadUserListSQL, [postId]);
+    console.log(users);
 
     if (users.length == 0) {
       conn.release();
@@ -236,33 +231,34 @@ export const unreadUserListDao = async (postId) => {
   }
 };
 
-export const userListDao = async (nickname, roomId) => { 
+export const userListDao = async (nickname, roomId) => {
   try {
     const conn = await pool.getConnection();
-    let userListSQLQuery, params = [];
+    let userListSQLQuery,
+      params = [];
 
-    if (nickname && nickname.trim() !== '') { // nickname 유효성 검사
-      userListSQLQuery = userListNameSQL;  
-      params = [nickname, roomId]; 
-    } else {  
+    if (nickname && nickname.trim() !== "") {
+      // nickname 유효성 검사
+      userListSQLQuery = userListNameSQL;
+      params = [nickname, roomId];
+    } else {
       userListSQLQuery = userListSQL; // 모든 유저 조회 쿼리
-      params = [roomId]; 
+      params = [roomId];
     }
 
     const [result] = await conn.query(userListSQLQuery, params);
     conn.release();
-    return result.map(user => user.user_id);
+    return result.map((user) => user.user_id);
   } catch (error) {
     console.log("User 검색 에러:", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };
 
-
 export const userProfileDao = async (roomId, userId) => {
   try {
     const conn = await pool.getConnection();
-    const [result] = await conn.query(userProfileSQL,[roomId, userId]);
+    const [result] = await conn.query(userProfileSQL, [roomId, userId]);
     conn.release();
     return result[0];
   } catch (error) {
@@ -302,25 +298,25 @@ export const deleteUserDao = async (body) => {
   }
 };
 
-export const penaltyDao = async () => { 
-  // UTC 기준 15시, 한국 기준 00시 정각 
-  schedule.scheduleJob('0 15 * * *', async function() {
+export const penaltyDao = async () => {
+  // UTC 기준 15시, 한국 기준 00시 정각
+  schedule.scheduleJob("0 15 * * *", async function () {
     let conn;
-    try{  
-        conn = await pool.getConnection();
-        console.log("test");
-        const [roomIds] = await conn.query(allRoomsSQL);
-        for(const row of roomIds){
-          const roomId = row.room_id; 
-          
-          await conn.query(penaltySQL, [roomId]);  
-          await conn.query(penaltyStateSQL, [roomId]);
-          await conn.query(addUserSubmitSQL, [roomId]);
-        } 
-        conn.release(); 
-    } catch(error){
-        if(conn)  conn.release();
-        throw new Error("쿼리 실행에 실패하였습니다.");
+    try {
+      conn = await pool.getConnection();
+      console.log("test");
+      const [roomIds] = await conn.query(allRoomsSQL);
+      for (const row of roomIds) {
+        const roomId = row.room_id;
+
+        await conn.query(penaltySQL, [roomId]);
+        await conn.query(penaltyStateSQL, [roomId]);
+        await conn.query(addUserSubmitSQL, [roomId]);
+      }
+      conn.release();
+    } catch (error) {
+      if (conn) conn.release();
+      throw new Error("쿼리 실행에 실패하였습니다.");
     }
-  });  
+  });
 };
