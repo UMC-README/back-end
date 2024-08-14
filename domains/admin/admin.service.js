@@ -10,6 +10,8 @@ import {
   userProfileDao,
   userInviteDao,
   deleteUserDao,
+  initializeSubmitByPostDAO,
+  reserveImposePenaltyByPostDAO,
 } from "./admin.dao.js";
 import { createShortUUID } from "./uuid.js";
 import { createRoomsDTO, updateRoomsDTO, createPostDTO, updatePostDTO } from "./admin.dto.js";
@@ -48,10 +50,12 @@ export const deleteRoomsService = async (body) => {
 
 export const createPostService = async (body, userId) => {
   try {
-    if(!body.room_id){
+    if (!body.room_id) {
       throw new Error("공지방 ID가 필요합니다.");
     }
     const postData = await createPostDao(body, userId);
+    await initializeSubmitByPostDAO(postData.newPostId);
+    await reserveImposePenaltyByPostDAO(postData.newPostId, postData.endDate);
     return createPostDTO(postData);
   } catch (error) {
     console.error("공지글 생성하기 에러:", error);
@@ -103,17 +107,16 @@ export const userListService = async (nickname, roomId) => {
     const result = await userListDao(nickname, roomId);
 
     if (!result.length) return [];
-    return result.map(user => ({
-      userId : user.user_id,
+    return result.map((user) => ({
+      userId: user.user_id,
       nickname: user.nickname,
-      profileImage: user.profile_image, 
-    })); 
+      profileImage: user.profile_image,
+    }));
   } catch (error) {
     console.error("유저 목록 조회 에러:", error);
     throw error;
   }
 };
-
 
 export const userProfileService = async (roomId, userId) => {
   try {
