@@ -111,7 +111,7 @@ export const createPostDao = async (body, userId) => {
     const quizAnswer = body.type === "QUIZ" ? body.quiz_answer : null;
 
     const startDate = `${body.start_date} 00:00`;
-    const endDate = `${body.end_date} 00:23`;
+    const endDate = `${body.end_date} 13:50`;
 
     if (isInvalidDate(body.start_date, body.end_date))
       throw new Error("날짜 형식이 올바르지 않습니다.");
@@ -357,6 +357,20 @@ export const reserveImposePenaltyForEveryValidPostDAO = async () => {
     return true;
   } catch (error) {
     console.log("마감기한이 지나지 않은 모든 공지글에 대한 페널티 부여 예약 에러");
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const cancelImposePenaltyByPostDAO = async (postId) => {
+  try {
+    const jobName = `#${postId}PostPenalty`;
+    schedule.cancelJob(jobName);
+    console.log(postId, "번 공지글 페널티 부여 예약 취소 완료");
+    const jobList = schedule.scheduledJobs;
+    console.log(jobList);
+    return true;
+  } catch (error) {
+    console.log("기존 페널티 부여 일정 취소 에러");
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };

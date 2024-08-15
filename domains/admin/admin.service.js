@@ -12,6 +12,7 @@ import {
   deleteUserDao,
   initializeSubmitByPostDAO,
   reserveImposePenaltyByPostDAO,
+  cancelImposePenaltyByPostDAO,
 } from "./admin.dao.js";
 import { createShortUUID } from "./uuid.js";
 import { createRoomsDTO, updateRoomsDTO, createPostDTO, updatePostDTO } from "./admin.dto.js";
@@ -66,6 +67,7 @@ export const createPostService = async (body, userId) => {
 export const updatePostService = async (body) => {
   try {
     const postData = await updatePostDao(body);
+    await cancelImposePenaltyByPostDAO(body.postData.id);
     return updatePostDTO(postData);
   } catch (error) {
     console.error("공지글 수정하기 에러:", error);
