@@ -55,8 +55,13 @@ export const createPostService = async (body, userId) => {
       throw new Error("공지방 ID가 필요합니다.");
     }
     const postData = await createPostDao(body, userId);
+
+    if (postData == -1) throw new Error("날짜 형식이 올바르지 않습니다.");
+    if (postData == -2) throw new Error("start_date는 현재보다 미래여야 합니다.");
+    if (postData == -3) throw new Error("end_date는 start_date보다 미래여야 합니다.");
+
     await initializeSubmitByPostDAO(postData.newPostId);
-    await reserveImposePenaltyByPostDAO(postData.newPostId, postData.endDate);
+    await reserveImposePenaltyByPostDAO(postData.newPostId, `20${postData.endDate}`);
     return createPostDTO(postData);
   } catch (error) {
     console.error("공지글 생성하기 에러:", error);
@@ -64,10 +69,16 @@ export const createPostService = async (body, userId) => {
   }
 };
 
-export const updatePostService = async (body) => {
+export const updatePostService = async (body, postId) => {
   try {
-    const postData = await updatePostDao(body);
-    await cancelImposePenaltyByPostDAO(body.postData.id);
+    const postData = await updatePostDao(body, postId);
+
+    if (postData == -1) throw new Error("날짜 형식이 올바르지 않습니다.");
+    if (postData == -2) throw new Error("start_date는 현재보다 미래여야 합니다.");
+    if (postData == -3) throw new Error("end_date는 start_date보다 미래여야 합니다.");
+
+    await cancelImposePenaltyByPostDAO(postId);
+    await reserveImposePenaltyByPostDAO(postId, `20${postData.endDate}`);
     return updatePostDTO(postData);
   } catch (error) {
     console.error("공지글 수정하기 에러:", error);
@@ -81,6 +92,7 @@ export const deletePostService = async (postId) => {
       throw new Error("삭제할 공지글의 ID가 필요합니다.");
     }
     const deleteRoomsData = await deletePostDao(postId);
+    await cancelImposePenaltyByPostDAO(postId);
     return deleteRoomsData;
   } catch (error) {
     console.error("공지글 삭제 에러:", error);
