@@ -309,9 +309,10 @@ export const getMySubmitList = async (req, res, next) => {
   try {
     console.log("미션 제출 목록 조회");
 
+    const userId = req.user.userId;
     const roomId = req.params.roomId;
 
-    const result = await getSubmitList(roomId);
+    const result = await getSubmitList(userId, roomId);
 
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
