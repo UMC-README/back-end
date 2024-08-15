@@ -53,7 +53,7 @@ export const createPostController = async (req, res, next) => {
 
 export const updatePostController = async (req, res, next) => {
   try {
-    const result = await updatePostService(req.body);
+    const result = await updatePostService(req.body, req.params.postId);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
