@@ -28,6 +28,8 @@ import {
   getPostCountSQL,
   userSubmitSQL,
   getSubmitStateSQL, 
+  userRequestAcceptSQL,
+  userRequestRejectSQL
 } from "./admin.sql.js";
 
 import schedule from "node-schedule";
@@ -337,9 +339,24 @@ export const userSubmitDao = async (roomId) => {
     
     conn.release();
     return { userSubmissions, submitStates } ;
-
   }catch(error){
     console.log("확인 요청 조회 에러");
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+}
+
+export const userRequestDao = async (body) => { 
+  try{
+    const conn = await pool.getConnection();
+    
+    if (body.type === 'accept') await conn.query(userRequestAcceptSQL, body.roomId); 
+    else if (body.type === 'reject') await conn.query(userRequestRejectSQL, body.roomId);
+    else throw new Error('유효하지 않은 type입니다.');  
+    
+    conn.release();
+    return "요청 수행에 성공하였습니다." ;
+  }catch(error){
+    console.log("수락/거절 요청 수행 error");
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 }
