@@ -11,6 +11,7 @@ import {
   userInviteDao,
   deleteUserDao,
   userSubmitDao,
+  userRequestDao,
 } from "./admin.dao.js";
 import { createShortUUID } from "./uuid.js";
 import { createRoomsDTO, updateRoomsDTO, createPostDTO, updatePostDTO, userSubmitDTO } from "./admin.dto.js";
@@ -160,3 +161,14 @@ export const userSubmitService = async (roomId) => {
     throw error;
   }
 };
+
+export const userRequestService = async (body) => { 
+  try{
+    const validTypes = ['accept', 'reject'];
+    if (!validTypes.includes(body.type)) throw new Error("올바른 type을 입력하세요.");
+    if (!body.roomId) throw new Error("요청을 수행하기를 위한 roomId가 필요합니다.");
+    return await userRequestDao(body); 
+  } catch(error){ 
+    throw error;
+  }
+}

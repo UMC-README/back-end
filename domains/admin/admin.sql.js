@@ -176,3 +176,23 @@ export const getSubmitStateSQL = `
   WHERE p.room_id = ? AND s.submit_state IN ('PENDING', 'COMPLETE');
 `; 
 
+// 대기 중 요청 수락/거절 
+export const userRequestAcceptSQL = `
+  UPDATE submit
+  SET submit_state = 'COMPLETE'
+  WHERE submit_state = 'PENDING' AND post_id IN (
+    SELECT p.id
+    FROM post p
+    WHERE p.room_id = ?
+  );
+`;
+
+export const userRequestRejectSQL = ` 
+  UPDATE submit
+  SET submit_state = 'REJECT'
+  WHERE submit_state = 'PENDING' AND post_id IN (
+    SELECT p.id
+    FROM post p
+    WHERE p.room_id = ?
+  );
+`;
