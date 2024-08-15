@@ -252,7 +252,6 @@ export const userListDao = async (nickname, roomId) => {
     const [result] = await conn.query(userListSQLQuery, params);
     conn.release();
     return result;
-
   } catch (error) {
     console.log("User 검색 에러:", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
@@ -331,16 +330,16 @@ export const userSubmitDao = async (roomId) => {
   
     const [rows] = await conn.query(getPostCountSQL);
     const countPost = rows[0]?.count || 0; 
-    if(countPost.length === 0)  return {massage : "공지가 없습니다."};
+    if(countPost === 0)  return {massage : "공지가 없습니다."};
 
     const [userSubmissions] = await conn.query(userSubmitSQL, roomId);
     const [submitStates] = await conn.query(getSubmitStateSQL, roomId);
-    console.log(submitStates);
+    
     conn.release();
     return { userSubmissions, submitStates } ;
+
   }catch(error){
     console.log("확인 요청 조회 에러");
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 }
-

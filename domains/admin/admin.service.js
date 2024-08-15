@@ -154,7 +154,7 @@ export const userSubmitService = async (roomId) => {
     if(!roomId)  throw new Error("요청 내역 조회를 위한 roomId가 필요합니다.");
 
     const { userSubmissions, submitStates } = await userSubmitDao(roomId);
-    const result = userSubmitDTO( userSubmissions, submitStates); 
+    const result = userSubmitDTO(userSubmissions, submitStates); 
     return result; 
   }catch(error){
     throw error;
