@@ -276,10 +276,10 @@ export const findSubmitCountInRoom = async (roomId, userId) => {
   }
 };
 
-export const findSubmitList = async (roomId) => {
+export const findSubmitList = async (userId, roomId) => {
   try {
     const conn = await pool.getConnection();
-    const [submits] = await conn.query(getSubmitListInRoom, [roomId]);
+    const [submits] = await conn.query(getSubmitListInRoom, [userId, roomId]);
 
     conn.release();
     return submits;

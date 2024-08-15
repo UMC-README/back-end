@@ -950,6 +950,9 @@ paths:
                     items:
                       type: object
                       properties:
+                        postId:
+                          type: number
+                          description: 해당 공지글의 아이디
                         nickname:
                           type: string
                           description: 해당 공지방에서의 닉네임
@@ -967,3 +970,77 @@ paths:
                           items:
                             type: string
                             description: 이미지 URL
+
+  /user/rooms/penalty/{roomId}:
+    get:
+      tags:
+        - user
+      summary: 공지방마다 페널티 내역 조회
+      description: 공지방마다 페널티 내역 조회
+      operationId: user-room-penalty
+      consumes:
+        - application/json
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: roomId
+          required: true
+          schema:
+            type: integer
+            description: 페널티 내역을 확인 할 공지방의 아이디
+      responses:
+        "200":
+          description: 공지방마다 페널티 조회 성공!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: object
+                    properties:
+                      penaltyCount:
+                        type: number
+                        description: 내 페널티 개수
+                      maxPenalty:
+                        type: number
+                        description: 공지방의 최대 페널티 개수
+                      posts:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            postId:
+                              type: number
+                              description: 공지글 아이디
+                            type:
+                              type: string
+                              description: 공지글 타입
+                            submitState:
+                              type: string
+                              description: 해당 제출의 상태 (COMPLETE, PENDING, REJECT)
+                            title:
+                              type: string
+                              description: 공지글의 제목
+                            content:
+                              type: string
+                              description: 공지글의 내용
+                            startDate:
+                              type: string
+                              description: 공지글의 시작일
+                            endDate:
+                              type: string
+                              description: 공지글의 마감일
+                            image:
+                              type: string
+                              description: 공지글의 첫번째 이미지의 URL
