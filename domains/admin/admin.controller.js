@@ -13,6 +13,7 @@ import {
   userProfileService,
   userInviteService,
   deleteUserService,
+  userSubmitService,
 } from "./admin.service.js";
 
 export const createRoomsController = async (req, res, next) => {
@@ -113,3 +114,12 @@ export const deleteUserController = async (req, res, next) => {
     next(error);
   }
 };
+
+export const userSubmitController = async (req, res, next) => {
+  try {
+    const result = await userSubmitService(req.params.roomId);
+    res.status(200).json(response(status.SUCCESS, result));
+  } catch (error) {
+    next(error);
+  }
+}
