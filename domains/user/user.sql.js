@@ -141,11 +141,11 @@ export const getSubmitCountInRoom = `
 
 // 공지방에 대한 내 submit 목록 조회하기
 export const getSubmitListInRoom = `
-  SELECT s.id as submit_id, s.submit_state, s.content, ur.nickname as user_nickname, ur.profile_image
+  SELECT s.id as submit_id, s.submit_state, s.content, ur.nickname as user_nickname, ur.profile_image, p.id as post_id
   FROM submit s
   JOIN post p ON s.post_id = p.id
   JOIN \`user-room\` ur ON ur.user_id = s.user_id AND ur.room_id = p.room_id
-  WHERE p.room_id = ? AND p.type = 'MISSION'
+  WHERE s.user_id = ? AND p.room_id = ? AND p.type = 'MISSION' AND s.submit_state <> "NOT_COMPLETE"
 `;
 
 // Sumbit에 대한 Submit-Image 목록 조회하기

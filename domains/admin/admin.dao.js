@@ -249,7 +249,7 @@ export const userListDao = async (nickname, roomId) => {
 
     const [result] = await conn.query(userListSQLQuery, params);
     conn.release();
-    return result.map((user) => user.user_id);
+    return result;
   } catch (error) {
     console.log("User 검색 에러:", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);

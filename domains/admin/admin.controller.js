@@ -71,7 +71,7 @@ export const deletePostController = async (req, res, next) => {
 
 export const unreadUserListController = async (req, res, next) => {
   try {
-    const result = await unreadUserListService(req.params["post-id"]);
+    const result = await unreadUserListService(req.params.postId);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
@@ -80,7 +80,7 @@ export const unreadUserListController = async (req, res, next) => {
 
 export const userListController = async (req, res, next) => {
   try {
-    const result = await userListService(req.query.nickname, req.query["room-id"]);
+    const result = await userListService(req.query.nickname, req.query.roomId);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
@@ -89,7 +89,7 @@ export const userListController = async (req, res, next) => {
 
 export const userProfileController = async (req, res, next) => {
   try {
-    const result = await userProfileService(req.query["room-id"], req.query["user-id"]);
+    const result = await userProfileService(req.query.roomId, req.query.userId);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
@@ -98,7 +98,7 @@ export const userProfileController = async (req, res, next) => {
 
 export const userInviteController = async (req, res, next) => {
   try {
-    const result = await userInviteService(req.params["room-id"]);
+    const result = await userInviteService(req.params.roomId);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
