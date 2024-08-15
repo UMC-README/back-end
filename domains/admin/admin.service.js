@@ -13,9 +13,17 @@ import {
   initializeSubmitByPostDAO,
   reserveImposePenaltyByPostDAO,
   cancelImposePenaltyByPostDAO,
+  userSubmitDao,
+  userRequestDao,
 } from "./admin.dao.js";
 import { createShortUUID } from "./uuid.js";
-import { createRoomsDTO, updateRoomsDTO, createPostDTO, updatePostDTO } from "./admin.dto.js";
+import {
+  createRoomsDTO,
+  updateRoomsDTO,
+  createPostDTO,
+  updatePostDTO,
+  userSubmitDTO,
+} from "./admin.dto.js";
 
 export const createRoomsService = async (body, userId) => {
   try {
@@ -160,6 +168,29 @@ export const deleteUserService = async (body) => {
     const result = await deleteUserDao(body);
     if (result == -1) throw new Error("공지방에 유저가 없습니다.");
     return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const userSubmitService = async (roomId) => {
+  try {
+    if (!roomId) throw new Error("요청 내역 조회를 위한 roomId가 필요합니다.");
+
+    const { userSubmissions, submitStates } = await userSubmitDao(roomId);
+    const result = userSubmitDTO(userSubmissions, submitStates);
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const userRequestService = async (body) => {
+  try {
+    const validTypes = ["accept", "reject"];
+    if (!validTypes.includes(body.type)) throw new Error("올바른 type을 입력하세요.");
+    if (!body.roomId) throw new Error("요청을 수행하기를 위한 roomId가 필요합니다.");
+    return await userRequestDao(body);
   } catch (error) {
     throw error;
   }

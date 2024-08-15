@@ -45,7 +45,7 @@ export const updatePostSQL = `
   WHERE id = ?;  
 `;
 export const deletePostImgSQL = `
-    UPDATE \`post-image\` SET state = 'DELETED' WHERE post_id = ? AND URL = ?;
+  UPDATE \`post-image\` SET state = 'DELETED' WHERE post_id = ? AND URL = ?;
 `;
 
 // 공지글 삭제
@@ -172,4 +172,50 @@ export const getPostsBeforeEndDate = `
   SELECT p.id, p.end_date
   FROM post p
   WHERE p.end_date > NOW() AND p.state = 'EXIST';
+`;
+
+// 확인 요청 내역 조회
+export const getPostCountSQL = `
+  SELECT COUNT(*) AS count FROM post;
+`;
+
+export const userSubmitSQL = ` 
+  SELECT 
+    p.title, p.start_date, p.end_date, p.content, r.room_image
+    , COUNT(s.id) AS pending_count
+  FROM post p
+  JOIN submit s ON p.id = s.post_id AND s.submit_state = 'PENDING'
+  JOIN room r ON p.room_id = r.id
+  WHERE p.room_id = ? 
+  GROUP BY p.id;
+`;
+
+export const getSubmitStateSQL = `
+  SELECT u.profile_image, u.nickname, si.URL, s.submit_state
+  FROM post p
+  JOIN submit s ON p.id = s.post_id 
+  JOIN user u ON s.user_id = u.id
+  LEFT JOIN \`submit-image\` si ON s.id = si.id
+  WHERE p.room_id = ? AND s.submit_state IN ('PENDING', 'COMPLETE');
+`;
+
+// 대기 중 요청 수락/거절
+export const userRequestAcceptSQL = `
+  UPDATE submit
+  SET submit_state = 'COMPLETE'
+  WHERE submit_state = 'PENDING' AND post_id IN (
+    SELECT p.id
+    FROM post p
+    WHERE p.room_id = ?
+  );
+`;
+
+export const userRequestRejectSQL = ` 
+  UPDATE submit
+  SET submit_state = 'REJECT'
+  WHERE submit_state = 'PENDING' AND post_id IN (
+    SELECT p.id
+    FROM post p
+    WHERE p.room_id = ?
+  );
 `;

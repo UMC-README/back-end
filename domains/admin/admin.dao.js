@@ -24,6 +24,11 @@ import {
   imposePenaltyByPostSQL,
   initializeSubmitByPostSQL,
   getPostsBeforeEndDate,
+  getPostCountSQL,
+  userSubmitSQL,
+  getSubmitStateSQL,
+  userRequestAcceptSQL,
+  userRequestRejectSQL,
 } from "./admin.sql.js";
 
 import schedule from "node-schedule";
@@ -262,7 +267,7 @@ export const userListDao = async (nickname, roomId) => {
 export const userProfileDao = async (roomId, userId) => {
   try {
     const conn = await pool.getConnection();
-    const [result] = await conn.query(userProfileSQL, [roomId, userId]);
+    const [result] = await conn.query(userProfileSQL, [userId, roomId]);
     conn.release();
     return result[0];
   } catch (error) {
@@ -372,6 +377,41 @@ export const cancelImposePenaltyByPostDAO = async (postId) => {
     return true;
   } catch (error) {
     console.log("기존 페널티 부여 일정 취소 에러");
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const userSubmitDao = async (roomId) => {
+  try {
+    const conn = await pool.getConnection();
+
+    const [rows] = await conn.query(getPostCountSQL);
+    const countPost = rows[0]?.count || 0;
+    if (countPost === 0) return { massage: "공지가 없습니다." };
+
+    const [userSubmissions] = await conn.query(userSubmitSQL, roomId);
+    const [submitStates] = await conn.query(getSubmitStateSQL, roomId);
+
+    conn.release();
+    return { userSubmissions, submitStates };
+  } catch (error) {
+    console.log("확인 요청 조회 에러");
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const userRequestDao = async (body) => {
+  try {
+    const conn = await pool.getConnection();
+
+    if (body.type === "accept") await conn.query(userRequestAcceptSQL, body.roomId);
+    else if (body.type === "reject") await conn.query(userRequestRejectSQL, body.roomId);
+    else throw new Error("유효하지 않은 type입니다.");
+
+    conn.release();
+    return "요청 수행에 성공하였습니다.";
+  } catch (error) {
+    console.log("수락/거절 요청 수행 error");
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };
