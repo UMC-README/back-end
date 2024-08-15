@@ -171,5 +171,5 @@ export const initializeSubmitByPostSQL = `
 export const getPostsBeforeEndDate = `
   SELECT p.id, p.end_date
   FROM post p
-  WHERE p.end_date > NOW();
+  WHERE p.end_date > NOW() AND p.state = 'EXIST';
 `;
