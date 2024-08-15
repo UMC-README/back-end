@@ -272,13 +272,14 @@ export const getLatestPostsInAllRooms = async (userId, page, pageSize) => {
   return { recentPostList, isNext, totalPages };
 };
 
-export const getSubmitList = async (roomId) => {
-  const submits = await findSubmitList(roomId);
+export const getSubmitList = async (userId, roomId) => {
+  const submits = await findSubmitList(userId, roomId);
 
   const detailedSubmitsPromises = submits.map(async (submit) => {
     const images = await findSubmitImages(submit.submit_id);
 
     return {
+      postId: submit.post_id,
       nickname: submit.user_nickname,
       profileImage: submit.profile_image,
       submitState: submit.submit_state,
@@ -312,7 +313,6 @@ export const getPenaltyPostList = async (roomId, userId) => {
   });
 
   return {
-    roomId: roomId,
     penaltyCount: penaltyCount.myPenaltyCount,
     maxPenalty: penaltyCount.maxPenalty,
     posts: postLists,
