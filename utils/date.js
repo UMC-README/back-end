@@ -12,3 +12,9 @@ export const getDate = (date) => {
 
 export const isInvalidDate = (startDate, endDate) =>
   isNaN(new Date(`20${startDate}`)) || isNaN(new Date(`20${endDate}`));
+
+export const getNow = () => {
+  const locale = new Date().toLocaleString("en-US", { timeZone: "Asia/Seoul" });
+  const today = new Date(locale);
+  return today;
+};
