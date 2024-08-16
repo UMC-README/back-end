@@ -27,9 +27,10 @@ import {
 
 export const createRoomsService = async (body, userId) => {
   try {
+    if (!body.room_image) throw new Error("공지방 생성을 위한 프로필 이미지가 필요합니다.");
     const roomInviteUrl = createShortUUID();
-    const createRoomsData = await createRoomsDao(body, userId, roomInviteUrl);
-    return createRoomsDTO(createRoomsData);
+    const roomData = await createRoomsDao(body, userId, roomInviteUrl);
+    return createRoomsDTO(roomData);
   } catch (error) {
     console.error("공지방 생성하기 에러:", error);
     throw error;

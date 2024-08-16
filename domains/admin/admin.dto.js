@@ -1,6 +1,12 @@
-export const createRoomsDTO = (createRoomsData) => {
+export const createRoomsDTO = (roomData) => {
   return {
-    ...createRoomsData,
+    roomId : roomData.roomId, 
+    roomImage : roomData.room_image, 
+    adminNickname: roomData.admin_nickname,
+    roomName: roomData.room_name,
+    roomPassword: roomData.room_password,
+    maxPenalty: roomData.max_penalty,
+    roomInviteUrl : roomData.roomInviteUrl, 
   };
 };
 
