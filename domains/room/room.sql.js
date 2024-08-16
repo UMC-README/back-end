@@ -226,3 +226,37 @@ export const searchPostInRoomSQLAtFirst = `
   WHERE p.state = 'EXIST' AND (p.title LIKE ? OR p.content LIKE ?)
   ORDER BY p.id DESC LIMIT ?
 `;
+
+//공지방 내 현재 페널티 카운트와 최대 페널티 한도 조회
+export const getMyPenaltyCountAndRoomMaxSQL = `
+  SELECT ur.penalty_count AS penaltyCount, r.max_penalty AS maxPenalty
+  FROM \`user-room\` ur
+  JOIN room r ON r.id = ? AND r.id = ur.room_id
+  WHERE ur.user_id = ?
+`;
+
+//공지방 내 미확인 페널티부여 포스트 조회
+export const notCheckedPenaltyInRoomSQL = `
+  SELECT p.id AS postId, p.title AS postTitle
+  FROM post p
+  JOIN submit s ON s.user_id = ? AND s.post_id = p.id AND s.penalty_state = true AND s.penalty_checked = false
+  JOIN room r ON r.id = ? AND r.id = p.room_id
+  WHERE p.state = 'EXIST'
+  ORDER BY p.id ASC
+`;
+
+//공지방 내 미확인 페널티부여 확인처리
+export const checkPenaltyInRoomSQL = `
+  UPDATE submit s
+  JOIN post p ON s.post_id = p.id AND p.state = 'EXIST'
+  JOIN room r ON r.id = ? AND r.id = p.room_id
+  SET s.penalty_checked = true
+  WHERE s.user_id = ? AND s.penalty_state = true
+`;
+
+//공지방 내 최대 페널티 한도 도달로 공지방에서 추방
+export const getExiledFromRoomSQL = `
+  DELETE ur FROM \`user-room\` ur
+  JOIN room r ON r.id = ? AND ur.room_id = r.id
+  WHERE ur.user_id = ? AND ur.penalty_count >= r.max_penalty
+`;
