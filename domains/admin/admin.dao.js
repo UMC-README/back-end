@@ -52,15 +52,7 @@ export const createRoomsDao = async (body, userId, roomInviteUrl) => {
     await conn.query(userRoomSQL, [userId, roomId, body.admin_nickname]);
 
     conn.release();
-    return {
-      roomId: roomId, // 생성된 방 Id 반환
-      roomImage: body.room_image,
-      adminNickname: body.admin_nickname,
-      roomName: body.room_name,
-      roomPassword: body.room_password,
-      maxPenalty: body.max_penalty,
-      roomInviteUrl,
-    };
+    return { roomId, result, roomInviteUrl };
   } catch (error) {
     console.error("공지방 생성하기 에러");
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
@@ -332,7 +324,7 @@ export const userSubmitDao = async (roomId) => {
   
     const [rows] = await conn.query(getPostCountSQL);
     const countPost = rows[0]?.count || 0; 
-    if(countPost === 0)  return {massage : "공지가 없습니다."};
+    if(countPost === 0)  return {message : "공지가 없습니다."};
 
     const [userSubmissions] = await conn.query(userSubmitSQL, roomId);
     const [submitStates] = await conn.query(getSubmitStateSQL, roomId);
