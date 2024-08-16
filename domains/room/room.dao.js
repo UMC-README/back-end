@@ -30,6 +30,10 @@ import {
   createRoomEntranceSQL,
   searchPostInRoomSQL,
   searchPostInRoomSQLAtFirst,
+  checkPenaltyInRoomSQL,
+  getExiledFromRoomSQL,
+  getMyPenaltyCountAndRoomMaxSQL,
+  notCheckedPenaltyInRoomSQL,
 } from "./room.sql.js";
 import { getUserById } from "../user/user.sql.js";
 
@@ -100,11 +104,17 @@ export const getAllPostInRoomDAO = async (roomId, userId, cursorId, size) => {
 
     const isRoomAdmin = userId === room[0].admin_id;
 
+    const [myPenaltyInfo] = await conn.query(getMyPenaltyCountAndRoomMaxSQL, [roomId, userId]);
+    const penaltyCount = myPenaltyInfo[0].penaltyCount;
+    const maxPenalty = myPenaltyInfo[0].maxPenalty;
+
+    const [notCheckedPenalty] = await conn.query(notCheckedPenaltyInRoomSQL, [userId, roomId]);
+
     if (cursorId == "undefined" || typeof cursorId == "undefined" || cursorId == null) {
       const [posts] = await pool.query(getPostDetailsByRoomIdAtFirst, [+roomId, +userId, +size]);
 
       conn.release();
-      return { isRoomAdmin, posts };
+      return { isRoomAdmin, penaltyCount, maxPenalty, notCheckedPenalty, posts };
     } else {
       const [posts] = await pool.query(getPostDetailsByRoomId, [
         +roomId,
@@ -114,7 +124,7 @@ export const getAllPostInRoomDAO = async (roomId, userId, cursorId, size) => {
       ]);
 
       conn.release();
-      return { isRoomAdmin, posts };
+      return { isRoomAdmin, penaltyCount, maxPenalty, notCheckedPenalty: [], posts };
     }
   } catch (err) {
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
@@ -451,6 +461,44 @@ export const searchPostInRoomDAO = async (roomId, userId, query, cursorId, size)
       conn.release();
       return posts;
     }
+  } catch (err) {
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const checkPenaltyInRoomDAO = async (roomId, userId) => {
+  try {
+    const conn = await pool.getConnection();
+
+    const [room] = await conn.query(getRoomById, roomId);
+
+    if (room.length == 0) {
+      conn.release();
+      return -1;
+    }
+
+    await conn.query(checkPenaltyInRoomSQL, [roomId, userId]);
+
+    conn.release();
+    return true;
+  } catch (err) {
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const exiledFromRoomDAO = async (roomId, userId) => {
+  try {
+    const conn = await pool.getConnection();
+
+    const [result] = await conn.query(getExiledFromRoomSQL, [roomId, userId]);
+
+    if (!result[0].affectedRows) {
+      conn.release();
+      return -1;
+    }
+
+    conn.release();
+    return true;
   } catch (err) {
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
