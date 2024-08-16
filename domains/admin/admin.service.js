@@ -10,11 +10,20 @@ import {
   userProfileDao,
   userInviteDao,
   deleteUserDao,
+  initializeSubmitByPostDAO,
+  reserveImposePenaltyByPostDAO,
+  cancelImposePenaltyByPostDAO,
   userSubmitDao,
   userRequestDao,
 } from "./admin.dao.js";
 import { createShortUUID } from "./uuid.js";
-import { createRoomsDTO, updateRoomsDTO, createPostDTO, updatePostDTO, userSubmitDTO } from "./admin.dto.js";
+import {
+  createRoomsDTO,
+  updateRoomsDTO,
+  createPostDTO,
+  updatePostDTO,
+  userSubmitDTO,
+} from "./admin.dto.js";
 
 export const createRoomsService = async (body, userId) => {
   try {
@@ -50,10 +59,17 @@ export const deleteRoomsService = async (body) => {
 
 export const createPostService = async (body, userId) => {
   try {
-    if(!body.room_id){
+    if (!body.room_id) {
       throw new Error("공지방 ID가 필요합니다.");
     }
     const postData = await createPostDao(body, userId);
+
+    if (postData == -1) throw new Error("날짜 형식이 올바르지 않습니다.");
+    if (postData == -2) throw new Error("start_date는 현재보다 미래여야 합니다.");
+    if (postData == -3) throw new Error("end_date는 start_date보다 미래여야 합니다.");
+
+    await initializeSubmitByPostDAO(postData.newPostId);
+    await reserveImposePenaltyByPostDAO(postData.newPostId, `20${postData.endDate}`);
     return createPostDTO(postData);
   } catch (error) {
     console.error("공지글 생성하기 에러:", error);
@@ -61,9 +77,16 @@ export const createPostService = async (body, userId) => {
   }
 };
 
-export const updatePostService = async (body) => {
+export const updatePostService = async (body, postId) => {
   try {
-    const postData = await updatePostDao(body);
+    const postData = await updatePostDao(body, postId);
+
+    if (postData == -1) throw new Error("날짜 형식이 올바르지 않습니다.");
+    if (postData == -2) throw new Error("start_date는 현재보다 미래여야 합니다.");
+    if (postData == -3) throw new Error("end_date는 start_date보다 미래여야 합니다.");
+
+    await cancelImposePenaltyByPostDAO(postId);
+    await reserveImposePenaltyByPostDAO(postId, `20${postData.endDate}`);
     return updatePostDTO(postData);
   } catch (error) {
     console.error("공지글 수정하기 에러:", error);
@@ -77,6 +100,7 @@ export const deletePostService = async (postId) => {
       throw new Error("삭제할 공지글의 ID가 필요합니다.");
     }
     const deleteRoomsData = await deletePostDao(postId);
+    await cancelImposePenaltyByPostDAO(postId);
     return deleteRoomsData;
   } catch (error) {
     console.error("공지글 삭제 에러:", error);
@@ -103,19 +127,18 @@ export const userListService = async (nickname, roomId) => {
       throw new Error("조회할 공지방의 ID가 필요합니다.");
     }
     const result = await userListDao(nickname, roomId);
-    
+
     if (!result.length) return [];
-    return result.map(user => ({
-      userId : user.user_id,
+    return result.map((user) => ({
+      userId: user.user_id,
       nickname: user.nickname,
-      profileImage: user.profile_image, 
-    })); 
+      profileImage: user.profile_image,
+    }));
   } catch (error) {
     console.error("유저 목록 조회 에러:", error);
     throw error;
   }
 };
-
 
 export const userProfileService = async (roomId, userId) => {
   try {
@@ -151,24 +174,24 @@ export const deleteUserService = async (body) => {
 };
 
 export const userSubmitService = async (roomId) => {
-  try{ 
-    if(!roomId)  throw new Error("요청 내역 조회를 위한 roomId가 필요합니다.");
+  try {
+    if (!roomId) throw new Error("요청 내역 조회를 위한 roomId가 필요합니다.");
 
     const { userSubmissions, submitStates } = await userSubmitDao(roomId);
-    const result = userSubmitDTO(userSubmissions, submitStates); 
-    return result; 
-  }catch(error){
+    const result = userSubmitDTO(userSubmissions, submitStates);
+    return result;
+  } catch (error) {
     throw error;
   }
 };
 
-export const userRequestService = async (body) => { 
-  try{
-    const validTypes = ['accept', 'reject'];
+export const userRequestService = async (body) => {
+  try {
+    const validTypes = ["accept", "reject"];
     if (!validTypes.includes(body.type)) throw new Error("올바른 type을 입력하세요.");
     if (!body.roomId) throw new Error("요청을 수행하기를 위한 roomId가 필요합니다.");
-    return await userRequestDao(body); 
-  } catch(error){ 
+    return await userRequestDao(body);
+  } catch (error) {
     throw error;
   }
-}
+};

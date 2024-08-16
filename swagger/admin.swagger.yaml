@@ -52,9 +52,9 @@ paths:
                   result:
                     type: object
                     properties:
-                      roomId : 
-                        type : number
-                        description : 생성된 공지방ID
+                      roomId:
+                        type: number
+                        description: 생성된 공지방ID
                       roomImage:
                         type: string
                         description: 공지방 이미지 url
@@ -73,7 +73,7 @@ paths:
                       roomInviteUrl:
                         type: string
                         description: 초대 url
-                        
+
     patch:
       tags:
         - admin
@@ -90,10 +90,10 @@ paths:
           application/json:
             schema:
               type: object
-              properties:  
+              properties:
                 roomId:
                   type: integer
-                  description: 삭제할 공지방 아이디 
+                  description: 삭제할 공지방 아이디
       responses:
         "200":
           description: 공지방 삭제 성공!
@@ -113,10 +113,10 @@ paths:
                     example: "success!"
                   result:
                     type: object
-                    properties: 
-                      roomId : 
-                        type : number 
-                        description : 삭제된 공지방의 Id
+                    properties:
+                      roomId:
+                        type: number
+                        description: 삭제된 공지방의 Id
 
   /admin/rooms/{roomId}:
     patch:
@@ -159,9 +159,9 @@ paths:
                 max_penalty:
                   type: number
                   description: 최대 페널티 개수
-                id: 
-                  type : number 
-                  description : 수정할 공지방 ID
+                id:
+                  type: number
+                  description: 수정할 공지방 ID
       responses:
         "200":
           description: 공지방 수정 성공!
@@ -217,7 +217,7 @@ paths:
               type: object
               properties:
                 roomId:
-                  type: integer 
+                  type: integer
                   description: 공지방 id
                 type:
                   type: string
@@ -230,7 +230,7 @@ paths:
                   description: 공지글 본문
                 start_date:
                   type: string
-                  description: 시작 기한 
+                  description: 시작 기한
                 end_date:
                   type: string
                   description: 마감 기한
@@ -238,13 +238,13 @@ paths:
                   type: string
                   description: 퀴즈/미션 질문
                 quiz_answer:
-                  type: string 
-                  description: 퀴즈 답 
-                imgURLs : 
-                  type : array
-                  items : 
-                    type : string 
-                    description : 이미지 URL 배열 
+                  type: string
+                  description: 퀴즈 답
+                imgURLs:
+                  type: array
+                  items:
+                    type: string
+                    description: 이미지 URL 배열
       responses:
         "200":
           description: 공지글 생성 성공!
@@ -266,12 +266,12 @@ paths:
                     type: object
                     properties:
                       newPostId:
-                        type : integer 
-                        description : 생성된 공지글 ID
+                        type: integer
+                        description: 생성된 공지글 ID
                       postType:
                         type: string
-                        enum : [QUIZ,MISSION]
-                        description: 공지글 타입(퀴즈/미션) 
+                        enum: [QUIZ, MISSION]
+                        description: 공지글 타입(퀴즈/미션)
                       postTitle:
                         type: string
                         description: 공지글 제목
@@ -287,12 +287,12 @@ paths:
                       endDate:
                         type: string
                         description: 마감 기한
-                      question: 
-                        type : string 
-                        description: 퀴즈/미션 질문 
-                      quiz_answer: 
-                        type: string 
-                        description: 퀴즈 답 
+                      question:
+                        type: string
+                        description: 퀴즈/미션 질문
+                      quiz_answer:
+                        type: string
+                        description: 퀴즈 답
 
     patch:
       tags:
@@ -313,7 +313,7 @@ paths:
               properties:
                 id:
                   type: integer
-                  description: 삭제할 공지글 아이디 
+                  description: 삭제할 공지글 아이디
       responses:
         "200":
           description: 공지글 삭제 성공!
@@ -333,10 +333,10 @@ paths:
                     example: "success!"
                   result:
                     type: object
-                    properties: 
-                      postId : 
-                        type : number 
-                        description : 삭제된 공지글의 Id
+                    properties:
+                      deletedPostId:
+                        type: number
+                        description: 삭제된 공지글의 Id
 
   /admin/post/{postId}:
     patch:
@@ -364,34 +364,34 @@ paths:
             schema:
               type: object
               properties:
-                title:
-                  type: string
-                  description: 공지글 제목
-                content:
-                  type: string
-                  description: 공지글 본문
-                start_date:
-                  type: string
-                  description: 시작 기한 
-                end_date:
-                  type: string
-                  description: 마감 기한
-                question:
-                  type: string
-                  description: 퀴즈/미션 질문
-                id:
-                  type: integer
-                  description: 수정할 공지글 아이디
-                imgURLs : 
-                  type : array
-                  items : 
-                    type : string 
-                    description : 추가할 이미지 URL 배열
-                imgToDelete : 
-                  type : array
-                  items : 
-                    type : string 
-                    description : 삭제할 이미지 URL 배열
+                postData:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                      description: 공지글 제목
+                    content:
+                      type: string
+                      description: 공지글 본문
+                    start_date:
+                      type: string
+                      description: 시작 기한
+                    end_date:
+                      type: string
+                      description: 마감 기한
+                    question:
+                      type: string
+                      description: 퀴즈/미션 질문
+                imgURLs:
+                  type: array
+                  items:
+                    type: string
+                    description: 추가할 이미지 URL 배열
+                imgToDelete:
+                  type: array
+                  items:
+                    type: string
+                    description: 삭제할 이미지 URL 배열
       responses:
         "200":
           description: 공지글 수정 성공!
@@ -430,9 +430,9 @@ paths:
                       endDate:
                         type: string
                         description: 마감 기한
-                      question: 
-                        type : string 
-                        description: 퀴즈/미션 질문 
+                      question:
+                        type: string
+                        description: 퀴즈/미션 질문
 
   /admin/post/{postId}/unread:
     get:
@@ -470,13 +470,13 @@ paths:
                     example: "success!"
                   result:
                     type: object
-                    properties: 
-                      profile_image : 
-                        type : string
-                        description : 유저 프로필 사진 
-                      nickname : 
-                        type : string
-                        description : 유저 닉네임
+                    properties:
+                      profile_image:
+                        type: string
+                        description: 유저 프로필 사진
+                      nickname:
+                        type: string
+                        description: 유저 닉네임
 
   /admin/users:
     get:
@@ -492,18 +492,18 @@ paths:
       parameters:
         - in: query
           name: nickname
-          required: false  
+          required: false
           description: 사용자의 닉네임
           schema:
             type: string
-            example : 제이
+            example: 제이
         - in: query
           name: roomId
-          required: true  
+          required: true
           description: 사용자가 속한 room의 ID
           schema:
             type: integer
-            example : 1
+            example: 1
       responses:
         "200":
           description: 유저 검색 성공!
@@ -523,16 +523,16 @@ paths:
                     example: "success!"
                   result:
                     type: object
-                    properties: 
-                      userId : 
-                        type : number 
-                        description : 유저 아이디
-                      nickname : 
-                        type : string
-                        description : 유저 닉네임
-                      profile_image : 
-                        type : string
-                        description : 유저 프로필 사진 
+                    properties:
+                      userId:
+                        type: number
+                        description: 유저 아이디
+                      nickname:
+                        type: string
+                        description: 유저 닉네임
+                      profile_image:
+                        type: string
+                        description: 유저 프로필 사진
 
   /admin/profile:
     get:
@@ -551,15 +551,15 @@ paths:
           required: true
           description: 공지방 ID
           schema:
-            type: integer 
-            example : 6
+            type: integer
+            example: 6
         - in: query
           name: userId
-          required: true  
+          required: true
           description: 유저 ID
           schema:
             type: integer
-            example : 1240
+            example: 1240
       responses:
         "200":
           description: 프로필 조회 성공!
@@ -579,18 +579,18 @@ paths:
                     example: "success!"
                   result:
                     type: object
-                    properties: 
-                      nickname : 
-                        type : string
-                        description : 유저 닉네임
-                      profile_image : 
-                        type : string
-                        description : 유저 프로필 사진 
-                      penalty_count : 
-                        type : integer 
-                        description : 패널티 개수
+                    properties:
+                      nickname:
+                        type: string
+                        description: 유저 닉네임
+                      profile_image:
+                        type: string
+                        description: 유저 프로필 사진
+                      penalty_count:
+                        type: integer
+                        description: 패널티 개수
 
-  /admin/invitation/{roomId} :
+  /admin/invitation/{roomId}:
     get:
       tags:
         - admin
@@ -602,7 +602,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: roomId 
+        - name: roomId
           in: path
           schema:
             type: integer
@@ -626,23 +626,23 @@ paths:
                     example: "success!"
                   result:
                     type: object
-                    properties: 
-                      room_image : 
-                        type : string 
-                        description : 공지방 이미지 
-                      room_invite_url : 
-                        type : string 
-                        description : 공지방 초대 url 
-                      room_name : 
-                        type : string 
-                        description : 공지방 이름
-                      room_password : 
-                        type : string  
-                        description : 공지방 비밀번호
-                      admin_nickname : 
-                        type : string
-                        description : 관리자 닉네임
-              
+                    properties:
+                      room_image:
+                        type: string
+                        description: 공지방 이미지
+                      room_invite_url:
+                        type: string
+                        description: 공지방 초대 url
+                      room_name:
+                        type: string
+                        description: 공지방 이름
+                      room_password:
+                        type: string
+                        description: 공지방 비밀번호
+                      admin_nickname:
+                        type: string
+                        description: 관리자 닉네임
+
   /admin/rooms/user-Ban:
     delete:
       tags:
@@ -664,9 +664,9 @@ paths:
                 nickname:
                   type: string
                   description: 강퇴할 유저 닉네임
-                room_id: 
+                room_id:
                   type: integer
-                  description : 강퇴할 유저가 속한 공지방 id
+                  description: 강퇴할 유저가 속한 공지방 id
       responses:
         "200":
           description: 유저 강퇴 성공!
@@ -686,155 +686,152 @@ paths:
                     example: "success!"
                   result:
                     type: object
-                    properties: 
-                      message : 
-                        type: string
-                        example : 유저 강퇴에 성공하였습니다.
-
-/admin/submit/{roomId} :
-    get:
-      tags:
-        - admin
-      summary: 확인 요청 내역 조회(대기 or 승인 완료)
-      description: 확인 요청 내역 조회
-      operationId: getSubmitList
-      consumes:
-        - application/json
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: roomId 
-          in: path
-          schema:
-            type: integer
-          required: true
-      responses:
-        "200":
-          description: 확인 요청 내역 조회 성공!
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  isSuccess:
-                    type: boolean
-                    example: true
-                  code:
-                    type: integer
-                    example: 200
-                  message:
-                    type: string
-                    example: "success!"
-                  result:
-                    type: object
                     properties:
-                      userSubmissions:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            title:
-                              type: string
-                              example: "test9"
-                            start_date:
-                              type: string
-                              format: date-time
-                              example: "2024-08-11T02:24:00.000Z"
-                            end_date:
-                              type: string
-                              format: date-time
-                              example: "2024-08-10T02:24:03.000Z"
-                            content:
-                              type: string
-                              example: "penaltytestcontent"
-                            room_image:
-                              type: string
-                              nullable: true
-                              example: null
-                            pending_count:
-                              type: integer
-                              example: 2
-                      pendingStates:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            profile_image:
-                              type: string
-                              nullable: true
-                              example: null
-                            nickname:
-                              type: string
-                              example: "제이"
-                            URL:
-                              type: string
-                              example: "https://s3.ap-northeast-2.amazonaws.com/read.me-bucket/43dbd401a34c7be69c9be7b123a13e67_exampleimage.png"
-                            submit_state:
-                              type: string
-                              example: "PENDING"
-                      completeStates:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            profile_image:
-                              type: string
-                              nullable: true
-                              example: null
-                            nickname:
-                              type: string
-                              example: "제이"
-                            URL:
-                              type: string
-                              example: "https://s3.ap-northeast-2.amazonaws.com/read.me-bucket/45425843b018b4ac8d235ad195b35a54_exampleimage.png"
-                            submit_state:
-                              type: string
-                              example: "COMPLETE"
-                      
-/admin/submit/user-request:
-    patch:
-      tags:
-        - admin
-      summary: 대기중 요청 수락/거절
-      description: 대기중 요청 수락/거절
-      operationId: submitAcceptOrReject 
-      consumes:
-        - application/json
-      security:
-        - bearerAuth: []
-      requestBody:
+                      message:
+                        type: string
+                        example: 유저 강퇴에 성공하였습니다.
+
+/admin/submit/{roomId}:
+  get:
+    tags:
+      - admin
+    summary: 확인 요청 내역 조회(대기 or 승인 완료)
+    description: 확인 요청 내역 조회
+    operationId: getSubmitList
+    consumes:
+      - application/json
+    security:
+      - bearerAuth: []
+    parameters:
+      - name: roomId
+        in: path
+        schema:
+          type: integer
         required: true
+    responses:
+      "200":
+        description: 확인 요청 내역 조회 성공!
         content:
           application/json:
             schema:
               type: object
               properties:
-                type:
-                  type: string
-                  description: 요청 수락/거절
-                roomId:
+                isSuccess:
+                  type: boolean
+                  example: true
+                code:
                   type: integer
-                  description: 공지방 아이디
-      responses:
-        "200":
-          description: 제출 요청 수행 성공!
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  isSuccess:
-                    type: boolean
-                    example: true
-                  code:
-                    type: integer
-                    example: 200
-                  message:
-                    type: string
-                    example: "success!"
-                  result:
-                    type: string
-                    example: "요청 수행에 성공하였습니다."
-                      
+                  example: 200
+                message:
+                  type: string
+                  example: "success!"
+                result:
+                  type: object
+                  properties:
+                    userSubmissions:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          title:
+                            type: string
+                            example: "test9"
+                          start_date:
+                            type: string
+                            format: date-time
+                            example: "2024-08-11T02:24:00.000Z"
+                          end_date:
+                            type: string
+                            format: date-time
+                            example: "2024-08-10T02:24:03.000Z"
+                          content:
+                            type: string
+                            example: "penaltytestcontent"
+                          room_image:
+                            type: string
+                            nullable: true
+                            example: null
+                          pending_count:
+                            type: integer
+                            example: 2
+                    pendingStates:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          profile_image:
+                            type: string
+                            nullable: true
+                            example: null
+                          nickname:
+                            type: string
+                            example: "제이"
+                          URL:
+                            type: string
+                            example: "https://s3.ap-northeast-2.amazonaws.com/read.me-bucket/43dbd401a34c7be69c9be7b123a13e67_exampleimage.png"
+                          submit_state:
+                            type: string
+                            example: "PENDING"
+                    completeStates:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          profile_image:
+                            type: string
+                            nullable: true
+                            example: null
+                          nickname:
+                            type: string
+                            example: "제이"
+                          URL:
+                            type: string
+                            example: "https://s3.ap-northeast-2.amazonaws.com/read.me-bucket/45425843b018b4ac8d235ad195b35a54_exampleimage.png"
+                          submit_state:
+                            type: string
+                            example: "COMPLETE"
 
-
+/admin/submit/user-request:
+  patch:
+    tags:
+      - admin
+    summary: 대기중 요청 수락/거절
+    description: 대기중 요청 수락/거절
+    operationId: submitAcceptOrReject
+    consumes:
+      - application/json
+    security:
+      - bearerAuth: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              type:
+                type: string
+                description: 요청 수락/거절
+              roomId:
+                type: integer
+                description: 공지방 아이디
+    responses:
+      "200":
+        description: 제출 요청 수행 성공!
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                isSuccess:
+                  type: boolean
+                  example: true
+                code:
+                  type: integer
+                  example: 200
+                message:
+                  type: string
+                  example: "success!"
+                result:
+                  type: string
+                  example: "요청 수행에 성공하였습니다."

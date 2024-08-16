@@ -151,10 +151,33 @@ export const addUserSubmitSQL = `
   AND NOW() > DATE_ADD(p.end_date, INTERVAL 1 SECOND);
 `;
 
-// 확인 요청 내역 조회 
+export const imposePenaltyByPostSQL = `
+  UPDATE \`user-room\` ur
+  JOIN submit s ON s.submit_state = 'NOT_COMPLETE' OR s.submit_state = 'PENDING' OR s.submit_state = 'REJECT'
+  JOIN post p ON p.id = ? AND p.id = s.post_id AND p.room_id = ur.room_id
+  SET ur.penalty_count = ur.penalty_count + 1,
+      s.penalty_state = true
+  WHERE s.user_id = ur.user_id;
+`;
+
+export const initializeSubmitByPostSQL = `
+  INSERT INTO submit (post_id, user_id, content, submit_state)
+  SELECT p.id AS post_id, ur.user_id, null AS content, 'NOT_COMPLETE' AS submit_state
+  FROM \`user-room\` ur
+  JOIN post p ON p.id = ? AND p.room_id = ur.room_id
+  JOIN room r ON p.room_id = r.id AND ur.user_id != r.admin_id
+`;
+
+export const getPostsBeforeEndDate = `
+  SELECT p.id, p.end_date
+  FROM post p
+  WHERE p.end_date > NOW() AND p.state = 'EXIST';
+`;
+
+// 확인 요청 내역 조회
 export const getPostCountSQL = `
   SELECT COUNT(*) AS count FROM post;
-`; 
+`;
 
 export const userSubmitSQL = ` 
   SELECT 
@@ -165,7 +188,7 @@ export const userSubmitSQL = `
   JOIN room r ON p.room_id = r.id
   WHERE p.room_id = ? 
   GROUP BY p.id;
-`; 
+`;
 
 export const getSubmitStateSQL = `
   SELECT u.profile_image, u.nickname, si.URL, s.submit_state
@@ -174,9 +197,9 @@ export const getSubmitStateSQL = `
   JOIN user u ON s.user_id = u.id
   LEFT JOIN \`submit-image\` si ON s.id = si.id
   WHERE p.room_id = ? AND s.submit_state IN ('PENDING', 'COMPLETE');
-`; 
+`;
 
-// 대기 중 요청 수락/거절 
+// 대기 중 요청 수락/거절
 export const userRequestAcceptSQL = `
   UPDATE submit
   SET submit_state = 'COMPLETE'
