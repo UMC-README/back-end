@@ -191,7 +191,7 @@ export const userSubmitSQL = `
 `;
 
 export const getSubmitStateSQL = `
-  SELECT u.profile_image, u.nickname, si.URL, s.submit_state
+  SELECT u.profile_image, u.nickname, si.URL, s.content, s.submit_state
   FROM post p
   JOIN submit s ON p.id = s.post_id 
   JOIN user u ON s.user_id = u.id
