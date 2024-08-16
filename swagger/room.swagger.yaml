@@ -104,6 +104,18 @@ paths:
                     type: array
                     example: {
                       "isRoomAdmin": true,
+                      "penaltyCount": 3,
+                      "maxPenalty": 5,
+                      "notCheckedPenalty": [
+                          {
+                              "postId": 3,
+                              "postTitle": "테스트 제목입니다.",
+                          },
+                          {
+                              "postId": 2,
+                              "postTitle": "테스트 제목입니다.",
+                          }
+                      ],
                       "posts": [
                         {
                           "postId": 3,
@@ -809,3 +821,87 @@ paths:
                     ],
                     "cursorId": 17,
                     }
+                  
+  /room/{roomId}/check-penalty:
+    patch:
+      tags:
+        - room
+      summary: 공지방 내 미확인 페널티 확인처리
+      description: 공지방 내 미확인 페널티 팝업에 나온 페널티 포스트들을 확인한 것으로 처리
+      operationId: checkPenaltyInRoom
+      consumes:
+        - application/json  
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: roomId
+          in: path
+          schema:
+            type: number
+          required: true
+      responses:
+        "200":
+          description: 공지방 내 페널티 확인 처리 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: number
+                    example: 200
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: object
+                    properties:
+                        isSuccess:
+                          type: boolean
+                          example: true
+                          description: 페널티 확인 처리 성공
+
+  /room/{roomId}/exiled:
+    delete:
+      tags:
+        - room
+      summary: 공지방 페널티 최대한도 도달하여 퇴장처리
+      description: 공지방 페널티 최대한도 도달하여 퇴장처리
+      operationId: exiledFromRoom
+      consumes:
+        - application/json  
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: roomId
+          in: path
+          schema:
+            type: number
+          required: true
+      responses:
+        "200":
+          description: 공지방 퇴장 처리 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: number
+                    example: 200
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: object
+                    properties:
+                        isSuccess:
+                          type: boolean
+                          example: true
+                          description: 공지방 퇴장 처리 성공
