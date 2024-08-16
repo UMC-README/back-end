@@ -378,8 +378,8 @@ export const userSubmitDao = async (roomId) => {
     const conn = await pool.getConnection();
 
     const [rows] = await conn.query(getPostCountSQL);
-    const countPost = rows[0]?.count || 0;
-    if (countPost === 0) return { massage: "공지가 없습니다." };
+    const countPost = rows[0]?.count || 0; 
+    if(countPost === 0)  return {message : "공지가 없습니다."};
 
     const [userSubmissions] = await conn.query(userSubmitSQL, roomId);
     const [submitStates] = await conn.query(getSubmitStateSQL, roomId);
