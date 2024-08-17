@@ -14,6 +14,7 @@ import {
   userInviteService,
   deleteUserService,
   userSubmitService,
+  userRequestService,
 } from "./admin.service.js";
 
 export const createRoomsController = async (req, res, next) => {
@@ -54,7 +55,7 @@ export const createPostController = async (req, res, next) => {
 
 export const updatePostController = async (req, res, next) => {
   try {
-    const result = await updatePostService(req.body);
+    const result = await updatePostService(req.body, req.params.postId);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
@@ -70,7 +71,7 @@ export const deletePostController = async (req, res, next) => {
   }
 };
 
-export const unreadUserListController = async(req, res, next) => { 
+export const unreadUserListController = async (req, res, next) => {
   try {
     const result = await unreadUserListService(req.params.postId);
     res.status(200).json(response(status.SUCCESS, result));
@@ -79,12 +80,12 @@ export const unreadUserListController = async(req, res, next) => {
   }
 };
 
-export const userListController = async (req,res,next) => { 
-  try{ 
+export const userListController = async (req, res, next) => {
+  try {
     const result = await userListService(req.query.nickname, req.query.roomId);
     res.status(200).json(response(status.SUCCESS, result));
-  }catch (error){
-    next(error); 
+  } catch (error) {
+    next(error);
   }
 };
 
@@ -122,4 +123,13 @@ export const userSubmitController = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-}
+};
+
+export const userRequestController = async (req, res, next) => {
+  try {
+    const result = await userRequestService(req.body);
+    res.status(200).json(response(status.SUCCESS, result));
+  } catch (error) {
+    next(error);
+  }
+};
