@@ -30,7 +30,7 @@ export const userRouter = express.Router();
 userRouter.post(
   "/s3/upload",
   tokenAuth,
-  imageUploader.single("file"),
+  imageUploader.array("file", 10),
   expressAsyncHandler(uploadImage)
 );
 
