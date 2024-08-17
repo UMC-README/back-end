@@ -28,7 +28,7 @@ export const createRoomsController = async (req, res, next) => {
 
 export const updateRoomsController = async (req, res, next) => {
   try {
-    const result = await updateRoomsService(req.body);
+    const result = await updateRoomsService(req.body, req.params.roomId);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
