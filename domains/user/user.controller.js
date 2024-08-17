@@ -145,8 +145,8 @@ export const userConfirmCode = async (req, res, next) => {
 
 export const uploadImage = async (req, res, next) => {
   try {
-    console.log("file", req.file);
-    res.status(200).json(response(status.SUCCESS, { image: req.file.location }));
+    const files = req.files.map((file) => file.location);
+    res.status(200).json(response(status.SUCCESS, { images: files }));
   } catch (error) {
     next(error);
   }
