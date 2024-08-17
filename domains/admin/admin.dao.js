@@ -29,12 +29,14 @@ import {
   getSubmitStateSQL,
   userRequestAcceptSQL,
   userRequestRejectSQL,
+  beforeUpdateRoomsSQL,
 } from "./admin.sql.js";
 
 import schedule from "node-schedule";
 
 export const createRoomsDao = async (body, userId, roomInviteUrl) => {
   try {
+    if(body.max_penalty > 10)   throw new Error("패널티는 최대 10개까지만 생성이 가능합니다.");
     const conn = await pool.getConnection();
     const [result] = await conn.query(createRoomsSQL, [
       userId,
@@ -53,30 +55,26 @@ export const createRoomsDao = async (body, userId, roomInviteUrl) => {
     conn.release();
     return { roomId, result, roomInviteUrl };
   } catch (error) {
-    console.error("공지방 생성하기 에러");
+    console.error("공지방 생성하기 에러", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };
 
-export const updateRoomsDao = async (body) => {
+export const updateRoomsDao = async (body, roomId) => {
   try {
+    if(body.max_penalty > 10)   throw new Error("패널티는 최대 10개까지만 생성이 가능합니다.");
     const conn = await pool.getConnection();
+    const [beforeRoomsData] = await conn.query(beforeUpdateRoomsSQL, [roomId]);
     await conn.query(updateRoomsSQL, [
       body.room_image,
       body.admin_nickname,
       body.room_name,
       body.room_password,
       body.max_penalty,
-      body.id,
+      roomId
     ]);
     conn.release();
-    return {
-      roomImage: body.room_image,
-      adminNickname: body.admin_nickname,
-      roomName: body.room_name,
-      passWord: body.room_password,
-      maxPenalty: body.max_penalty,
-    };
+    return { beforeRoomsData };
   } catch (error) {
     console.error("공지방 수정하기 에러:", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
@@ -86,9 +84,8 @@ export const updateRoomsDao = async (body) => {
 export const deleteRoomsDao = async (body) => {
   try {
     const conn = await pool.getConnection();
-    const { roomId } = body;
-    await conn.query(deleteRoomsSQL, roomId);
-    return { deletedRoomId: roomId };
+    await conn.query(deleteRoomsSQL, body.roomId);
+    return true;
   } catch (error) {
     console.error("공지방 삭제하기 에러:", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
@@ -385,8 +382,8 @@ export const userSubmitDao = async (roomId) => {
     const [submitStates] = await conn.query(getSubmitStateSQL, roomId);
 
     conn.release();
-    return { userSubmissions, submitStates };
-  } catch (error) {
+    return { userSubmissions , submitStates };
+  } catch (error) { 
     console.log("확인 요청 조회 에러");
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }

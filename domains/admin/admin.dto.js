@@ -10,10 +10,8 @@ export const createRoomsDTO = (roomData) => {
   };
 };
 
-export const updateRoomsDTO = (updateRoomsData) => {
-  return {
-    ...updateRoomsData,
-  };
+export const updateRoomsDTO = (beforeRoomsData) => { 
+  return{ BeforeRoomsData : beforeRoomsData[0], message : "공지방 수정에 성공하였습니다."};
 };
 
 export const createPostDTO = (createPostData) => {
@@ -32,5 +30,20 @@ export const userSubmitDTO = (userSubmissions, submitStates) => {
   const pendingStates = submitStates.filter(state => state.submit_state === 'PENDING');
   const completeStates = submitStates.filter(state => state.submit_state === 'COMPLETE');
 
-  return { userSubmissions, pendingStates, completeStates };
+  const UserSubmissions = userSubmissions.map(submission => {
+    const startDate = new Date(submission.start_date);  
+    const year = String(startDate.getFullYear()).slice(-2);  
+    const month = String(startDate.getMonth() + 1).padStart(2, '0');  
+    const day = String(startDate.getDate()).padStart(2, '0'); 
+
+    const endDate = new Date(submission.end_date); 
+    const year1 = String(endDate.getFullYear()).slice(-2);  
+    const month1 = String(endDate.getMonth() + 1).padStart(2, '0');  
+    const day1 = String(endDate.getDate()).padStart(2, '0'); 
+    
+    const formattedStartDate = `${year}.${month}.${day}`;
+    const formattedEndDate = `${year1}.${month1}.${day1}`;
+    return { ...submission, start_date : formattedStartDate, end_date : formattedEndDate };
+  });
+  return {  UserSubmissions, pendingStates, completeStates };
 }

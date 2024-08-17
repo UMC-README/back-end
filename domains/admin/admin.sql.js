@@ -10,8 +10,15 @@ export const userRoomSQL = `
 `;
 
 // 공지방 수정
+export const beforeUpdateRoomsSQL = `
+  SELECT room_image, admin_nickname, room_name, room_password, max_penalty
+  FROM room 
+  WHERE id = ?;
+`; 
+
 export const updateRoomsSQL = `
-   UPDATE room SET admin_nickname = ?, room_name = ?, room_password = ?, room_image = ?, max_penalty = ?
+   UPDATE room 
+   SET room_image = ?, admin_nickname = ?, room_name = ?, room_password = ?, max_penalty = ?
    WHERE id = ?;
 `;
 
@@ -181,7 +188,7 @@ export const getPostCountSQL = `
 
 export const userSubmitSQL = ` 
   SELECT 
-    p.title, p.start_date, p.end_date, p.content, r.room_image
+    s.id, p.title, p.start_date, p.end_date, p.content, r.room_image
     , COUNT(s.id) AS pending_count
   FROM post p
   JOIN submit s ON p.id = s.post_id AND s.submit_state = 'PENDING'
@@ -191,7 +198,7 @@ export const userSubmitSQL = `
 `;
 
 export const getSubmitStateSQL = `
-  SELECT u.profile_image, u.nickname, si.URL, s.content, s.submit_state
+  SELECT s.id AS submit_id, u.profile_image, u.nickname, si.URL, s.content, s.submit_state
   FROM post p
   JOIN submit s ON p.id = s.post_id 
   JOIN user u ON s.user_id = u.id
