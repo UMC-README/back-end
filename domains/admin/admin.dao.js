@@ -33,6 +33,8 @@ import {
   getAlluserRoomSQL,
 } from "./admin.sql.js";
 
+import { updateUnreadCountByRoom } from "../room/room.sql.js";
+
 import schedule from "node-schedule";
 
 export const createRoomsDao = async (body, userId, roomInviteUrl) => {
@@ -304,6 +306,7 @@ export const deleteUserDao = async (body) => {
       return -1;
     }
     await conn.query(deleteUserSQL, [body.nickname, body.room_id]);
+    await conn.query(updateUnreadCountByRoom, body.room.id);
 
     conn.release();
     return "유저 강퇴에 성공하였습니다.";
