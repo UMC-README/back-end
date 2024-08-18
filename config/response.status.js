@@ -71,4 +71,22 @@ export const status = {
     code: "PW001",
     message: "잘못된 비밀번호 입니다.",
   },
+  WRONG_DATE_FORMAT: {
+    status: StatusCodes.BAD_REQUEST,
+    isSuccess: false,
+    code: "COMMON007",
+    message: "올바르지 않는 날짜 형식입니다.",
+  },
+  WRONG_STARTDATE_COMPARE: {
+    status: StatusCodes.BAD_REQUEST,
+    isSuccess: false,
+    code: "COMMON008",
+    message: "start_date는 현재보다 미래여야 합니다.",
+  },
+  WRONG_ENDDATE_COMPARE: {
+    status: StatusCodes.BAD_REQUEST,
+    isSuccess: false,
+    code: "COMMON009",
+    message: "end_date는 start_date보다 미래여야 합니다.",
+  }
 };

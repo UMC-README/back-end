@@ -227,7 +227,7 @@ paths:
             schema:
               type: object
               properties:
-                roomId:
+                room_id:
                   type: integer
                   description: 공지방 id
                 type:
@@ -739,22 +739,25 @@ paths:
                   result:
                     type: object
                     properties:
-                      userSubmissions:
+                      UserSubmissions:
                         type: array
                         items:
                           type: object
                           properties:
+                            id:
+                              type: number
+                              description: 제출 id
                             title:
                               type: string
                               example: "test9"
                             start_date:
                               type: string
                               format: date-time
-                              example: "2024-08-11T02:24:00.000Z"
+                              example: "2024-08-11"
                             end_date:
                               type: string
                               format: date-time
-                              example: "2024-08-10T02:24:03.000Z"
+                              example: "2024-08-10"
                             content:
                               type: string
                               example: "penaltytestcontent"
@@ -770,6 +773,9 @@ paths:
                         items:
                           type: object
                           properties:
+                            submit_id: 
+                              type: number
+                              example: 제출id
                             profile_image:
                               type: string
                               nullable: true
@@ -788,6 +794,9 @@ paths:
                         items:
                           type: object
                           properties:
+                            submit_id: 
+                              type: number
+                              example: 제출id
                             profile_image:
                               type: string
                               nullable: true
