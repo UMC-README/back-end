@@ -201,9 +201,9 @@ paths:
                   result:
                     type: object
                     properties:
-                      roomId:
-                        type: number
-                        description: 삭제된 공지방의 Id
+                      isDeleted:
+                        type: boolean
+                        description: 공지방 삭제 여부
   /admin/post:
     post:
       tags:
@@ -299,51 +299,6 @@ paths:
                       quiz_answer:
                         type: string
                         description: 퀴즈 답
-
-    patch:
-      tags:
-        - admin
-      summary: 공지글 삭제
-      description: 공지글 삭제
-      operationId: deletePost
-      consumes:
-        - application/json
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                id:
-                  type: integer
-                  description: 삭제할 공지글 아이디
-      responses:
-        "200":
-          description: 공지글 삭제 성공!
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  isSuccess:
-                    type: boolean
-                    example: true
-                  code:
-                    type: integer
-                    example: 200
-                  message:
-                    type: string
-                    example: "success!"
-                  result:
-                    type: object
-                    properties:
-                      deletedPostId:
-                        type: number
-                        description: 삭제된 공지글의 Id
-
   /admin/post/{postId}:
     patch:
       tags:
@@ -439,7 +394,47 @@ paths:
                       question:
                         type: string
                         description: 퀴즈/미션 질문
-
+    delete:
+      tags:
+        - admin
+      summary: 공지글 삭제
+      description: 공지글 삭제
+      operationId: deletePost
+      consumes:
+        - application/json
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: postId
+          required: true
+          schema:
+            type: integer
+            example: 1
+            description: postId
+      responses:
+        "200":
+          description: 공지글 삭제 성공!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: object
+                    properties:
+                      isDeleted:
+                        type: boolean
+                        description: 공지글 삭제 여부
   /admin/post/{postId}/unread:
     get:
       tags:

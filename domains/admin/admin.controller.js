@@ -64,7 +64,7 @@ export const updatePostController = async (req, res, next) => {
 
 export const deletePostController = async (req, res, next) => {
   try {
-    const result = await deletePostService(req.body.id);
+    const result = await deletePostService(req.params.postId);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
