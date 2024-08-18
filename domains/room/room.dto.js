@@ -1,6 +1,23 @@
-export const allPostInRoomDTO = ({ isRoomAdmin, posts }) => {
+export const allPostInRoomDTO = ({
+  roomName,
+  isRoomAdmin,
+  joinedRoomAt,
+  penaltyCount,
+  maxPenalty,
+  notCheckedPenalty,
+  posts,
+}) => {
   if (posts.length == 0) {
-    return { isRoomAdmin, posts, cursorId: null };
+    return {
+      roomName,
+      isRoomAdmin,
+      joinedRoomAt: formatDate(joinedRoomAt),
+      penaltyCount,
+      maxPenalty,
+      notCheckedPenalty,
+      posts,
+      cursorId: null,
+    };
   }
 
   const returnPosts = posts.map((post) => ({
@@ -16,7 +33,16 @@ export const allPostInRoomDTO = ({ isRoomAdmin, posts }) => {
     unreadCount: post.unread_count,
   }));
 
-  return { isRoomAdmin, posts: returnPosts, cursorId: posts[posts.length - 1].id };
+  return {
+    roomName,
+    isRoomAdmin,
+    joinedRoomAt: formatDate(joinedRoomAt),
+    penaltyCount,
+    maxPenalty,
+    notCheckedPenalty,
+    posts: returnPosts,
+    cursorId: posts[posts.length - 1].id,
+  };
 };
 
 const formatSubmitState = (data) => {
