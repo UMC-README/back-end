@@ -185,19 +185,19 @@ paths:
                       BeforeRoomsData:
                         type: object
                         properties:
-                          room_image:  
+                          room_image:
                             type: string
                             description: 공지방 이미지 URL
                             example: "www.s3.~~~"
-                          admin_nickname:   
+                          admin_nickname:
                             type: string
                             description: 운영진 닉네임
                             example: "단체 대표자(관리자) 이름"
-                          room_name:   
+                          room_name:
                             type: string
                             description: 공지방 이름
                             example: "리드미"
-                          room_password:   
+                          room_password:
                             type: string
                             description: 공지방 비밀번호
                             example: "1234"
@@ -205,9 +205,9 @@ paths:
                             type: integer
                             description: 최대 패널티 개수
                             example: 3
-                      message: 
-                        type: string 
-                        example: "공지방 수정에 성공하였습니다." 
+                      message:
+                        type: string
+                        example: "공지방 수정에 성공하였습니다."
 
   /admin/post:
     post:
@@ -701,157 +701,155 @@ paths:
                       message:
                         type: string
                         example: 유저 강퇴에 성공하였습니다.
-
-  /admin/submit/{roomId}:
-    get:
-      tags:
-        - admin
-      summary: 확인 요청 내역 조회(대기 or 승인 완료)
-      description: 확인 요청 내역 조회
-      operationId: getSubmitList
-      consumes:
-        - application/json
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: roomId
-          in: path
-          schema:
-            type: integer
-          required: true
-      responses:
-        "200":
-          description: 확인 요청 내역 조회 성공!
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  isSuccess:
-                    type: boolean
-                    example: true
-                  code:
-                    type: integer
-                    example: 200
-                  message:
-                    type: string
-                    example: "success!"
-                  result:
-                    type: object
-                    properties:
-                      UserSubmissions:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            id:
-                              type: number
-                              description: 제출 id
-                            title:
-                              type: string
-                              example: "test9"
-                            start_date:
-                              type: string
-                              format: date-time
-                              example: "2024-08-11"
-                            end_date:
-                              type: string
-                              format: date-time
-                              example: "2024-08-10"
-                            content:
-                              type: string
-                              example: "penaltytestcontent"
-                            room_image:
-                              type: string
-                              nullable: true
-                              example: null
-                            pending_count:
-                              type: integer
-                              example: 2
-                      pendingStates:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            submit_id: 
-                              type: number
-                              example: 제출id
-                            profile_image:
-                              type: string
-                              nullable: true
-                              example: null
-                            nickname:
-                              type: string
-                              example: "제이"
-                            URL:
-                              type: string
-                              example: "https://s3.ap-northeast-2.amazonaws.com/read.me-bucket/43dbd401a34c7be69c9be7b123a13e67_exampleimage.png"
-                            submit_state:
-                              type: string
-                              example: "PENDING"
-                      completeStates:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            submit_id: 
-                              type: number
-                              example: 제출id
-                            profile_image:
-                              type: string
-                              nullable: true
-                              example: null
-                            nickname:
-                              type: string
-                              example: "제이"
-                            URL:
-                              type: string
-                              example: "https://s3.ap-northeast-2.amazonaws.com/read.me-bucket/45425843b018b4ac8d235ad195b35a54_exampleimage.png"
-                            submit_state:
-                              type: string
-                              example: "COMPLETE"
-
-  /admin/submit/user-request:
-    patch:
-      tags:
-        - admin
-      summary: 대기중 요청 수락/거절
-      description: 대기중 요청 수락/거절
-      operationId: submitAcceptOrReject
-      consumes:
-        - application/json
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
+    /admin/submit/{roomId}:
+      get:
+        tags:
+          - admin
+        summary: 확인 요청 내역 조회(대기 or 승인 완료)
+        description: 확인 요청 내역 조회
+        operationId: getSubmitList
+        consumes:
+          - application/json
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: roomId
+            in: path
             schema:
-              type: object
-              properties:
-                type:
-                  type: string
-                  description: 요청 수락/거절
-                roomId:
-                  type: integer
-                  description: 공지방 아이디
-      responses:
-        "200":
-          description: 제출 요청 수행 성공!
+              type: integer
+            required: true
+        responses:
+          "200":
+            description: 확인 요청 내역 조회 성공!
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    isSuccess:
+                      type: boolean
+                      example: true
+                    code:
+                      type: integer
+                      example: 200
+                    message:
+                      type: string
+                      example: "success!"
+                    result:
+                      type: object
+                      properties:
+                        UserSubmissions:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: number
+                                description: 제출 id
+                              title:
+                                type: string
+                                example: "test9"
+                              start_date:
+                                type: string
+                                format: date-time
+                                example: "2024-08-11"
+                              end_date:
+                                type: string
+                                format: date-time
+                                example: "2024-08-10"
+                              content:
+                                type: string
+                                example: "penaltytestcontent"
+                              room_image:
+                                type: string
+                                nullable: true
+                                example: null
+                              pending_count:
+                                type: integer
+                                example: 2
+                        pendingStates:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              submit_id:
+                                type: number
+                                example: 제출id
+                              profile_image:
+                                type: string
+                                nullable: true
+                                example: null
+                              nickname:
+                                type: string
+                                example: "제이"
+                              URL:
+                                type: string
+                                example: "https://s3.ap-northeast-2.amazonaws.com/read.me-bucket/43dbd401a34c7be69c9be7b123a13e67_exampleimage.png"
+                              submit_state:
+                                type: string
+                                example: "PENDING"
+                        completeStates:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              submit_id:
+                                type: number
+                                example: 제출id
+                              profile_image:
+                                type: string
+                                nullable: true
+                                example: null
+                              nickname:
+                                type: string
+                                example: "제이"
+                              URL:
+                                type: string
+                                example: "https://s3.ap-northeast-2.amazonaws.com/read.me-bucket/45425843b018b4ac8d235ad195b35a54_exampleimage.png"
+                              submit_state:
+                                type: string
+                                example: "COMPLETE"
+    /admin/submit/user-request:
+      patch:
+        tags:
+          - admin
+        summary: 대기중 요청 수락/거절
+        description: 대기중 요청 수락/거절
+        operationId: submitAcceptOrReject
+        consumes:
+          - application/json
+        security:
+          - bearerAuth: []
+        requestBody:
+          required: true
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  isSuccess:
-                    type: boolean
-                    example: true
-                  code:
+                  type:
+                    type: string
+                    description: 요청 수락/거절
+                  roomId:
                     type: integer
-                    example: 200
-                  message:
-                    type: string
-                    example: "success!"
-                  result:
-                    type: string
-                    example: "요청 수행에 성공하였습니다."
+                    description: 공지방 아이디
+        responses:
+          "200":
+            description: 제출 요청 수행 성공!
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    isSuccess:
+                      type: boolean
+                      example: true
+                    code:
+                      type: integer
+                      example: 200
+                    message:
+                      type: string
+                      example: "success!"
+                    result:
+                      type: string
+                      example: "요청 수행에 성공하였습니다."

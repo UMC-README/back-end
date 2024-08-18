@@ -83,7 +83,7 @@ paths:
                   message:
                     type: string
                     example: 서버 에러, 관리자에게 문의 바랍니다.
-  
+
   /user/create-code:
     post:
       tags:
@@ -126,7 +126,7 @@ paths:
                   result:
                     type: string
                     example: "이메일을 확인해주세요."
-  
+
   /user/confirm-code:
     post:
       tags:
@@ -282,7 +282,7 @@ paths:
                       accessToken:
                         type: string
                         description: JWT 토큰
-  
+
   /user:
     get:
       tags:
@@ -329,7 +329,7 @@ paths:
                       profileImage:
                         type: string
                         description: 유저 프로필 사진
-  
+
   /user/fixed:
     get:
       tags:
@@ -376,7 +376,7 @@ paths:
                       endDate:
                         type: string
                         description: 마감일
-  
+
   /user/recent:
     get:
       tags:
@@ -395,14 +395,14 @@ paths:
           schema:
             type: integer
             example: 1
-            description: 페이지 번호 (기본값: 1)
+            description: 페이지 번호 (기본값:\ 1)
         - in: query
           name: pageSize
           required: false
           schema:
             type: integer
             example: 5
-            description: 페이지 크기 (기본값: 5)
+            description: 페이지 크기 (기본값:\ 5)
       responses:
         "200":
           description: 최근 공지글 목록 조회 성공!
@@ -468,14 +468,14 @@ paths:
           schema:
             type: integer
             example: 1
-            description: 페이지 번호 (기본값: 1)
+            description: 페이지 번호 (기본값:\ 1)
         - in: query
           name: pageSize
           required: false
           schema:
             type: integer
             example: 6
-            description: 페이지 크기 (기본값: 6)
+            description: 페이지 크기 (기본값:\ 6)
       responses:
         "200":
           description: 내가 개설한 공지방 조회 성공!
@@ -525,7 +525,7 @@ paths:
                       totalPages:
                         type: number
                         description: 총 페이지 수
-                      
+
   /user/join-room:
     get:
       tags:
@@ -544,14 +544,14 @@ paths:
           schema:
             type: integer
             example: 1
-            description: 페이지 번호 (기본값: 1)
+            description: 페이지 번호 (기본값:\ 1)
         - in: query
           name: pageSize
           required: false
           schema:
             type: integer
             example: 6
-            description: 페이지 크기 (기본값: 6)
+            description: 페이지 크기 (기본값:\ 6)
       responses:
         "200":
           description: 내가 입장한 공지방 조회 성공!
@@ -821,7 +821,7 @@ paths:
                       isDuplicate:
                         type: boolean
                         description: true (중복 발생) / false (중복 X)
-  
+
   /user/password:
     post:
       tags:
@@ -909,7 +909,7 @@ paths:
                       isSuccess:
                         type: boolean
                         description: 수정 성공 여부
-  
+
   /user/rooms/missions/{roomId}:
     get:
       tags:

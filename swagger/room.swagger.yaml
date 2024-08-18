@@ -60,7 +60,7 @@ paths:
       description: 공지방 입장시 모든 공지글 조회, 커서 페이지네이션
       operationId: getAllPostsinRoom
       consumes:
-        - application/json  
+        - application/json
       security:
         - bearerAuth: []
       parameters:
@@ -102,49 +102,50 @@ paths:
                     example: "success!"
                   result:
                     type: array
-                    example: {
-                      "isRoomAdmin": true,
-                      "posts": [
-                        {
-                          "postId": 3,
-                          "postType": "QUIZ",
-                          "postTitle": "test3",
-                          "postBody": "testcontent3",
-                          "postImage": "url31.com",
-                          "startDate": "24. 7. 27. 19:05",
-                          "endDate": "24. 7. 27. 19:05",
-                          "commentCount": 1,
-                          "submitState": "NOT_COMPLETE",
-                          "unreadCount": 200,
-                        },
-                        {
-                          "postId": 2,
-                          "postType": "MISSION",
-                          "postTitle": "test2",
-                          "postBody": "testcontent2",
-                          "postImage": null,
-                          "startDate": "24. 7. 27. 19:01",
-                          "endDate": "24. 7. 27. 19:01",
-                          "commentCount": 0,
-                          "submitState": "NOT_COMPLETE",
-                          "unreadCount": 18,
-                        },
-                        {
-                          "postId": 1,
-                          "postType": "QUIZ",
-                          "postTitle": "TEST",
-                          "postBody": "TESTCONTENT",
-                          "postImage": "url11.com",
-                          "startDate": "24. 7. 25. 04:24",
-                          "endDate": "24. 7. 25. 05:24",
-                          "commentCount": 5,
-                          "submitState": "COMPLETE",
-                          "unreadCount": 6,
-                        }
-                    ],
-                    "cursorId": 1,
-                    }
-
+                    example:
+                      {
+                        "isRoomAdmin": true,
+                        "posts":
+                          [
+                            {
+                              "postId": 3,
+                              "postType": "QUIZ",
+                              "postTitle": "test3",
+                              "postBody": "testcontent3",
+                              "postImage": "url31.com",
+                              "startDate": "24. 7. 27. 19:05",
+                              "endDate": "24. 7. 27. 19:05",
+                              "commentCount": 1,
+                              "submitState": "NOT_COMPLETE",
+                              "unreadCount": 200,
+                            },
+                            {
+                              "postId": 2,
+                              "postType": "MISSION",
+                              "postTitle": "test2",
+                              "postBody": "testcontent2",
+                              "postImage": null,
+                              "startDate": "24. 7. 27. 19:01",
+                              "endDate": "24. 7. 27. 19:01",
+                              "commentCount": 0,
+                              "submitState": "NOT_COMPLETE",
+                              "unreadCount": 18,
+                            },
+                            {
+                              "postId": 1,
+                              "postType": "QUIZ",
+                              "postTitle": "TEST",
+                              "postBody": "TESTCONTENT",
+                              "postImage": "url11.com",
+                              "startDate": "24. 7. 25. 04:24",
+                              "endDate": "24. 7. 25. 05:24",
+                              "commentCount": 5,
+                              "submitState": "COMPLETE",
+                              "unreadCount": 6,
+                            },
+                          ],
+                        "cursorId": 1,
+                      }
   /room/{roomId}/notChecked:
     get:
       tags:
@@ -153,7 +154,7 @@ paths:
       description: 공지방 입장시 완료하지 않은 공지글 조회, 최신순으로 최대 3개까지
       operationId: getnotCheckedPostsinRoom
       consumes:
-        - application/json  
+        - application/json
       security:
         - bearerAuth: []
       parameters:
@@ -181,28 +182,30 @@ paths:
                     example: "success!"
                   result:
                     type: array
-                    example: {
-                      "posts": [
-                        {
-                            "roomName": "README",
-                            "postId": 6,
-                            "postTitle": "test6",
-                            "createdAtBefore": "1분 전",
-                        },
-                        {
-                            "roomName": "README",
-                            "postId": 4,
-                            "postTitle": "test4",
-                            "createdAtBefore": "2개월 전",
-                        },
-                        {
-                            "roomName": "README",
-                            "postId": 3,
-                            "postTitle": "test3",
-                            "createdAtBefore": "4년 전",
-                        }
-                      ]
-                    }
+                    example:
+                      {
+                        "posts":
+                          [
+                            {
+                              "roomName": "README",
+                              "postId": 6,
+                              "postTitle": "test6",
+                              "createdAtBefore": "1분 전",
+                            },
+                            {
+                              "roomName": "README",
+                              "postId": 4,
+                              "postTitle": "test4",
+                              "createdAtBefore": "2개월 전",
+                            },
+                            {
+                              "roomName": "README",
+                              "postId": 3,
+                              "postTitle": "test3",
+                              "createdAtBefore": "4년 전",
+                            },
+                          ],
+                      }
 
   /room/post/{postId}:
     get:
@@ -212,7 +215,7 @@ paths:
       description: 개별 공지글 상세 조회
       operationId: getDetailedPost
       consumes:
-        - application/json  
+        - application/json
       security:
         - bearerAuth: []
       parameters:
@@ -240,25 +243,24 @@ paths:
                     example: "success!"
                   result:
                     type: array
-                    example: {
-                      "post": [
-                        {
-                            "postId": 1,
-                            "postType": "QUIZ",
-                            "postTitle": "TEST",
-                            "postBody": "TESTCONTENT",
-                            "startDate": "24. 7. 25. 04:24",
-                            "endDate": "24. 7. 25. 05:24",
-                            "commentCount": 5,
-                            "submitState": "COMPLETE",
-                            "unreadCount": 183,
-                        }
-                      ],
-                      "imageURLs": [
-                        "url11.com",
-                        "url12.com",
-                      ]
-                    }
+                    example:
+                      {
+                        "post":
+                          [
+                            {
+                              "postId": 1,
+                              "postType": "QUIZ",
+                              "postTitle": "TEST",
+                              "postBody": "TESTCONTENT",
+                              "startDate": "24. 7. 25. 04:24",
+                              "endDate": "24. 7. 25. 05:24",
+                              "commentCount": 5,
+                              "submitState": "COMPLETE",
+                              "unreadCount": 183,
+                            },
+                          ],
+                        "imageURLs": ["url11.com", "url12.com"],
+                      }
 
   /room/post/{postId}/comment:
     get:
@@ -268,7 +270,7 @@ paths:
       description: 공지글별 댓글 조회
       operationId: getCommentsInPost
       consumes:
-        - application/json  
+        - application/json
       security:
         - bearerAuth: []
       parameters:
@@ -310,67 +312,69 @@ paths:
                     example: "success!"
                   result:
                     type: array
-                    example: {
-                      "data": [
-                        {
-                          "commentId": 1,
-                          "isCommentMine": false,
-                          "commentAuthorNickname": "kimroom1",
-                          "commentAuthorProfileImage": null,
-                          "commentBody": "com.con.1",
-                          "createdAt": "24. 7. 27. 18:08",
-                        },
-                        {
-                          "commentId": 3,
-                          "isCommentMine": false,
-                          "commentAuthorNickname": "parkroom1",
-                          "commentAuthorProfileImage": "parkroom1image.com",
-                          "commentBody": "com.con.3",
-                          "createdAt": "24. 7. 27. 18:09",
-                        },
-                        {
-                          "commentId": 4,
-                          "isCommentMine": true,
-                          "commentAuthorNickname": "leeroom1",
-                          "commentAuthorProfileImage": "leeroom1image.com",
-                          "commentBody": "com.con.4",
-                          "createdAt": "24. 7. 27. 18:09",
-                        },
-                        {
-                          "commentId": 5,
-                          "isCommentMine": false,
-                          "commentAuthorNickname": null,
-                          "commentAuthorProfileImage": null,
-                          "commentBody": "com.con.5",
-                          "createdAt": "24. 7. 27. 18:10",
-                        },
-                        {
-                          "commentId": 7,
-                          "isCommentMine": true,
-                          "commentAuthorNickname": "leeroom1",
-                          "commentAuthorProfileImage": "leeroom1image.com",
-                          "commentBody": "com.con.7",
-                          "createdAt": "24. 7. 27. 18:11",
-                        },
-                        {
-                          "commentId": 11,
-                          "isCommentMine": false,
-                          "commentAuthorNickname": "parkroom1",
-                          "commentAuthorProfileImage": "parkroom1image.com",
-                          "commentBody": "testcontent",
-                          "createdAt": "24. 8. 1. 16:22",
-                        },
-                        {
-                          "commentId": 12,
-                          "isCommentMine": false,
-                          "commentAuthorNickname": "parkroom1",
-                          "commentAuthorProfileImage": "parkroom1image.com",
-                          "commentBody": "testcontent",
-                          "createdAt": "24. 8. 1. 16:22",
-                        }
-                      ],
-                      "cursorId": 12,
-                    }
+                    example:
+                      {
+                        "data":
+                          [
+                            {
+                              "commentId": 1,
+                              "isCommentMine": false,
+                              "commentAuthorNickname": "kimroom1",
+                              "commentAuthorProfileImage": null,
+                              "commentBody": "com.con.1",
+                              "createdAt": "24. 7. 27. 18:08",
+                            },
+                            {
+                              "commentId": 3,
+                              "isCommentMine": false,
+                              "commentAuthorNickname": "parkroom1",
+                              "commentAuthorProfileImage": "parkroom1image.com",
+                              "commentBody": "com.con.3",
+                              "createdAt": "24. 7. 27. 18:09",
+                            },
+                            {
+                              "commentId": 4,
+                              "isCommentMine": true,
+                              "commentAuthorNickname": "leeroom1",
+                              "commentAuthorProfileImage": "leeroom1image.com",
+                              "commentBody": "com.con.4",
+                              "createdAt": "24. 7. 27. 18:09",
+                            },
+                            {
+                              "commentId": 5,
+                              "isCommentMine": false,
+                              "commentAuthorNickname": null,
+                              "commentAuthorProfileImage": null,
+                              "commentBody": "com.con.5",
+                              "createdAt": "24. 7. 27. 18:10",
+                            },
+                            {
+                              "commentId": 7,
+                              "isCommentMine": true,
+                              "commentAuthorNickname": "leeroom1",
+                              "commentAuthorProfileImage": "leeroom1image.com",
+                              "commentBody": "com.con.7",
+                              "createdAt": "24. 7. 27. 18:11",
+                            },
+                            {
+                              "commentId": 11,
+                              "isCommentMine": false,
+                              "commentAuthorNickname": "parkroom1",
+                              "commentAuthorProfileImage": "parkroom1image.com",
+                              "commentBody": "testcontent",
+                              "createdAt": "24. 8. 1. 16:22",
+                            },
+                            {
+                              "commentId": 12,
+                              "isCommentMine": false,
+                              "commentAuthorNickname": "parkroom1",
+                              "commentAuthorProfileImage": "parkroom1image.com",
+                              "commentBody": "testcontent",
+                              "createdAt": "24. 8. 1. 16:22",
+                            },
+                          ],
+                        "cursorId": 12,
+                      }
     post:
       tags:
         - room
@@ -378,7 +382,7 @@ paths:
       description: 해당 공지글에 댓글 작성
       operationId: postComment
       consumes:
-        - application/json  
+        - application/json
       security:
         - bearerAuth: []
       parameters:
@@ -428,7 +432,7 @@ paths:
       description: 개별 댓글 삭제
       operationId: deleteComment
       consumes:
-        - application/json  
+        - application/json
       security:
         - bearerAuth: []
       parameters:
@@ -469,7 +473,7 @@ paths:
       description: 공지글 퀴즈/미션 제출 요구사항 조회 구현
       operationId: getSubmitRequirements
       consumes:
-        - application/json  
+        - application/json
       security:
         - bearerAuth: []
       parameters:
@@ -498,15 +502,15 @@ paths:
                   result:
                     type: object
                     properties:
-                        id:
-                          type: number
-                          description: 해당 포스트 ID
-                        type:
-                          type: string
-                          description: 해당 포스트 타입 (퀴즈/미션)
-                        question:
-                          type: string
-                          description: 해당 포스트의 퀴즈/미션 제출 요구사항
+                      id:
+                        type: number
+                        description: 해당 포스트 ID
+                      type:
+                        type: string
+                        description: 해당 포스트 타입 (퀴즈/미션)
+                      question:
+                        type: string
+                        description: 해당 포스트의 퀴즈/미션 제출 요구사항
     post:
       tags:
         - room
@@ -514,7 +518,7 @@ paths:
       description: 공지글 퀴즈/미션 답변 및 인증사진 제출
       operationId: postSubmit
       consumes:
-        - application/json  
+        - application/json
       security:
         - bearerAuth: []
       parameters:
@@ -538,7 +542,7 @@ paths:
                   description: 미션에 제출할 답변 (퀴즈에서는 NULL, 미션에서는 필수)
                   example: ["https://image1.jpeg", "https://image2.jpeg", "https://image3.jpeg"]
                   items:
-                    type: string    
+                    type: string
       responses:
         "200":
           description: 제출 성공
@@ -574,7 +578,7 @@ paths:
       description: 공지방 최초 입장시 공지방 정보 조회
       operationId: getRoomEntrance
       consumes:
-        - application/json  
+        - application/json
       security:
         - bearerAuth: []
       parameters:
@@ -603,21 +607,21 @@ paths:
                   result:
                     type: object
                     properties:
-                        isAlreadyJoinedRoom:
-                          type: boolean
-                          description: 해당 공지방에 이미 입장되어있는지 여부
-                        roomId:
-                          type: number
-                          description: 해당 공지방 ID
-                        roomName:
-                          type: string
-                          description: 해당 공지방 이름
-                        roomImage:
-                          type: string
-                          description: 해당 공지방 이미지 URL
-                        adminNickname:
-                          type: string
-                          description: 해당 공지방 관리자 닉네임
+                      isAlreadyJoinedRoom:
+                        type: boolean
+                        description: 해당 공지방에 이미 입장되어있는지 여부
+                      roomId:
+                        type: number
+                        description: 해당 공지방 ID
+                      roomName:
+                        type: string
+                        description: 해당 공지방 이름
+                      roomImage:
+                        type: string
+                        description: 해당 공지방 이미지 URL
+                      adminNickname:
+                        type: string
+                        description: 해당 공지방 관리자 닉네임
 
   /room/enter/{roomId}:
     post:
@@ -627,7 +631,7 @@ paths:
       description: 공지방 최초 입장 확정하여 유저를 user-room 테이블에 등록
       operationId: postRoomEntrance
       consumes:
-        - application/json  
+        - application/json
       security:
         - bearerAuth: []
       parameters:
@@ -666,10 +670,10 @@ paths:
                   result:
                     type: object
                     properties:
-                        isSuccess:
-                          type: boolean
-                          example: true
-                          description: 공지방에 유저 등록 성공
+                      isSuccess:
+                        type: boolean
+                        example: true
+                        description: 공지방에 유저 등록 성공
 
   /room/{roomId}/checkPassword:
     post:
@@ -679,7 +683,7 @@ paths:
       description: 공지방 입장시 비밀번호 일치여부 확인
       operationId: checkRoomPassword
       consumes:
-        - application/json  
+        - application/json
       security:
         - bearerAuth: []
       parameters:
@@ -687,7 +691,7 @@ paths:
           in: path
           schema:
             type: number
-          required: true    
+          required: true
       requestBody:
         required: true
         content:
@@ -718,10 +722,10 @@ paths:
                   result:
                     type: object
                     properties:
-                        isValid:
-                          type: boolean
-                          example: true
-                          description: 비밀번호 일치 여부
+                      isValid:
+                        type: boolean
+                        example: true
+                        description: 비밀번호 일치 여부
 
   /room/{roomId}/search:
     get:
@@ -731,7 +735,7 @@ paths:
       description: 공지방 내 공지글들의 제목과 내용을 대상으로 검색색, 커서 페이지네이션
       operationId: searchPostInRoom
       consumes:
-        - application/json  
+        - application/json
       security:
         - bearerAuth: []
       parameters:
@@ -780,32 +784,34 @@ paths:
                     example: "success!"
                   result:
                     type: array
-                    example: {
-                      "posts": [
-                        {
-                          "postId": 22,
-                          "postType": "QUIZ",
-                          "postTitle": "test3apple",
-                          "postBody": "testcontent3",
-                          "postImage": "url31.com",
-                          "startDate": "24. 7. 27. 19:05",
-                          "endDate": "24. 7. 27. 19:05",
-                          "commentCount": 1,
-                          "submitState": "NOT_COMPLETE",
-                          "unreadCount": 200,
-                        },
-                        {
-                          "postId": 17,
-                          "postType": "MISSION",
-                          "postTitle": "TEST",
-                          "postBody": "TESTappleCONTENT",
-                          "postImage": "url11.com",
-                          "startDate": "24. 7. 25. 04:24",
-                          "endDate": "24. 7. 25. 05:24",
-                          "commentCount": 5,
-                          "submitState": "COMPLETE",
-                          "unreadCount": 6,
-                        }
-                    ],
-                    "cursorId": 17,
-                    }
+                    example:
+                      {
+                        "posts":
+                          [
+                            {
+                              "postId": 22,
+                              "postType": "QUIZ",
+                              "postTitle": "test3apple",
+                              "postBody": "testcontent3",
+                              "postImage": "url31.com",
+                              "startDate": "24. 7. 27. 19:05",
+                              "endDate": "24. 7. 27. 19:05",
+                              "commentCount": 1,
+                              "submitState": "NOT_COMPLETE",
+                              "unreadCount": 200,
+                            },
+                            {
+                              "postId": 17,
+                              "postType": "MISSION",
+                              "postTitle": "TEST",
+                              "postBody": "TESTappleCONTENT",
+                              "postImage": "url11.com",
+                              "startDate": "24. 7. 25. 04:24",
+                              "endDate": "24. 7. 25. 05:24",
+                              "commentCount": 5,
+                              "submitState": "COMPLETE",
+                              "unreadCount": 6,
+                            },
+                          ],
+                        "cursorId": 17,
+                      }
