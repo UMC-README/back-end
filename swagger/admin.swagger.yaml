@@ -74,6 +74,73 @@ paths:
                         type: string
                         description: 초대 url
   /admin/rooms/{roomId}:
+    get:
+      tags:
+        - admin
+      summary: 공지방 정보 조회
+      description: 공지방 수정을 위한 정보 조회를 합니다.
+      operationId: getRoomInfo
+      consumes:
+        - application/json
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: roomId
+          in: path
+          schema:
+            type: integer
+          required: true
+      responses:
+        "200":
+          description: 공지 정보 조회 성공!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: object
+                    properties:
+                      imageUrl:
+                        type: string
+                        description: https://s3~~
+                      adminNickname:
+                        type: string
+                        description: 공지방 단체 정보
+                      roomName:
+                        type: string
+                        description: 공지방 이름
+                      password:
+                        type: string
+                        description: 공지방 비밀번호
+                      maxPenalty:
+                        type: integer
+                        description: 최대 패널티 개수
+        "400":
+          description: 공지 정보 조회 실패
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: "COMMON010"
+                  message:
+                    type: string
+                    example: "본인의 공지방에 대해서만 조회가 가능합니다."
     patch:
       tags:
         - admin
@@ -451,7 +518,6 @@ paths:
                       nickname:
                         type: string
                         description: 유저 닉네임
-
   /admin/users:
     get:
       tags:
