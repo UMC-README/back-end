@@ -103,7 +103,7 @@ paths:
             schema:
               type: object
               properties:
-                key:
+                url:
                   type: string
                   example: "https://s3~~~"
                   description: 이미지 파일
