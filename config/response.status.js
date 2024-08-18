@@ -88,5 +88,11 @@ export const status = {
     isSuccess: false,
     code: "COMMON009",
     message: "end_date는 start_date보다 미래여야 합니다.",
-  }
+  },
+  NOT_MY_ROOM: {
+    status: StatusCodes.BAD_REQUEST,
+    isSuccess: false,
+    code: "COMMON010",
+    message: "본인의 공지방에 대해서만 조회가 가능합니다.",
+  },
 };
