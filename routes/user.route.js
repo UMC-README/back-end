@@ -29,7 +29,7 @@ import { imageUploader } from "../middleware/s3.js";
 export const userRouter = express.Router();
 
 userRouter.post(
-  "/s3/upload",
+  "/s3",
   tokenAuth,
   imageUploader.array("file", 10),
   expressAsyncHandler(uploadImage)
