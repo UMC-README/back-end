@@ -30,7 +30,7 @@ export const userSubmitDTO = (userSubmissions, submitStates) => {
   const pendingStates = submitStates.filter(state => state.submit_state === 'PENDING');
   const completeStates = submitStates.filter(state => state.submit_state === 'COMPLETE');
 
-  const UserSubmissions = userSubmissions.map(submission => {
+  const procSubmissions = userSubmissions.map(submission => {
     const startDate = new Date(submission.start_date);  
     const year = String(startDate.getFullYear()).slice(-2);  
     const month = String(startDate.getMonth() + 1).padStart(2, '0');  
@@ -57,5 +57,5 @@ export const userSubmitDTO = (userSubmissions, submitStates) => {
     };
   });
 
-  return { UserSubmissions };
+  return { userSubmissions : procSubmissions };
 }
