@@ -1,11 +1,11 @@
 paths:
-  /user/s3/upload:
+  /user/s3:
     post:
       tags:
         - user
       summary: S3에 이미지 업로드
       description: S3에 이미지를 업로드하고 url을 반환합니다.
-      operationId: S3
+      operationId: uploadS3
       consumes:
         - multipart/form-data
       security:
@@ -47,7 +47,7 @@ paths:
                     properties:
                       images:
                         type: array
-                        example: ["https://s3.~","https://s3.~"]
+                        example: ["https://s3.~", "https://s3.~"]
         "401":
           description: 잘못된 요청
           content:
@@ -86,6 +86,71 @@ paths:
                   message:
                     type: string
                     example: 서버 에러, 관리자에게 문의 바랍니다.
+    delete:
+      tags:
+        - user
+      summary: S3 이미지 삭제
+      description: S3에 업로드된 이미지를 삭제합니다.
+      operationId: deleteS3
+      consumes:
+        - application/json
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url:
+                  type: string
+                  example: "https://s3~~~"
+                  description: 이미지 파일
+      responses:
+        "200":
+          description: 이미지 삭제 성공!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: object
+                    properties:
+                      isDeleted:
+                        type: boolean
+        "400":
+          description: 이미지 삭제 실패
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 400
+                  isSuccess:
+                    type: boolean
+                    example: false
+                  code:
+                    type: string
+                    example: COMMON011
+                  message:
+                    type: string
+                    example: 이미지를 삭제하는데 실패했습니다.
 
   /user/create-code:
     post:

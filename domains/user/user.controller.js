@@ -1,5 +1,6 @@
 import { response } from "../../config/response.js";
 import { status } from "../../config/response.status.js";
+import { deleteS3 } from "../../middleware/s3.js";
 import { sendCodeEmail } from "../../utils/email.js";
 import { getKakaoToken, getKakaoUser } from "../../utils/kakao.js";
 
@@ -147,6 +148,20 @@ export const uploadImage = async (req, res, next) => {
   try {
     const files = req.files.map((file) => file.location);
     res.status(200).json(response(status.SUCCESS, { images: files }));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteImage = async (req, res, next) => {
+  try {
+    const s3Response = await deleteS3(req.body.url);
+
+    if (!s3Response) {
+      return res.status(400).json(response(status.DELETE_FAIL));
+    }
+
+    res.status(200).json(response(status.SUCCESS, { isDeleted: true }));
   } catch (error) {
     next(error);
   }
