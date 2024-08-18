@@ -155,8 +155,7 @@ export const uploadImage = async (req, res, next) => {
 
 export const deleteImage = async (req, res, next) => {
   try {
-    const key = req.body.key.split("//")[1].split("/")[2];
-    const s3Response = await deleteS3(key);
+    const s3Response = await deleteS3(req.body.url);
 
     if (!s3Response) {
       return res.status(400).json(response(status.DELETE_FAIL));

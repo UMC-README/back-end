@@ -40,7 +40,8 @@ export const imageUploader = multer({
   limits: { fileSize: 5 * 1024 * 1024 },
 });
 
-export const deleteS3 = async (key) => {
+export const deleteS3 = async (url) => {
+  const key = url.split("//")[1].split("/")[2];
   try {
     await new Promise((resolve, reject) => {
       s3.deleteObject(
