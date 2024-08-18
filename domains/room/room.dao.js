@@ -34,6 +34,8 @@ import {
   getExiledFromRoomSQL,
   getMyRoomJoinDatetimeAndPenaltyCountAndRoomMaxSQL,
   notCheckedPenaltyInRoomSQL,
+  initializeSubmitWhenUserJoinsRoomSQL,
+  updateUnreadCountByRoom,
 } from "./room.sql.js";
 import { getUserById } from "../user/user.sql.js";
 
@@ -425,6 +427,7 @@ export const checkPasswordDAO = async (roomId, passwordInput) => {
 export const postRoomEntranceDAO = async (roomId, userId, userNickname) => {
   try {
     const conn = await pool.getConnection();
+    await conn.beginTransaction();
 
     const [room] = await conn.query(getRoomById, roomId);
 
@@ -434,9 +437,14 @@ export const postRoomEntranceDAO = async (roomId, userId, userNickname) => {
     }
 
     await conn.query(createRoomEntranceSQL, [userId, roomId, userNickname]);
+    await conn.query(initializeSubmitWhenUserJoinsRoomSQL, [userId, roomId]);
+    await conn.query(updateUnreadCountByRoom, roomId);
+
+    await conn.commit();
     conn.release();
     return true;
   } catch (err) {
+    await conn.rollback();
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };
@@ -510,6 +518,7 @@ export const checkPenaltyInRoomDAO = async (roomId, userId) => {
 export const exiledFromRoomDAO = async (roomId, userId) => {
   try {
     const conn = await pool.getConnection();
+    await conn.beginTransaction();
 
     const [result] = await conn.query(getExiledFromRoomSQL, [roomId, userId]);
 
@@ -518,9 +527,13 @@ export const exiledFromRoomDAO = async (roomId, userId) => {
       return -1;
     }
 
+    await conn.query(updateUnreadCountByRoom, roomId);
+
+    await conn.commit();
     conn.release();
     return true;
   } catch (err) {
+    await conn.rollback();
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };
