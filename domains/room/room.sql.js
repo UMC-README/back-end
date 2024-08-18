@@ -227,9 +227,9 @@ export const searchPostInRoomSQLAtFirst = `
   ORDER BY p.id DESC LIMIT ?
 `;
 
-//공지방 내 현재 페널티 카운트와 최대 페널티 한도 조회
-export const getMyPenaltyCountAndRoomMaxSQL = `
-  SELECT ur.penalty_count AS penaltyCount, r.max_penalty AS maxPenalty
+//공지방에 가입한 날짜, 공지방 내 현재 페널티 카운트와 최대 페널티 한도 조회
+export const getMyRoomJoinDatetimeAndPenaltyCountAndRoomMaxSQL = `
+  SELECT ur.created_at AS joinedRoomAt, ur.penalty_count AS penaltyCount, r.max_penalty AS maxPenalty
   FROM \`user-room\` ur
   JOIN room r ON r.id = ? AND r.id = ur.room_id
   WHERE ur.user_id = ?
