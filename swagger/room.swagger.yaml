@@ -103,9 +103,9 @@ paths:
                   result:
                     type: array
                     example: {
-                      "roomName": "UMC 6기 공지방"
+                      "roomName": "UMC 6기 공지방",
                       "isRoomAdmin": true,
-                      "joinedRoomAt": "24. 06. 27. 08:05"
+                      "joinedRoomAt": "24. 06. 27. 08:05",
                       "penaltyCount": 3,
                       "maxPenalty": 5,
                       "notCheckedPenalty": [

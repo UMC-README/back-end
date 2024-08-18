@@ -43,7 +43,19 @@ export const userSubmitDTO = (userSubmissions, submitStates) => {
     
     const formattedStartDate = `${year}.${month}.${day}`;
     const formattedEndDate = `${year1}.${month1}.${day1}`;
-    return { ...submission, start_date : formattedStartDate, end_date : formattedEndDate };
+    
+    // 해당 submission의 pendingStates와 completeStates 필터링
+    const relatedPendingStates = pendingStates.filter(state => state.submit_id === submission.id);
+    const relatedCompleteStates = completeStates.filter(state => state.submit_id === submission.id);
+
+    return { 
+      ...submission, 
+      start_date: formattedStartDate, 
+      end_date: formattedEndDate,
+      pendingStates: relatedPendingStates,
+      completeStates: relatedCompleteStates
+    };
   });
-  return {  UserSubmissions, pendingStates, completeStates };
+
+  return { UserSubmissions };
 }
