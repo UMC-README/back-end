@@ -1,3 +1,5 @@
+import { BaseError } from "../../config/error.js";
+import { status } from "../../config/response.status.js";
 import {
   createRoomsDao,
   deleteRoomsDao,
@@ -15,14 +17,15 @@ import {
   cancelImposePenaltyByPostDAO,
   userSubmitDao,
   userRequestDao,
+  getRoomsDao,
 } from "./admin.dao.js";
 import { createShortUUID } from "./uuid.js";
 import {
   createRoomsDTO,
-  updateRoomsDTO,
   createPostDTO,
   updatePostDTO,
   userSubmitDTO,
+  getRoomsDTO,
 } from "./admin.dto.js";
 
 export const createRoomsService = async (body, userId) => {
@@ -40,18 +43,32 @@ export const createRoomsService = async (body, userId) => {
 export const updateRoomsService = async (body, roomId) => {
   try {
     if (!roomId) throw new Error("수정할 공지방의 ID가 필요합니다.");
-    const { beforeRoomsData } = await updateRoomsDao(body, roomId);
-    return updateRoomsDTO(beforeRoomsData);
+    const response = await updateRoomsDao(body, roomId);
+    return response;
   } catch (error) {
     console.error("공지방 수정하기 에러:", error);
     throw error;
   }
 };
 
-export const deleteRoomsService = async (body) => {
+export const getRoomsService = async (roomId, userId) => {
   try {
-    if (!body) throw new Error("삭제할 방의 ID가 필요합니다.");
-    await deleteRoomsDao(body);
+    if (!roomId) throw new Error("수정할 공지방의 ID가 필요합니다.");
+    const response = await getRoomsDao(roomId, userId);
+    if (response === -1) {
+      return -1;
+    }
+    return getRoomsDTO(response);
+  } catch (error) {
+    console.error("공지방 수정하기 에러:", error);
+    throw error;
+  }
+};
+
+export const deleteRoomsService = async (roomId) => {
+  try {
+    if (!roomId) throw new Error("삭제할 방의 ID가 필요합니다.");
+    await deleteRoomsDao(roomId);
     return "공지방 삭제 성공";
   } catch (error) {
     console.error("공지방 삭제하기 에러:", error);
@@ -61,14 +78,13 @@ export const deleteRoomsService = async (body) => {
 
 export const createPostService = async (body, userId) => {
   try {
-    if (!body.room_id) {
-      throw new Error("공지방 ID가 필요합니다.");
-    }
+    if (!body.room_id) throw new Error("공지방 ID가 필요합니다.");
+
     const postData = await createPostDao(body, userId);
 
-    if (postData == -1) throw new Error("날짜 형식이 올바르지 않습니다.");
-    if (postData == -2) throw new Error("start_date는 현재보다 미래여야 합니다.");
-    if (postData == -3) throw new Error("end_date는 start_date보다 미래여야 합니다.");
+    if (postData == -1) throw new BaseError(status.WRONG_DATE_FORMAT);
+    if (postData == -2) throw new BaseError(status.WRONG_STARTDATE_COMPARE);
+    if (postData == -3) throw new BaseError(status.WRONG_ENDDATE_COMPARE);
 
     await initializeSubmitByPostDAO(postData.newPostId);
     await reserveImposePenaltyByPostDAO(postData.newPostId, `20${postData.endDate}`);
@@ -83,9 +99,9 @@ export const updatePostService = async (body, postId) => {
   try {
     const postData = await updatePostDao(body, postId);
 
-    if (postData == -1) throw new Error("날짜 형식이 올바르지 않습니다.");
-    if (postData == -2) throw new Error("start_date는 현재보다 미래여야 합니다.");
-    if (postData == -3) throw new Error("end_date는 start_date보다 미래여야 합니다.");
+    if (postData == -1) throw new BaseError(status.WRONG_DATE_FORMAT);
+    if (postData == -2) throw new BaseError(status.WRONG_STARTDATE_COMPARE);
+    if (postData == -3) throw new BaseError(status.WRONG_ENDDATE_COMPARE);
 
     await cancelImposePenaltyByPostDAO(postId);
     await reserveImposePenaltyByPostDAO(postId, `20${postData.endDate}`);
@@ -98,9 +114,8 @@ export const updatePostService = async (body, postId) => {
 
 export const deletePostService = async (postId) => {
   try {
-    if (!postId) {
-      throw new Error("삭제할 공지글의 ID가 필요합니다.");
-    }
+    if (!postId) throw new Error("삭제할 공지글의 ID가 필요합니다.");
+
     const deleteRoomsData = await deletePostDao(postId);
     await cancelImposePenaltyByPostDAO(postId);
     return deleteRoomsData;

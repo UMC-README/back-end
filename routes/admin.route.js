@@ -15,21 +15,22 @@ import {
   deleteUserController,
   userSubmitController,
   userRequestController,
+  getRoomsController,
 } from "../domains/admin/admin.controller.js";
 
 export const adminRouter = express.Router();
 
 adminRouter.post("/rooms", tokenAuth, expressAsyncHandler(createRoomsController));
 adminRouter.patch("/rooms/:roomId", tokenAuth, expressAsyncHandler(updateRoomsController));
-adminRouter.patch("/rooms", tokenAuth, expressAsyncHandler(deleteRoomsController));
+adminRouter.get("/rooms/:roomId", tokenAuth, expressAsyncHandler(getRoomsController));
+adminRouter.delete("/rooms/:roomId", tokenAuth, expressAsyncHandler(deleteRoomsController));
 adminRouter.post("/post", tokenAuth, expressAsyncHandler(createPostController));
 adminRouter.patch("/post/:postId", tokenAuth, expressAsyncHandler(updatePostController));
-adminRouter.patch("/post", tokenAuth, expressAsyncHandler(deletePostController));
+adminRouter.delete("/post/:postId", tokenAuth, expressAsyncHandler(deletePostController));
 adminRouter.get("/post/:postId/unread", tokenAuth, expressAsyncHandler(unreadUserListController));
 adminRouter.get("/users", tokenAuth, expressAsyncHandler(userListController));
 adminRouter.get("/profile", tokenAuth, expressAsyncHandler(userProfileController));
 adminRouter.get("/invitation/:roomId", tokenAuth, expressAsyncHandler(userInviteController));
 adminRouter.delete("/user-ban", tokenAuth, expressAsyncHandler(deleteUserController));
-
 adminRouter.get("/submit/:roomId", tokenAuth, expressAsyncHandler(userSubmitController));
 adminRouter.patch("/submit/user-request", tokenAuth, expressAsyncHandler(userRequestController));
