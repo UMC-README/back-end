@@ -32,7 +32,7 @@ import {
   searchPostInRoomSQLAtFirst,
   checkPenaltyInRoomSQL,
   getExiledFromRoomSQL,
-  getMyPenaltyCountAndRoomMaxSQL,
+  getMyRoomJoinDatetimeAndPenaltyCountAndRoomMaxSQL,
   notCheckedPenaltyInRoomSQL,
 } from "./room.sql.js";
 import { getUserById } from "../user/user.sql.js";
@@ -102,11 +102,16 @@ export const getAllPostInRoomDAO = async (roomId, userId, cursorId, size) => {
       return -2;
     }
 
+    const roomName = room[0].room_name;
     const isRoomAdmin = userId === room[0].admin_id;
 
-    const [myPenaltyInfo] = await conn.query(getMyPenaltyCountAndRoomMaxSQL, [roomId, userId]);
-    const penaltyCount = myPenaltyInfo[0].penaltyCount;
-    const maxPenalty = myPenaltyInfo[0].maxPenalty;
+    const [myUserRoomInfo] = await conn.query(getMyRoomJoinDatetimeAndPenaltyCountAndRoomMaxSQL, [
+      roomId,
+      userId,
+    ]);
+    const joinedRoomAt = myUserRoomInfo[0].joinedRoomAt;
+    const penaltyCount = myUserRoomInfo[0].penaltyCount;
+    const maxPenalty = myUserRoomInfo[0].maxPenalty;
 
     const [notCheckedPenalty] = await conn.query(notCheckedPenaltyInRoomSQL, [userId, roomId]);
 
@@ -114,7 +119,15 @@ export const getAllPostInRoomDAO = async (roomId, userId, cursorId, size) => {
       const [posts] = await pool.query(getPostDetailsByRoomIdAtFirst, [+roomId, +userId, +size]);
 
       conn.release();
-      return { isRoomAdmin, penaltyCount, maxPenalty, notCheckedPenalty, posts };
+      return {
+        roomName,
+        isRoomAdmin,
+        joinedRoomAt,
+        penaltyCount,
+        maxPenalty,
+        notCheckedPenalty,
+        posts,
+      };
     } else {
       const [posts] = await pool.query(getPostDetailsByRoomId, [
         +roomId,
@@ -124,7 +137,15 @@ export const getAllPostInRoomDAO = async (roomId, userId, cursorId, size) => {
       ]);
 
       conn.release();
-      return { isRoomAdmin, penaltyCount, maxPenalty, notCheckedPenalty: [], posts };
+      return {
+        roomName,
+        isRoomAdmin,
+        joinedRoomAt,
+        penaltyCount,
+        maxPenalty,
+        notCheckedPenalty: [],
+        posts,
+      };
     }
   } catch (err) {
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
