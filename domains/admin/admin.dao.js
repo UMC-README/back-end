@@ -29,7 +29,8 @@ import {
   getSubmitStateSQL,
   userRequestAcceptSQL,
   userRequestRejectSQL,
-  beforeUpdateRoomsSQL,
+  getRoomSQL,
+  getAlluserRoomSQL,
 } from "./admin.sql.js";
 
 import schedule from "node-schedule";
@@ -74,6 +75,23 @@ export const updateRoomsDao = async (body, roomId) => {
     ]);
     conn.release();
     return { isFixed: true };
+  } catch (error) {
+    console.error("공지방 수정하기 에러:", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const getRoomsDao = async (roomId, userId) => {
+  try {
+    const conn = await pool.getConnection();
+    const [[{ id }]] = await conn.query(getAlluserRoomSQL, userId);
+    const isUsersRoom = id.split(",").includes(String(roomId));
+    if (!isUsersRoom) {
+      return -1;
+    }
+    const [roomResponse] = await conn.query(getRoomSQL, roomId);
+    conn.release();
+    return roomResponse[0];
   } catch (error) {
     console.error("공지방 수정하기 에러:", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);

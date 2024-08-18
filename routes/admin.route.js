@@ -15,12 +15,14 @@ import {
   deleteUserController,
   userSubmitController,
   userRequestController,
+  getRoomsController,
 } from "../domains/admin/admin.controller.js";
 
 export const adminRouter = express.Router();
 
 adminRouter.post("/rooms", tokenAuth, expressAsyncHandler(createRoomsController));
 adminRouter.patch("/rooms/:roomId", tokenAuth, expressAsyncHandler(updateRoomsController));
+adminRouter.get("/rooms/:roomId", tokenAuth, expressAsyncHandler(getRoomsController));
 adminRouter.delete("/rooms/:roomId", tokenAuth, expressAsyncHandler(deleteRoomsController));
 adminRouter.post("/post", tokenAuth, expressAsyncHandler(createPostController));
 adminRouter.patch("/post/:postId", tokenAuth, expressAsyncHandler(updatePostController));

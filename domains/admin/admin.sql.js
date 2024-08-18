@@ -14,11 +14,23 @@ export const beforeUpdateRoomsSQL = `
   SELECT room_image, admin_nickname, room_name, room_password, max_penalty
   FROM room 
   WHERE id = ?;
-`; 
+`;
 
 export const updateRoomsSQL = `
    UPDATE room 
    SET room_image = ?, admin_nickname = ?, room_name = ?, room_password = ?, max_penalty = ?
+   WHERE id = ?;
+`;
+
+export const getAlluserRoomSQL = `
+    SELECT GROUP_CONCAT(id) AS id
+    FROM room
+    WHERE admin_id = ?; 
+`;
+
+export const getRoomSQL = `
+   SELECT r.room_image, r.admin_nickname, r.room_name, r.room_password, r.max_penalty 
+   FROM room r
    WHERE id = ?;
 `;
 

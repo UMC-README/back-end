@@ -22,6 +22,14 @@ export const updatePostDTO = (updatePostData) => {
   };
 };
 
+export const getRoomsDTO = (roomData) => ({
+  roomImage: roomData.room_image,
+  adminNickname: roomData.admin_nickname,
+  roomName: roomData.room_name,
+  roomPassword: roomData.room_password,
+  maxPenalty: roomData.max_penalty,
+});
+
 export const userSubmitDTO = (userSubmissions, submitStates) => {
   const pendingStates = submitStates.filter((state) => state.submit_state === "PENDING");
   const completeStates = submitStates.filter((state) => state.submit_state === "COMPLETE");

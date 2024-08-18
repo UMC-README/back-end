@@ -17,9 +17,16 @@ import {
   cancelImposePenaltyByPostDAO,
   userSubmitDao,
   userRequestDao,
+  getRoomsDao,
 } from "./admin.dao.js";
 import { createShortUUID } from "./uuid.js";
-import { createRoomsDTO, createPostDTO, updatePostDTO, userSubmitDTO } from "./admin.dto.js";
+import {
+  createRoomsDTO,
+  createPostDTO,
+  updatePostDTO,
+  userSubmitDTO,
+  getRoomsDTO,
+} from "./admin.dto.js";
 
 export const createRoomsService = async (body, userId) => {
   try {
@@ -38,6 +45,20 @@ export const updateRoomsService = async (body, roomId) => {
     if (!roomId) throw new Error("수정할 공지방의 ID가 필요합니다.");
     const response = await updateRoomsDao(body, roomId);
     return response;
+  } catch (error) {
+    console.error("공지방 수정하기 에러:", error);
+    throw error;
+  }
+};
+
+export const getRoomsService = async (roomId, userId) => {
+  try {
+    if (!roomId) throw new Error("수정할 공지방의 ID가 필요합니다.");
+    const response = await getRoomsDao(roomId, userId);
+    if (response === -1) {
+      return -1;
+    }
+    return getRoomsDTO(response);
   } catch (error) {
     console.error("공지방 수정하기 에러:", error);
     throw error;
