@@ -260,3 +260,31 @@ export const getExiledFromRoomSQL = `
   JOIN room r ON r.id = ? AND ur.room_id = r.id
   WHERE ur.user_id = ? AND ur.penalty_count >= r.max_penalty
 `;
+
+//공지방 내 시작 기한 전인 공지글 모두 찾기
+export const getPostsBeforeStartDateInRoomSQL = `
+  SELECT p.id
+  FROM post p
+  WHERE p.room_id = ? AND p.start_date > NOW() AND p.state = 'EXIST';
+`;
+
+export const initializeSubmitWhenUserJoinsRoomSQL = `
+  INSERT INTO submit (post_id, user_id, content, submit_state)
+  SELECT p.id AS post_id, ? AS user_id, null AS content, 'NOT_COMPLETE' AS submit_state
+  FROM post p
+  WHERE p.room_id = ? AND p.start_date > NOW() AND p.state = 'EXIST'
+`;
+
+export const updateUnreadCountByRoom = `
+  UPDATE post p3,
+    (SELECT p2.id, (SELECT COUNT(ur.user_id)
+      FROM \`user-room\` ur
+      JOIN post p ON p.room_id = ur.room_id AND p.id = p2.id
+      JOIN submit s ON s.post_id = p.id and s.user_id = ur.user_id
+      WHERE ur.user_id NOT IN
+      (SELECT s2.user_id FROM submit s2 WHERE s2.submit_state = 'COMPLETE' AND s2.post_id = p.id)) AS unreadCount
+    FROM post p2
+    WHERE p2.room_id = ?) AS tableA
+  SET unread_count = tableA.unreadCount
+  WHERE p3.id = tableA.id
+`;
