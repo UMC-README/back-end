@@ -95,4 +95,10 @@ export const status = {
     code: "COMMON010",
     message: "본인의 공지방에 대해서만 조회가 가능합니다.",
   },
+  DELETE_FAIL: {
+    status: StatusCodes.BAD_REQUEST,
+    isSuccess: false,
+    code: "COMMON011",
+    message: "이미지를 삭제하는데 실패했습니다.",
+  },
 };
