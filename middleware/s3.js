@@ -39,3 +39,26 @@ export const imageUploader = multer({
   // 이미지 용량 제한 (5MB)
   limits: { fileSize: 5 * 1024 * 1024 },
 });
+
+export const deleteS3 = async (key) => {
+  try {
+    await new Promise((resolve, reject) => {
+      s3.deleteObject(
+        {
+          Bucket: process.env.AWS_S3_BUCKET_NAME,
+          Key: key,
+        },
+        (err, data) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(data);
+          }
+        }
+      );
+    });
+    return true;
+  } catch (err) {
+    return false;
+  }
+};

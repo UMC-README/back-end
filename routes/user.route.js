@@ -21,6 +21,7 @@ import {
   getLatestPosts,
   getMySubmitList,
   getMyPenaltyPostList,
+  deleteImage,
 } from "../domains/user/user.controller.js";
 import { tokenAuth } from "../middleware/token.auth.js";
 import { imageUploader } from "../middleware/s3.js";
@@ -33,6 +34,8 @@ userRouter.post(
   imageUploader.array("file", 10),
   expressAsyncHandler(uploadImage)
 );
+
+userRouter.delete("/s3", tokenAuth, expressAsyncHandler(deleteImage));
 
 userRouter.post("/signup", expressAsyncHandler(userSignUp));
 
