@@ -27,19 +27,21 @@ import {
 
 export const createRoomsService = async (body, userId) => {
   try {
+    if (!body.room_image) throw new Error("공지방 생성을 위한 프로필 이미지가 필요합니다.");
     const roomInviteUrl = createShortUUID();
-    const createRoomsData = await createRoomsDao(body, userId, roomInviteUrl);
-    return createRoomsDTO(createRoomsData);
+    const roomData = await createRoomsDao(body, userId, roomInviteUrl);
+    return createRoomsDTO(roomData);
   } catch (error) {
     console.error("공지방 생성하기 에러:", error);
     throw error;
   }
 };
 
-export const updateRoomsService = async (body) => {
+export const updateRoomsService = async (body, roomId) => {
   try {
-    const updateRoomsData = await updateRoomsDao(body);
-    return updateRoomsDTO(updateRoomsData);
+    if (!roomId) throw new Error("수정할 공지방의 ID가 필요합니다.");
+    const { beforeRoomsData } = await updateRoomsDao(body, roomId);
+    return updateRoomsDTO(beforeRoomsData);
   } catch (error) {
     console.error("공지방 수정하기 에러:", error);
     throw error;
@@ -49,8 +51,8 @@ export const updateRoomsService = async (body) => {
 export const deleteRoomsService = async (body) => {
   try {
     if (!body) throw new Error("삭제할 방의 ID가 필요합니다.");
-    const deleteRoomsData = await deleteRoomsDao(body);
-    return deleteRoomsData;
+    await deleteRoomsDao(body);
+    return "공지방 삭제 성공";
   } catch (error) {
     console.error("공지방 삭제하기 에러:", error);
     throw error;
