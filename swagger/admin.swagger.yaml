@@ -730,6 +730,7 @@ paths:
                       message:
                         type: string
                         example: 유저 강퇴에 성공하였습니다.
+
     /admin/submit/{roomId}:
       get:
         tags:

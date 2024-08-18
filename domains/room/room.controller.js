@@ -16,6 +16,8 @@ import {
   checkPasswordService,
   postRoomEntranceService,
   searchPostInRoomService,
+  checkPenaltyInRoomService,
+  exiledFromRoomService,
 } from "./room.service.js";
 
 export const fixPost = async (req, res, next) => {
@@ -207,6 +209,32 @@ export const searchPostInRoom = async (req, res, next) => {
     console.log("공지방 내 공지글 검색");
 
     const result = await searchPostInRoomService(roomId, userId, req.query);
+    res.status(200).json(response(status.SUCCESS, result));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const checkPenaltyInRoom = async (req, res, next) => {
+  try {
+    const roomId = req.params.roomId;
+    const userId = req.user.userId;
+    console.log("부여된 페널티 확인");
+
+    const result = await checkPenaltyInRoomService(roomId, userId);
+    res.status(200).json(response(status.SUCCESS, result));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const exiledFromRoom = async (req, res, next) => {
+  try {
+    const roomId = req.params.roomId;
+    const userId = req.user.userId;
+    console.log("페널티 한도 도달로 공지방에서 추방");
+
+    const result = await exiledFromRoomService(roomId, userId);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);

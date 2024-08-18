@@ -102,50 +102,62 @@ paths:
                     example: "success!"
                   result:
                     type: array
-                    example:
-                      {
-                        "isRoomAdmin": true,
-                        "posts":
-                          [
-                            {
+                    example: {
+                      "roomName": "UMC 6기 공지방",
+                      "isRoomAdmin": true,
+                      "joinedRoomAt": "24. 06. 27. 08:05",
+                      "penaltyCount": 3,
+                      "maxPenalty": 5,
+                      "notCheckedPenalty": [
+                          {
                               "postId": 3,
-                              "postType": "QUIZ",
-                              "postTitle": "test3",
-                              "postBody": "testcontent3",
-                              "postImage": "url31.com",
-                              "startDate": "24. 7. 27. 19:05",
-                              "endDate": "24. 7. 27. 19:05",
-                              "commentCount": 1,
-                              "submitState": "NOT_COMPLETE",
-                              "unreadCount": 200,
-                            },
-                            {
+                              "postTitle": "테스트 제목입니다.",
+                          },
+                          {
                               "postId": 2,
-                              "postType": "MISSION",
-                              "postTitle": "test2",
-                              "postBody": "testcontent2",
-                              "postImage": null,
-                              "startDate": "24. 7. 27. 19:01",
-                              "endDate": "24. 7. 27. 19:01",
-                              "commentCount": 0,
-                              "submitState": "NOT_COMPLETE",
-                              "unreadCount": 18,
-                            },
-                            {
-                              "postId": 1,
-                              "postType": "QUIZ",
-                              "postTitle": "TEST",
-                              "postBody": "TESTCONTENT",
-                              "postImage": "url11.com",
-                              "startDate": "24. 7. 25. 04:24",
-                              "endDate": "24. 7. 25. 05:24",
-                              "commentCount": 5,
-                              "submitState": "COMPLETE",
-                              "unreadCount": 6,
-                            },
-                          ],
-                        "cursorId": 1,
-                      }
+                              "postTitle": "테스트 제목입니다.",
+                          }
+                      ],
+                      "posts": [
+                        {
+                          "postId": 3,
+                          "postType": "QUIZ",
+                          "postTitle": "test3",
+                          "postBody": "testcontent3",
+                          "postImage": "url31.com",
+                          "startDate": "24. 07. 27. 19:05",
+                          "endDate": "24. 07. 27. 19:05",
+                          "commentCount": 1,
+                          "submitState": "NOT_COMPLETE",
+                          "unreadCount": 200,
+                        },
+                        {
+                          "postId": 2,
+                          "postType": "MISSION",
+                          "postTitle": "test2",
+                          "postBody": "testcontent2",
+                          "postImage": null,
+                          "startDate": "24. 07. 27. 19:01",
+                          "endDate": "24. 07. 27. 19:01",
+                          "commentCount": 0,
+                          "submitState": "NOT_COMPLETE",
+                          "unreadCount": 18,
+                        },
+                        {
+                          "postId": 1,
+                          "postType": "QUIZ",
+                          "postTitle": "TEST",
+                          "postBody": "TESTCONTENT",
+                          "postImage": "url11.com",
+                          "startDate": "24. 07. 25. 04:24",
+                          "endDate": "24. 07. 25. 05:24",
+                          "commentCount": 5,
+                          "submitState": "COMPLETE",
+                          "unreadCount": 6,
+                        }
+                    ],
+                    "cursorId": 1,
+                    }
   /room/{roomId}/notChecked:
     get:
       tags:
@@ -784,34 +796,116 @@ paths:
                     example: "success!"
                   result:
                     type: array
-                    example:
-                      {
-                        "posts":
-                          [
-                            {
-                              "postId": 22,
-                              "postType": "QUIZ",
-                              "postTitle": "test3apple",
-                              "postBody": "testcontent3",
-                              "postImage": "url31.com",
-                              "startDate": "24. 7. 27. 19:05",
-                              "endDate": "24. 7. 27. 19:05",
-                              "commentCount": 1,
-                              "submitState": "NOT_COMPLETE",
-                              "unreadCount": 200,
-                            },
-                            {
-                              "postId": 17,
-                              "postType": "MISSION",
-                              "postTitle": "TEST",
-                              "postBody": "TESTappleCONTENT",
-                              "postImage": "url11.com",
-                              "startDate": "24. 7. 25. 04:24",
-                              "endDate": "24. 7. 25. 05:24",
-                              "commentCount": 5,
-                              "submitState": "COMPLETE",
-                              "unreadCount": 6,
-                            },
-                          ],
-                        "cursorId": 17,
-                      }
+                    example: {
+                      "posts": [
+                        {
+                          "postId": 22,
+                          "postType": "QUIZ",
+                          "postTitle": "test3apple",
+                          "postBody": "testcontent3",
+                          "postImage": "url31.com",
+                          "startDate": "24. 7. 27. 19:05",
+                          "endDate": "24. 7. 27. 19:05",
+                          "commentCount": 1,
+                          "submitState": "NOT_COMPLETE",
+                          "unreadCount": 200,
+                        },
+                        {
+                          "postId": 17,
+                          "postType": "MISSION",
+                          "postTitle": "TEST",
+                          "postBody": "TESTappleCONTENT",
+                          "postImage": "url11.com",
+                          "startDate": "24. 7. 25. 04:24",
+                          "endDate": "24. 7. 25. 05:24",
+                          "commentCount": 5,
+                          "submitState": "COMPLETE",
+                          "unreadCount": 6,
+                        }
+                    ],
+                    "cursorId": 17,
+                    }
+                  
+  /room/{roomId}/check-penalty:
+    patch:
+      tags:
+        - room
+      summary: 공지방 내 미확인 페널티 확인처리
+      description: 공지방 내 미확인 페널티 팝업에 나온 페널티 포스트들을 확인한 것으로 처리
+      operationId: checkPenaltyInRoom
+      consumes:
+        - application/json  
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: roomId
+          in: path
+          schema:
+            type: number
+          required: true
+      responses:
+        "200":
+          description: 공지방 내 페널티 확인 처리 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: number
+                    example: 200
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: object
+                    properties:
+                        isSuccess:
+                          type: boolean
+                          example: true
+                          description: 페널티 확인 처리 성공
+
+  /room/{roomId}/exiled:
+    delete:
+      tags:
+        - room
+      summary: 공지방 페널티 최대한도 도달하여 퇴장처리
+      description: 공지방 페널티 최대한도 도달하여 퇴장처리
+      operationId: exiledFromRoom
+      consumes:
+        - application/json  
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: roomId
+          in: path
+          schema:
+            type: number
+          required: true
+      responses:
+        "200":
+          description: 공지방 퇴장 처리 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: number
+                    example: 200
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: object
+                    properties:
+                        isSuccess:
+                          type: boolean
+                          example: true
+                          description: 공지방 퇴장 처리 성공
