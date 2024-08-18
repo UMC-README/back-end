@@ -1,12 +1,23 @@
 export const allPostInRoomDTO = ({
+  roomName,
   isRoomAdmin,
+  joinedRoomAt,
   penaltyCount,
   maxPenalty,
   notCheckedPenalty,
   posts,
 }) => {
   if (posts.length == 0) {
-    return { isRoomAdmin, penaltyCount, maxPenalty, notCheckedPenalty, posts, cursorId: null };
+    return {
+      roomName,
+      isRoomAdmin,
+      joinedRoomAt: formatDate(joinedRoomAt),
+      penaltyCount,
+      maxPenalty,
+      notCheckedPenalty,
+      posts,
+      cursorId: null,
+    };
   }
 
   const returnPosts = posts.map((post) => ({
@@ -23,7 +34,9 @@ export const allPostInRoomDTO = ({
   }));
 
   return {
+    roomName,
     isRoomAdmin,
+    joinedRoomAt: formatDate(joinedRoomAt),
     penaltyCount,
     maxPenalty,
     notCheckedPenalty,
