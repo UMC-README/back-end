@@ -19,13 +19,7 @@ import {
   userRequestDao,
 } from "./admin.dao.js";
 import { createShortUUID } from "./uuid.js";
-import {
-  createRoomsDTO,
-  updateRoomsDTO,
-  createPostDTO,
-  updatePostDTO,
-  userSubmitDTO,
-} from "./admin.dto.js";
+import { createRoomsDTO, createPostDTO, updatePostDTO, userSubmitDTO } from "./admin.dto.js";
 
 export const createRoomsService = async (body, userId) => {
   try {
@@ -42,8 +36,8 @@ export const createRoomsService = async (body, userId) => {
 export const updateRoomsService = async (body, roomId) => {
   try {
     if (!roomId) throw new Error("수정할 공지방의 ID가 필요합니다.");
-    const { beforeRoomsData } = await updateRoomsDao(body, roomId);
-    return updateRoomsDTO(beforeRoomsData);
+    const response = await updateRoomsDao(body, roomId);
+    return response;
   } catch (error) {
     console.error("공지방 수정하기 에러:", error);
     throw error;

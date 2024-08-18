@@ -64,7 +64,6 @@ export const updateRoomsDao = async (body, roomId) => {
   try {
     if (body.max_penalty > 10) throw new Error("패널티는 최대 10개까지만 생성이 가능합니다.");
     const conn = await pool.getConnection();
-    const [beforeRoomsData] = await conn.query(beforeUpdateRoomsSQL, [roomId]);
     await conn.query(updateRoomsSQL, [
       body.room_image,
       body.admin_nickname,
@@ -74,7 +73,7 @@ export const updateRoomsDao = async (body, roomId) => {
       roomId,
     ]);
     conn.release();
-    return { beforeRoomsData };
+    return { isFixed: true };
   } catch (error) {
     console.error("공지방 수정하기 에러:", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
