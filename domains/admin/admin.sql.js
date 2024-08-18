@@ -14,11 +14,23 @@ export const beforeUpdateRoomsSQL = `
   SELECT room_image, admin_nickname, room_name, room_password, max_penalty
   FROM room 
   WHERE id = ?;
-`; 
+`;
 
 export const updateRoomsSQL = `
    UPDATE room 
    SET room_image = ?, admin_nickname = ?, room_name = ?, room_password = ?, max_penalty = ?
+   WHERE id = ?;
+`;
+
+export const getAlluserRoomSQL = `
+    SELECT GROUP_CONCAT(id) AS id
+    FROM room
+    WHERE admin_id = ?; 
+`;
+
+export const getRoomSQL = `
+   SELECT r.room_image, r.admin_nickname, r.room_name, r.room_password, r.max_penalty 
+   FROM room r
    WHERE id = ?;
 `;
 
@@ -188,10 +200,13 @@ export const getPostCountSQL = `
 
 export const userSubmitSQL = ` 
   SELECT 
-    s.id, p.title, p.start_date, p.end_date, p.content, r.room_image
-    , COUNT(s.id) AS pending_count
+    s.id, p.title, p.start_date, p.end_date, p.content, r.room_image,
+    CASE 
+        WHEN COUNT(CASE WHEN s.submit_state = 'PENDING' THEN s.id END) = 0 THEN '요청 없음'
+        ELSE COUNT(CASE WHEN s.submit_state = 'PENDING' THEN s.id END)
+    END AS pending_count
   FROM post p
-  JOIN submit s ON p.id = s.post_id AND s.submit_state = 'PENDING'
+  JOIN submit s ON p.id = s.post_id  
   JOIN room r ON p.room_id = r.id
   WHERE p.room_id = ? 
   GROUP BY p.id;

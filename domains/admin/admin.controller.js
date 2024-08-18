@@ -15,6 +15,7 @@ import {
   deleteUserService,
   userSubmitService,
   userRequestService,
+  getRoomsService,
 } from "./admin.service.js";
 
 export const createRoomsController = async (req, res, next) => {
@@ -35,9 +36,21 @@ export const updateRoomsController = async (req, res, next) => {
   }
 };
 
+export const getRoomsController = async (req, res, next) => {
+  try {
+    const result = await getRoomsService(req.params.roomId, req.user.userId);
+    if (result === -1) {
+      return res.status(400).json(response(status.NOT_MY_ROOM));
+    }
+    res.status(200).json(response(status.SUCCESS, result));
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const deleteRoomsController = async (req, res, next) => {
   try {
-    const result = await deleteRoomsService(req.body);
+    const result = await deleteRoomsService(req.params.roomId);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
@@ -64,7 +77,7 @@ export const updatePostController = async (req, res, next) => {
 
 export const deletePostController = async (req, res, next) => {
   try {
-    const result = await deletePostService(req.body.id);
+    const result = await deletePostService(req.params.postId);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);

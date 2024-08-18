@@ -13,6 +13,8 @@ import {
   checkPasswordDAO,
   postRoomEntranceDAO,
   searchPostInRoomDAO,
+  checkPenaltyInRoomDAO,
+  exiledFromRoomDAO,
 } from "./room.dao.js";
 
 import {
@@ -201,4 +203,24 @@ export const searchPostInRoomService = async (roomId, userId, query) => {
   }
 
   return searchPostInRoomDTO(roomData);
+};
+
+export const checkPenaltyInRoomService = async (roomId, userId) => {
+  const userRoomData = await checkPenaltyInRoomDAO(roomId, userId);
+
+  if (userRoomData == -1) {
+    throw new Error("공지방을 찾을 수 없습니다.");
+  }
+
+  return { isSuccess: userRoomData };
+};
+
+export const exiledFromRoomService = async (roomId, userId) => {
+  const userRoomData = await exiledFromRoomDAO(roomId, userId);
+
+  if (userRoomData == -1) {
+    throw new Error("잘못된 삭제 요청입니다.");
+  }
+
+  return { isSuccess: userRoomData };
 };

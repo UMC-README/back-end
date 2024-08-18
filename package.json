@@ -6,7 +6,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon --exec babel-node index.js"
+    "start": "nodemon --exec babel-node index.js",
+    "start:prod": "npx pm2 start npm --name back-end -- start > /dev/null 2>&1",
+    "stop:prod": "npx pm2 stop back-end > /dev/null 2>&1",
+    "reboot": "npx pm2 stop back-end > /dev/null 2>&1 && npx pm2 start npm --name back-end -- start > /dev/null 2>&1"
   },
   "repository": {
     "type": "git",
