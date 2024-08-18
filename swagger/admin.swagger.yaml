@@ -691,147 +691,161 @@ paths:
                         type: string
                         example: 유저 강퇴에 성공하였습니다.
 
-/admin/submit/{roomId}:
-  get:
-    tags:
-      - admin
-    summary: 확인 요청 내역 조회(대기 or 승인 완료)
-    description: 확인 요청 내역 조회
-    operationId: getSubmitList
-    consumes:
-      - application/json
-    security:
-      - bearerAuth: []
-    parameters:
-      - name: roomId
-        in: path
-        schema:
-          type: integer
-        required: true
-    responses:
-      "200":
-        description: 확인 요청 내역 조회 성공!
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                isSuccess:
-                  type: boolean
-                  example: true
-                code:
-                  type: integer
-                  example: 200
-                message:
-                  type: string
-                  example: "success!"
-                result:
-                  type: object
-                  properties:
-                    userSubmissions:
-                      type: array
-                      items:
+  /admin/submit/{roomId}:
+    get:
+      tags:
+        - admin
+      summary: 확인 요청 내역 조회(대기 or 승인 완료)
+      description: 확인 요청 내역 조회
+      operationId: getSubmitList
+      consumes:
+        - application/json
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: roomId
+          in: path
+          schema:
+            type: integer
+          required: true
+      responses:
+        "200":
+          description: 확인 요청 내역 조회 성공!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: object
+                    properties:
+                      userSubmissions:
                         type: object
                         properties:
+                          id:
+                            type: integer
+                            example: 251
                           title:
                             type: string
-                            example: "test9"
+                            example: "test7"
                           start_date:
                             type: string
-                            format: date-time
-                            example: "2024-08-11T02:24:00.000Z"
+                            format: date
+                            example: "24.07.10"
                           end_date:
                             type: string
-                            format: date-time
-                            example: "2024-08-10T02:24:03.000Z"
+                            format: date
+                            example: "24.08.10"
                           content:
                             type: string
-                            example: "penaltytestcontent"
+                            example: "penaltytestcontent7"
                           room_image:
                             type: string
-                            nullable: true
-                            example: null
+                            example: "www.s3.~~~"
                           pending_count:
-                            type: integer
-                            example: 2
-                    pendingStates:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          profile_image:
                             type: string
-                            nullable: true
-                            example: null
-                          nickname:
-                            type: string
-                            example: "제이"
-                          URL:
-                            type: string
-                            example: "https://s3.ap-northeast-2.amazonaws.com/read.me-bucket/43dbd401a34c7be69c9be7b123a13e67_exampleimage.png"
-                          submit_state:
-                            type: string
-                            example: "PENDING"
-                    completeStates:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          profile_image:
-                            type: string
-                            nullable: true
-                            example: null
-                          nickname:
-                            type: string
-                            example: "제이"
-                          URL:
-                            type: string
-                            example: "https://s3.ap-northeast-2.amazonaws.com/read.me-bucket/45425843b018b4ac8d235ad195b35a54_exampleimage.png"
-                          submit_state:
-                            type: string
-                            example: "COMPLETE"
+                            example: "2"
+                          pendingStates:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                submit_id:
+                                  type: integer
+                                  example: 251
+                                profile_image:
+                                  type: string
+                                  nullable: true
+                                  example: null
+                                nickname:
+                                  type: string
+                                  example: "제이"
+                                URL:
+                                  type: string
+                                  nullable: true
+                                  example: null
+                                content:
+                                  type: string
+                                  example: "Jay"
+                                submit_state:
+                                  type: string
+                                  example: "PENDING"
+                          completeStates:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                submit_id:
+                                  type: integer
+                                  example: 253
+                                profile_image:
+                                  type: string
+                                  nullable: true
+                                  example: null
+                                nickname:
+                                  type: string
+                                  example: "제이"
+                                URL:
+                                  type: string
+                                  nullable: true
+                                  example: null
+                                content:
+                                  type: string
+                                  example: "Jay"
+                                submit_state:
+                                  type: string
+                                  example: "COMPLETE"
 
-/admin/submit/user-request:
-  patch:
-    tags:
-      - admin
-    summary: 대기중 요청 수락/거절
-    description: 대기중 요청 수락/거절
-    operationId: submitAcceptOrReject
-    consumes:
-      - application/json
-    security:
-      - bearerAuth: []
-    requestBody:
-      required: true
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              type:
-                type: string
-                description: 요청 수락/거절
-              roomId:
-                type: integer
-                description: 공지방 아이디
-    responses:
-      "200":
-        description: 제출 요청 수행 성공!
+  /admin/submit/user-request:
+    patch:
+      tags:
+        - admin
+      summary: 대기중 요청 수락/거절
+      description: 대기중 요청 수락/거절
+      operationId: submitAcceptOrReject
+      consumes:
+        - application/json
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
         content:
           application/json:
             schema:
               type: object
               properties:
-                isSuccess:
-                  type: boolean
-                  example: true
-                code:
+                type:
+                  type: string
+                  description: 요청 수락/거절
+                roomId:
                   type: integer
-                  example: 200
-                message:
-                  type: string
-                  example: "success!"
-                result:
-                  type: string
-                  example: "요청 수행에 성공하였습니다."
+                  description: 공지방 아이디
+      responses:
+        "200":
+          description: 제출 요청 수행 성공!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: string
+                    example: "요청 수행에 성공하였습니다."
