@@ -50,10 +50,10 @@ export const updateRoomsService = async (body, roomId) => {
   }
 };
 
-export const deleteRoomsService = async (body) => {
+export const deleteRoomsService = async (roomId) => {
   try {
-    if (!body) throw new Error("삭제할 방의 ID가 필요합니다.");
-    await deleteRoomsDao(body);
+    if (!roomId) throw new Error("삭제할 방의 ID가 필요합니다.");
+    await deleteRoomsDao(roomId);
     return "공지방 삭제 성공";
   } catch (error) {
     console.error("공지방 삭제하기 에러:", error);
@@ -64,10 +64,10 @@ export const deleteRoomsService = async (body) => {
 export const createPostService = async (body, userId) => {
   try {
     if (!body.room_id) throw new Error("공지방 ID가 필요합니다.");
-    
+
     const postData = await createPostDao(body, userId);
 
-    if (postData == -1) throw new BaseError(status.WRONG_DATE_FORMAT); 
+    if (postData == -1) throw new BaseError(status.WRONG_DATE_FORMAT);
     if (postData == -2) throw new BaseError(status.WRONG_STARTDATE_COMPARE);
     if (postData == -3) throw new BaseError(status.WRONG_ENDDATE_COMPARE);
 
@@ -84,7 +84,7 @@ export const updatePostService = async (body, postId) => {
   try {
     const postData = await updatePostDao(body, postId);
 
-    if (postData == -1) throw new BaseError(status.WRONG_DATE_FORMAT); 
+    if (postData == -1) throw new BaseError(status.WRONG_DATE_FORMAT);
     if (postData == -2) throw new BaseError(status.WRONG_STARTDATE_COMPARE);
     if (postData == -3) throw new BaseError(status.WRONG_ENDDATE_COMPARE);
 
@@ -100,7 +100,7 @@ export const updatePostService = async (body, postId) => {
 export const deletePostService = async (postId) => {
   try {
     if (!postId) throw new Error("삭제할 공지글의 ID가 필요합니다.");
-    
+
     const deleteRoomsData = await deletePostDao(postId);
     await cancelImposePenaltyByPostDAO(postId);
     return deleteRoomsData;

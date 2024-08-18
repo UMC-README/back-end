@@ -36,7 +36,7 @@ import schedule from "node-schedule";
 
 export const createRoomsDao = async (body, userId, roomInviteUrl) => {
   try {
-    if(body.max_penalty > 10)   throw new Error("패널티는 최대 10개까지만 생성이 가능합니다.");
+    if (body.max_penalty > 10) throw new Error("패널티는 최대 10개까지만 생성이 가능합니다.");
     const conn = await pool.getConnection();
     const [result] = await conn.query(createRoomsSQL, [
       userId,
@@ -62,7 +62,7 @@ export const createRoomsDao = async (body, userId, roomInviteUrl) => {
 
 export const updateRoomsDao = async (body, roomId) => {
   try {
-    if(body.max_penalty > 10)   throw new Error("패널티는 최대 10개까지만 생성이 가능합니다.");
+    if (body.max_penalty > 10) throw new Error("패널티는 최대 10개까지만 생성이 가능합니다.");
     const conn = await pool.getConnection();
     const [beforeRoomsData] = await conn.query(beforeUpdateRoomsSQL, [roomId]);
     await conn.query(updateRoomsSQL, [
@@ -71,7 +71,7 @@ export const updateRoomsDao = async (body, roomId) => {
       body.room_name,
       body.room_password,
       body.max_penalty,
-      roomId
+      roomId,
     ]);
     conn.release();
     return { beforeRoomsData };
@@ -81,10 +81,10 @@ export const updateRoomsDao = async (body, roomId) => {
   }
 };
 
-export const deleteRoomsDao = async (body) => {
+export const deleteRoomsDao = async (roomId) => {
   try {
     const conn = await pool.getConnection();
-    await conn.query(deleteRoomsSQL, body.roomId);
+    await conn.query(deleteRoomsSQL, roomId);
     return true;
   } catch (error) {
     console.error("공지방 삭제하기 에러:", error);
@@ -375,15 +375,15 @@ export const userSubmitDao = async (roomId) => {
     const conn = await pool.getConnection();
 
     const [rows] = await conn.query(getPostCountSQL);
-    const countPost = rows[0]?.count || 0; 
-    if(countPost === 0)  return {message : "공지가 없습니다."};
+    const countPost = rows[0]?.count || 0;
+    if (countPost === 0) return { message: "공지가 없습니다." };
 
     const [userSubmissions] = await conn.query(userSubmitSQL, roomId);
     const [submitStates] = await conn.query(getSubmitStateSQL, roomId);
 
     conn.release();
-    return { userSubmissions , submitStates };
-  } catch (error) { 
+    return { userSubmissions, submitStates };
+  } catch (error) {
     console.log("확인 요청 조회 에러");
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
