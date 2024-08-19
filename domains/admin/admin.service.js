@@ -111,12 +111,12 @@ export const getPostService = async (postId, userId) => {
 };
 
 export const updatePostService = async (body, postId) => {
-  try {    
+  try {
     if (!postId) throw new Error("수정할 공지방의 ID가 필요합니다.");
     await updatePostDao(body, postId);
 
     await cancelImposePenaltyByPostDAO(postId);
-    await reserveImposePenaltyByPostDAO(postId, `20${body.endDate}`);
+    await reserveImposePenaltyByPostDAO(postId, `20${body.postData.endDate}`);
     return "공지글 수정에 성공하였습니다.";
   } catch (error) {
     console.error("공지글 수정하기 에러:", error);
