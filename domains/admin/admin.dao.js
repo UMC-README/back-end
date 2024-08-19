@@ -201,11 +201,12 @@ export const updatePostDao = async (body, postId) => {
   const conn = await pool.getConnection();
   try {
     await conn.beginTransaction();
+    const EndDate = `20${body.endDate} 23:59`;
 
     await conn.query(updatePostSQL, [
       body.postTitle,
       body.postContent,
-      body.endDate,
+      EndDate,
       body.question,
       body.quizAnswer, 
       postId
