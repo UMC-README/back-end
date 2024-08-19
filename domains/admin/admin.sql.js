@@ -108,11 +108,11 @@ export const userInviteSQL = `
 
 // 유저 강퇴하기
 export const checkUserInRoomSQL = `
-  select * from \`user-room\` where nickname = ? AND room_id = ?
+  select * from \`user-room\` where user_id = ? AND room_id = ?
 `;
 
 export const deleteUserSQL = ` 
-  DELETE FROM  \`user-room\` WHERE nickname = ? AND room_id;
+  DELETE FROM  \`user-room\` WHERE user_id = ? AND room_id;
 `;
 
 // 패널티 부여하기 (제출 이력 유무 고려 / 중복 부과 x)
