@@ -683,7 +683,7 @@ paths:
                         type: string
                         description: 관리자 닉네임
 
-  /admin/rooms/user-ban:
+  /admin/user-ban:
     delete:
       tags:
         - admin
