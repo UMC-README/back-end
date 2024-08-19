@@ -32,6 +32,7 @@ import {
   getRoomSQL,
   getAlluserRoomSQL,
   decreaseUnreadCountOneBySubmitId,
+  getPostSQL,
 } from "./admin.sql.js";
 
 import { updateUnreadCountByRoom } from "../room/room.sql.js";
@@ -57,8 +58,8 @@ export const createRoomsDao = async (body, userId, roomInviteUrl) => {
     await conn.query(userRoomSQL, [userId, roomId, body.admin_nickname]);
 
     conn.release();
-    return{
-      roomId: roomId,  
+    return {
+      roomId: roomId,
       roomImage: body.room_image,
       adminNickname: body.admin_nickname,
       roomName: body.room_name,
@@ -177,6 +178,21 @@ export const createPostDao = async (body, userId) => {
   } catch (error) {
     await conn.rollback(); // 오류 발생 시 롤백
     console.error("공지글 생성 에러:", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const getPostDAO = async (postId, userId) => {
+  const conn = await pool.getConnection();
+  try {
+    const [post] = await conn.query(getPostSQL, postId);
+    if (!post.length) return -1;
+    if (post[0].admin_id !== userId) return -2;
+    conn.release();
+    return post[0];
+  } catch (error) {
+    conn.release();
+    console.error("admin 공지글 조회하기 에러:", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };

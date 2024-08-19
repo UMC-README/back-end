@@ -19,6 +19,7 @@ import {
   getRoomsDao,
   getPostListDao,
   getSubmitListDao,
+  getPostDAO,
 } from "./admin.dao.js";
 import { createShortUUID } from "./uuid.js";
 import {
@@ -27,6 +28,7 @@ import {
   updatePostDTO,
   getRoomsDTO,
   postListDTO,
+  getPostDTO,
 } from "./admin.dto.js";
 
 export const createRoomsService = async (body, userId) => {
@@ -92,6 +94,19 @@ export const createPostService = async (body, userId) => {
     return createPostDTO(postData);
   } catch (error) {
     console.error("공지글 생성하기 에러:", error);
+    throw error;
+  }
+};
+
+export const getPostService = async (postId, userId) => {
+  try {
+    const postData = await getPostDAO(postId, userId);
+
+    if (typeof postData === "number") return postData;
+
+    return getPostDTO(postData);
+  } catch (error) {
+    console.error("공지글 수정하기 에러:", error);
     throw error;
   }
 };
@@ -183,7 +198,7 @@ export const userInviteService = async (roomId) => {
 
 export const deleteUserService = async (body) => {
   try {
-    if(!body.userId) throw new Error("강퇴할 User의 ID가 필요합니다.");
+    if (!body.userId) throw new Error("강퇴할 User의 ID가 필요합니다.");
     const result = await deleteUserDao(body);
     if (result == -1) throw new Error("공지방에 유저가 없습니다.");
     return result;
