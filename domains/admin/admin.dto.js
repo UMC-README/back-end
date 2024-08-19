@@ -1,14 +1,8 @@
 import { getYearMonthDayHourMinute } from "../../utils/timeChange.js";
 
-export const createRoomsDTO = (roomData) => {
+export const createRoomsDTO = (createRoomsData) => {
   return {
-    roomId: roomData.roomId,
-    roomImage: roomData.room_image,
-    adminNickname: roomData.admin_nickname,
-    roomName: roomData.room_name,
-    roomPassword: roomData.room_password,
-    maxPenalty: roomData.max_penalty,
-    roomInviteUrl: roomData.roomInviteUrl,
+    ...createRoomsData,
   };
 };
 

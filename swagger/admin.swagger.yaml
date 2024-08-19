@@ -701,10 +701,10 @@ paths:
             schema:
               type: object
               properties:
-                nickname:
+                userId:
                   type: string
-                  description: 강퇴할 유저 닉네임
-                room_id:
+                  description: 강퇴할 유저 id
+                roomId:
                   type: integer
                   description: 강퇴할 유저가 속한 공지방 id
       responses:

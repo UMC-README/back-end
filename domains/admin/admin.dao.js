@@ -57,7 +57,15 @@ export const createRoomsDao = async (body, userId, roomInviteUrl) => {
     await conn.query(userRoomSQL, [userId, roomId, body.admin_nickname]);
 
     conn.release();
-    return { roomId, result, roomInviteUrl };
+    return{
+      roomId: roomId,  
+      roomImage: body.room_image,
+      adminNickname: body.admin_nickname,
+      roomName: body.room_name,
+      roomPassword: body.room_password,
+      maxPenalty: body.max_penalty,
+      roomInviteUrl,
+    };
   } catch (error) {
     console.error("공지방 생성하기 에러", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
@@ -302,14 +310,14 @@ export const deleteUserDao = async (body) => {
   try {
     await conn.beginTransaction();
 
-    const [checkUser] = await conn.query(checkUserInRoomSQL, [body.nickname, body.room_id]);
+    const [checkUser] = await conn.query(checkUserInRoomSQL, [body.userId, body.roomId]);
     if (!checkUser.length) {
       await conn.rollback();
       conn.release();
       return -1;
     }
-    await conn.query(deleteUserSQL, [body.nickname, body.room_id]);
-    await conn.query(updateUnreadCountByRoom, body.room_id);
+    await conn.query(deleteUserSQL, [body.userId, body.roomId]);
+    await conn.query(updateUnreadCountByRoom, body.roomId);
 
     await conn.commit();
     conn.release();
