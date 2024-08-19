@@ -241,25 +241,3 @@ export const decreaseUnreadCountOneBySubmitId = `
   SET p.unread_count = p.unread_count - 1
   WHERE p.id = s.post_id
 `;
-
-/*export const updateUnreadCountByPost = `
-  UPDATE post p2
-  SET unread_count =
-  (SELECT * FROM (SELECT COUNT(ur.user_id) AS unreadCount
-    FROM \`user-room\` ur
-    JOIN post p ON p.id = p2.id AND p.room_id = ur.room_id
-    JOIN submit s ON s.post_id = p.id and s.user_id = ur.user_id
-    WHERE ur.user_id NOT IN
-      (SELECT s2.user_id FROM submit s2 WHERE s2.submit_state = 'COMPLETE' AND s2.post_id = p.id)) AS tableA)
-  WHERE p2.id = ?
-`;
-
-export const getUnreadCountByPost = `
-  SELECT COUNT(ur.user_id)
-  FROM \`user-room\` ur
-  JOIN post p ON p.room_id = ur.room_id AND p.id = ?
-  JOIN submit s ON s.post_id = p.id and s.user_id = ur.user_id
-  WHERE ur.user_id NOT IN
-    (SELECT s2.user_id FROM submit s2 WHERE s2.submit_state = 'COMPLETE' AND s2.post_id = p.id)
-`;
-*/
