@@ -20,7 +20,6 @@ export const getKakaoUser = async (token) => {
   const response = await fetch("https://kapi.kakao.com/v2/user/me", {
     method: "GET",
     headers: {
-      // Authorization: `Bearer ${token}`,
       Authorization: `Bearer ${token}`,
       "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
     },
