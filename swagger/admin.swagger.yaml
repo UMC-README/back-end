@@ -409,7 +409,7 @@ paths:
                     example: false
                   code:
                     type: string
-                    example: "COMMON012"
+                    example: "POST001"
                   message:
                     type: string
                     example: "존재하지 않는 공지글 ID 입니다."
@@ -425,7 +425,7 @@ paths:
                     example: false
                   code:
                     type: string
-                    example: "COMMON013"
+                    example: "POST002"
                   message:
                     type: string
                     example: "본인의 공지글에 대해서만 조회가 가능합니다."
@@ -472,7 +472,7 @@ paths:
                       description: 퀴즈/미션 질문
                     quizAnswer:
                       type: string
-                      description: 퀴즈/미션 질문                      
+                      description: 퀴즈/미션 질문
                 addImgURLs:
                   type: array
                   items:
@@ -503,7 +503,7 @@ paths:
                   result:
                     type: object
                     properties:
-                      
+
     delete:
       tags:
         - admin

@@ -104,13 +104,13 @@ export const status = {
   NOT_MY_POST: {
     status: StatusCodes.BAD_REQUEST,
     isSuccess: false,
-    code: "COMMON012",
+    code: "POST001",
     message: "본인의 공지글에 대해서만 조회가 가능합니다.",
   },
   NOT_FOUND_POST: {
     status: StatusCodes.NOT_FOUND,
     isSuccess: false,
-    code: "COMMON013",
+    code: "POST002",
     message: "존재하지 않는 공지글 ID 입니다.",
   },
 };
