@@ -15,17 +15,18 @@ import {
   initializeSubmitByPostDAO,
   reserveImposePenaltyByPostDAO,
   cancelImposePenaltyByPostDAO,
-  userSubmitDao,
   userRequestDao,
   getRoomsDao,
+  getPostListDao,
+  getSubmitListDao,
 } from "./admin.dao.js";
 import { createShortUUID } from "./uuid.js";
 import {
   createRoomsDTO,
   createPostDTO,
   updatePostDTO,
-  userSubmitDTO,
   getRoomsDTO,
+  postListDTO,
 } from "./admin.dto.js";
 
 export const createRoomsService = async (body, userId) => {
@@ -190,24 +191,44 @@ export const deleteUserService = async (body) => {
   }
 };
 
-export const userSubmitService = async (roomId) => {
+// 확인 요청 내역 공지글 목록 조회
+export const getPostListService = async (roomId) => {
   try {
-    if (!roomId) throw new Error("요청 내역 조회를 위한 roomId가 필요합니다.");
+    if (!roomId) {
+      throw new Error("요청 내역 조회를 위한 roomId가 필요합니다.");
+    }
 
-    const { userSubmissions, submitStates } = await userSubmitDao(roomId);
-    const result = userSubmitDTO(userSubmissions, submitStates);
-    return result;
+    const posts = await getPostListDao(roomId);
+
+    const postLists = posts.map(postListDTO);
+
+    return postLists;
   } catch (error) {
     throw error;
   }
 };
 
-export const userRequestService = async (body) => {
+// 하나의 공지글에 대한 확인 요청 내역 (대기 or 승인 완료) 조회
+export const getSubmitListService = async (roomId, postId, state) => {
+  try {
+    if (!roomId || !postId) throw new Error("요청 내역 조회를 위한 roomId와 postId가 필요합니다.");
+    if (state !== "pending" && state !== "complete") {
+      throw new Error("pending 혹은 complete 중 하나의 값으로 요청해야합니다.");
+    }
+
+    const submitList = await getSubmitListDao(roomId, postId, state.toUpperCase());
+
+    return submitList;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const userRequestService = async (submitId, body) => {
   try {
     const validTypes = ["accept", "reject"];
     if (!validTypes.includes(body.type)) throw new Error("올바른 type을 입력하세요.");
-    if (!body.roomId) throw new Error("요청을 수행하기를 위한 roomId가 필요합니다.");
-    return await userRequestDao(body);
+    return await userRequestDao(submitId, body);
   } catch (error) {
     throw error;
   }

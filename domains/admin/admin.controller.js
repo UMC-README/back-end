@@ -13,9 +13,10 @@ import {
   userProfileService,
   userInviteService,
   deleteUserService,
-  userSubmitService,
+  getSubmitListService,
   userRequestService,
   getRoomsService,
+  getPostListService,
 } from "./admin.service.js";
 
 export const createRoomsController = async (req, res, next) => {
@@ -129,9 +130,25 @@ export const deleteUserController = async (req, res, next) => {
   }
 };
 
-export const userSubmitController = async (req, res, next) => {
+// 확인 요청 내역 공지글 목록 조회
+export const getPostListController = async (req, res, next) => {
   try {
-    const result = await userSubmitService(req.params.roomId);
+    const result = await getPostListService(req.params.roomId);
+    res.status(200).json(response(status.SUCCESS, result));
+  } catch (error) {
+    next(error);
+  }
+};
+
+// 하나의 공지글에 대한 확인 요청 내역 (대기 or 승인 완료) 조회
+export const getSubmitListController = async (req, res, next) => {
+  try {
+    const { roomId, postId } = req.params;
+    const { state } = req.query;
+
+    console.log(state);
+
+    const result = await getSubmitListService(roomId, postId, state);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
@@ -140,7 +157,7 @@ export const userSubmitController = async (req, res, next) => {
 
 export const userRequestController = async (req, res, next) => {
   try {
-    const result = await userRequestService(req.body);
+    const result = await userRequestService(req.params.submitId, req.body);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);
