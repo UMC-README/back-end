@@ -297,21 +297,25 @@ export const userInviteDao = async (roomId) => {
 };
 
 export const deleteUserDao = async (body) => {
+  const conn = await pool.getConnection();
   try {
-    const conn = await pool.getConnection();
+    await conn.beginTransaction();
 
     const [checkUser] = await conn.query(checkUserInRoomSQL, [body.nickname, body.room_id]);
     if (!checkUser.length) {
+      await conn.rollback();
       conn.release();
       return -1;
     }
     await conn.query(deleteUserSQL, [body.nickname, body.room_id]);
-    await conn.query(updateUnreadCountByRoom, body.room.id);
+    await conn.query(updateUnreadCountByRoom, body.room_id);
 
+    await conn.commit();
     conn.release();
     return "유저 강퇴에 성공하였습니다.";
   } catch (error) {
     console.log("유저 강퇴하기 에러");
+    await conn.rollback();
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };
