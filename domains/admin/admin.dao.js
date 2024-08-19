@@ -395,21 +395,46 @@ export const cancelImposePenaltyByPostDAO = async (postId) => {
   }
 };
 
-export const userSubmitDao = async (roomId) => {
+// 확인 요청 내역 공지글 목록 조회
+export const getPostListDao = async (roomId) => {
   try {
     const conn = await pool.getConnection();
 
     const [rows] = await conn.query(getPostCountSQL);
     const countPost = rows[0]?.count || 0;
-    if (countPost === 0) return { message: "공지가 없습니다." };
+    if (countPost === 0) {
+      return { message: "공지가 없습니다." };
+    }
 
-    const [userSubmissions] = await conn.query(userSubmitSQL, roomId);
-    const [submitStates] = await conn.query(getSubmitStateSQL, roomId);
+    const [postList] = await conn.query(userSubmitSQL, roomId);
+    conn.release();
+
+    return postList;
+  } catch (error) {
+    console.log("확인 요청 내역 공지글 목록 조회 에러");
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+// 하나의 공지글에 대한 확인 요청 내역 (대기 or 승인 완료) 조회
+export const getSubmitListDao = async (roomId, postId, state) => {
+  try {
+    const conn = await pool.getConnection();
+
+    const [submitList] = await conn.query(getSubmitStateSQL, [roomId, postId, state]);
 
     conn.release();
-    return { userSubmissions, submitStates };
+
+    return submitList.map((submit) => ({
+      submitId: submit.submit_id,
+      profileImage: submit.profile_image,
+      nickname: submit.nickname,
+      images: submit.images ? submit.images.split(",") : [],
+      content: submit.content,
+      submitState: submit.submit_state,
+    }));
   } catch (error) {
-    console.log("확인 요청 조회 에러");
+    console.log("하나의 공지글에 대한 확인 요청 내역 (대기 or 승인 완료) 조회 에러");
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };
