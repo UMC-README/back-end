@@ -188,7 +188,7 @@ export const checkRoomPasswordSQL = `
 
 //공지방에 유저를 입장 등록
 export const createRoomEntranceSQL = `
-  INSERT INTO \`user-room\` (user_id, room_id, nickname) VALUES (?, ?, ?)
+  INSERT INTO \`user-room\` (user_id, room_id, nickname, profile_image) VALUES (?, ?, ?, ?)
 `;
 
 //공지방 내 공지글 제목, 내용 대상으로 검색 (커서 존재)

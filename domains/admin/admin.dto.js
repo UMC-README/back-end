@@ -12,6 +12,17 @@ export const createPostDTO = (createPostData) => {
   };
 };
 
+export const getPostDTO = (postData) => ({
+  type: postData.type,
+  title: postData.title,
+  content: postData.content,
+  imgURLs: postData.imgURLs,
+  startDate: postData.start_date,
+  endDate: postData.end_date,
+  question: postData.question,
+  quizAnswer: postData.quiz_answer,
+});
+
 export const updatePostDTO = (updatePostData) => {
   return {
     ...updatePostData,

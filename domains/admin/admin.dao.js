@@ -32,6 +32,7 @@ import {
   getRoomSQL,
   getAlluserRoomSQL,
   decreaseUnreadCountOneBySubmitId,
+  getPostSQL,
 } from "./admin.sql.js";
 
 import { updateUnreadCountByRoom } from "../room/room.sql.js";
@@ -57,8 +58,8 @@ export const createRoomsDao = async (body, userId, roomInviteUrl) => {
     await conn.query(userRoomSQL, [userId, roomId, body.admin_nickname]);
 
     conn.release();
-    return{
-      roomId: roomId,  
+    return {
+      roomId: roomId,
       roomImage: body.room_image,
       adminNickname: body.admin_nickname,
       roomName: body.room_name,
@@ -181,46 +182,46 @@ export const createPostDao = async (body, userId) => {
   }
 };
 
-export const updatePostDao = async ({ postData, imgURLs, imgToDelete }, postId) => {
+export const getPostDAO = async (postId, userId) => {
+  const conn = await pool.getConnection();
+  try {
+    const [post] = await conn.query(getPostSQL, postId);
+    if (!post.length) return -1;
+    if (post[0].admin_id !== userId) return -2;
+    conn.release();
+    return post[0];
+  } catch (error) {
+    conn.release();
+    console.error("admin 공지글 조회하기 에러:", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const updatePostDao = async (body, postId) => {
   const conn = await pool.getConnection();
   try {
     await conn.beginTransaction();
-    const startDate = new Date(`20${postData.start_date}`);
-    const endDate = new Date(`20${postData.end_date}`);
-
-    if (isInvalidDate(postData.start_date, postData.end_date)) return -1;
-    if (startDate < getNow()) return -2;
-    if (endDate <= startDate) return -3;
 
     await conn.query(updatePostSQL, [
-      postData.title,
-      postData.content,
-      postData.start_date,
-      postData.end_date,
-      postData.question,
-      postId,
+      body.postTitle,
+      body.postContent,
+      body.endDate,
+      body.question,
+      body.quizAnswer, 
+      postId
     ]);
     // 추가할 이미지
-    for (const url of imgURLs) {
+    for (const url of body.addImgURLs) {
       await conn.query(createPostImgSQL, [url, postId]);
     }
     // 삭제할 이미지
-    if (imgToDelete.length > 0) {
-      for (const url of imgToDelete) {
+    if (body.deleteImgURLs) {
+      for (const url of body.deleteImgURLs) {
         await conn.query(deletePostImgSQL, [postId, url]);
       }
     }
-
     await conn.commit();
-    return {
-      postTitle: postData.title,
-      postContent: postData.content,
-      addImgURLs: imgURLs, // 추가할 이미지
-      deleteImgURLs: imgToDelete, // 삭제할 이미지
-      startDate: postData.start_date,
-      endDate: postData.end_date,
-      question: postData.question,
-    };
+    return true;
   } catch (error) {
     await conn.rollback();
     console.error("공지글 수정하기 에러:", error);

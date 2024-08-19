@@ -17,6 +17,7 @@ import {
   userRequestService,
   getRoomsService,
   getPostListService,
+  getPostService,
 } from "./admin.service.js";
 
 export const createRoomsController = async (req, res, next) => {
@@ -61,6 +62,20 @@ export const deleteRoomsController = async (req, res, next) => {
 export const createPostController = async (req, res, next) => {
   try {
     const result = await createPostService(req.body, req.user.userId);
+    res.status(200).json(response(status.SUCCESS, result));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getPostController = async (req, res, next) => {
+  try {
+    const result = await getPostService(req.params.postId, req.user.userId);
+    if (result === -1) {
+      return res.status(404).json(response(status.NOT_FOUND_POST));
+    } else if (result === -2) {
+      return res.status(400).json(response(status.NOT_MY_POST));
+    }
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);

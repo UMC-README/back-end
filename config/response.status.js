@@ -101,4 +101,16 @@ export const status = {
     code: "COMMON011",
     message: "이미지를 삭제하는데 실패했습니다.",
   },
+  NOT_MY_POST: {
+    status: StatusCodes.BAD_REQUEST,
+    isSuccess: false,
+    code: "POST001",
+    message: "본인의 공지글에 대해서만 조회가 가능합니다.",
+  },
+  NOT_FOUND_POST: {
+    status: StatusCodes.NOT_FOUND,
+    isSuccess: false,
+    code: "POST002",
+    message: "존재하지 않는 공지글 ID 입니다.",
+  },
 };

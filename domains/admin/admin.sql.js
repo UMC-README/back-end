@@ -57,10 +57,19 @@ export const createPostImgSQL = `
   INSERT INTO \`post-image\` (URL, post_id) VALUES(?,?);  
 `;
 
+// admin 공지글 조회
+export const getPostSQL = ` 
+  SELECT p.title, p.content, p.type, p.start_date, p.end_date, p.question, p.quiz_answer, r.admin_id
+  FROM post p
+  JOIN room r
+  ON r.id = p.room_id
+  WHERE p.id = ?;  
+`;
+
 // 공지글 수정 & 이미지 삭제
 export const updatePostSQL = ` 
   UPDATE post
-  SET title = ?, content = ?, start_date = ?, end_date = ?, question = ? 
+  SET title = ?, content = ?, end_date = ?, question = ? , quiz_answer = ?
   WHERE id = ?;  
 `;
 export const deletePostImgSQL = `

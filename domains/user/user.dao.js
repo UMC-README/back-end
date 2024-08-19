@@ -27,15 +27,21 @@ import {
   getPenaltyCount,
 } from "./user.sql.js";
 
+import dotenv from "dotenv";
+dotenv.config();
+
 export const insertUser = async (data) => {
   try {
     const conn = await pool.getConnection();
+
+    const defaultProfileImage = process.env.DEFAULT_PROFILE_IMAGE;
 
     const result = await conn.query(userSignUpSQL, [
       data.name,
       data.nickname,
       data.email,
       data.password,
+      defaultProfileImage,
     ]);
 
     conn.release();
