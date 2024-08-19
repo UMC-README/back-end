@@ -12,12 +12,6 @@ export const createPostDTO = (createPostData) => {
   };
 };
 
-export const updatePostDTO = (updatePostData) => {
-  return {
-    ...updatePostData,
-  };
-};
-
 export const getRoomsDTO = (roomData) => ({
   roomImage: roomData.room_image,
   adminNickname: roomData.admin_nickname,
