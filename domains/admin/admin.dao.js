@@ -201,15 +201,15 @@ export const updatePostDao = async (body, postId) => {
   const conn = await pool.getConnection();
   try {
     await conn.beginTransaction();
-    const EndDate = `20${body.endDate} 23:59`;
+    const EndDate = `20${body.postData.endDate} 23:59`;
 
     await conn.query(updatePostSQL, [
-      body.postTitle,
-      body.postContent,
+      body.postData.postTitle,
+      body.postData.postContent,
       EndDate,
-      body.question,
-      body.quizAnswer, 
-      postId
+      body.postData.question,
+      body.postData.quizAnswer,
+      postId,
     ]);
     // 추가할 이미지
     for (const url of body.addImgURLs) {
