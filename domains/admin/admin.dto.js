@@ -20,12 +20,6 @@ export const getRoomsDTO = (roomData) => ({
   maxPenalty: roomData.max_penalty,
 });
 
-export const getPostInfoDTO = (postData) => ({
-
-
-}); 
-
-
 export const userSubmitDTO = (userSubmissions, submitStates) => {
   const pendingStates = submitStates.filter((state) => state.submit_state === "PENDING");
   const completeStates = submitStates.filter((state) => state.submit_state === "COMPLETE");

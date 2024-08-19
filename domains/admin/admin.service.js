@@ -25,7 +25,6 @@ import {
   createRoomsDTO,
   createPostDTO,
   getRoomsDTO,
-  getPostInfoDTO,
   postListDTO,
 } from "./admin.dto.js";
 
