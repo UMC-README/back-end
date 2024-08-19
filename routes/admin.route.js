@@ -17,6 +17,7 @@ import {
   getRoomsController,
   getPostListController,
   getSubmitListController,
+  getPostController,
 } from "../domains/admin/admin.controller.js";
 
 export const adminRouter = express.Router();
@@ -26,6 +27,7 @@ adminRouter.patch("/rooms/:roomId", tokenAuth, expressAsyncHandler(updateRoomsCo
 adminRouter.get("/rooms/:roomId", tokenAuth, expressAsyncHandler(getRoomsController));
 adminRouter.delete("/rooms/:roomId", tokenAuth, expressAsyncHandler(deleteRoomsController));
 adminRouter.post("/post", tokenAuth, expressAsyncHandler(createPostController));
+adminRouter.get("/post/:postId", tokenAuth, expressAsyncHandler(getPostController));
 adminRouter.patch("/post/:postId", tokenAuth, expressAsyncHandler(updatePostController));
 adminRouter.delete("/post/:postId", tokenAuth, expressAsyncHandler(deletePostController));
 adminRouter.get("/post/:postId/unread", tokenAuth, expressAsyncHandler(unreadUserListController));
