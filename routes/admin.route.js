@@ -13,9 +13,10 @@ import {
   userProfileController,
   userInviteController,
   deleteUserController,
-  userSubmitController,
   userRequestController,
   getRoomsController,
+  getPostListController,
+  getSubmitListController,
 } from "../domains/admin/admin.controller.js";
 
 export const adminRouter = express.Router();
@@ -32,5 +33,11 @@ adminRouter.get("/users", tokenAuth, expressAsyncHandler(userListController));
 adminRouter.get("/profile", tokenAuth, expressAsyncHandler(userProfileController));
 adminRouter.get("/invitation/:roomId", tokenAuth, expressAsyncHandler(userInviteController));
 adminRouter.delete("/user-ban", tokenAuth, expressAsyncHandler(deleteUserController));
-adminRouter.get("/submit/:roomId", tokenAuth, expressAsyncHandler(userSubmitController));
+
+// 확인 요청 내역 공지글 목록 조회
+adminRouter.get("/posts/:roomId", tokenAuth, expressAsyncHandler(getPostListController));
+
+// 하나의 공지글에 대한 확인 요청 내역 (대기 or 승인 완료) 조회
+adminRouter.get("/submit/:roomId/:postId", tokenAuth, expressAsyncHandler(getSubmitListController));
+
 adminRouter.patch("/submit/:submitId", tokenAuth, expressAsyncHandler(userRequestController));

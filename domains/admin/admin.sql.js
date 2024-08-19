@@ -201,25 +201,27 @@ export const getPostCountSQL = `
 
 export const userSubmitSQL = ` 
   SELECT 
-    s.id, p.title, p.start_date, p.end_date, p.content, r.room_image,
+    p.id, p.title, p.start_date, p.end_date, p.content, GROUP_CONCAT(pi.URL ORDER BY pi.id ASC) as images,
     CASE 
         WHEN COUNT(CASE WHEN s.submit_state = 'PENDING' THEN s.id END) = 0 THEN '요청 없음'
         ELSE COUNT(CASE WHEN s.submit_state = 'PENDING' THEN s.id END)
     END AS pending_count
   FROM post p
-  JOIN submit s ON p.id = s.post_id  
-  JOIN room r ON p.room_id = r.id
-  WHERE p.room_id = ? 
+  LEFT JOIN submit s ON p.id = s.post_id
+  LEFT JOIN \`post-image\` pi ON pi.post_id = p.id
+  WHERE p.room_id = ? AND p.type = 'MISSION'
   GROUP BY p.id;
 `;
 
+// 하나의 공지글에 대한 확인 요청 내역 (대기 or 승인 완료) 조회
 export const getSubmitStateSQL = `
-  SELECT s.id AS submit_id, u.profile_image, u.nickname, si.URL, s.content, s.submit_state
+  SELECT s.id AS submit_id, u.profile_image, u.nickname, GROUP_CONCAT(si.URL ORDER BY si.created_at SEPARATOR ',') AS images, s.content, s.submit_state
   FROM post p
-  JOIN submit s ON p.id = s.post_id 
+  JOIN submit s ON p.id = s.post_id
   JOIN user u ON s.user_id = u.id
-  LEFT JOIN \`submit-image\` si ON s.id = si.id
-  WHERE p.room_id = ? AND s.submit_state IN ('PENDING', 'COMPLETE');
+  LEFT JOIN \`submit-image\` si ON s.id = si.submit_id
+  WHERE p.room_id = ? AND p.id = ? AND s.submit_state = ?
+  GROUP BY s.id;
 `;
 
 // 대기 중 요청 수락/거절
