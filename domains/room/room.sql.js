@@ -288,3 +288,10 @@ export const updateUnreadCountByRoom = `
   SET unread_count = tableA.unreadCount
   WHERE p3.id = tableA.id
 `;
+
+export const getRoomInfoAndUserRoomInfoByUserIdAndPostId = `
+  SELECT r.room_name, r.admin_id, ur.created_at
+  FROM room r 
+  JOIN \`user-room\` ur ON r.id = ur.room_id AND ur.user_id = ?
+  JOIN post p ON p.id = ? AND p.room_id = r.id
+`;

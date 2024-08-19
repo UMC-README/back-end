@@ -36,6 +36,7 @@ import {
   notCheckedPenaltyInRoomSQL,
   initializeSubmitWhenUserJoinsRoomSQL,
   updateUnreadCountByRoom,
+  getRoomInfoAndUserRoomInfoByUserIdAndPostId,
 } from "./room.sql.js";
 import { getUserById } from "../user/user.sql.js";
 
@@ -185,9 +186,14 @@ export const getDetailedPostDAO = async (postId, userId) => {
       return -1;
     }
 
+    const [info] = await pool.query(getRoomInfoAndUserRoomInfoByUserIdAndPostId, [userId, postId]);
+    const roomName = info[0].room_name;
+    const isRoomAdmin = userId === info[0].admin_id;
+    const joinedRoomAt = info[0].created_at;
+
     const [postImages] = await pool.query(getPostImagesByPostId, postId);
     conn.release();
-    return { post, postImages };
+    return { roomName, isRoomAdmin, joinedRoomAt, post, postImages };
   } catch (err) {
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
@@ -425,8 +431,8 @@ export const checkPasswordDAO = async (roomId, passwordInput) => {
 };
 
 export const postRoomEntranceDAO = async (roomId, userId, userNickname) => {
+  const conn = await pool.getConnection();
   try {
-    const conn = await pool.getConnection();
     await conn.beginTransaction();
 
     const [room] = await conn.query(getRoomById, roomId);
@@ -435,6 +441,7 @@ export const postRoomEntranceDAO = async (roomId, userId, userNickname) => {
       conn.release();
       return -1;
     }
+    console.log(roomId, userId, userNickname);
 
     await conn.query(createRoomEntranceSQL, [userId, roomId, userNickname]);
     await conn.query(initializeSubmitWhenUserJoinsRoomSQL, [userId, roomId]);
@@ -516,14 +523,14 @@ export const checkPenaltyInRoomDAO = async (roomId, userId) => {
 };
 
 export const exiledFromRoomDAO = async (roomId, userId) => {
+  const conn = await pool.getConnection();
   try {
-    const conn = await pool.getConnection();
     await conn.beginTransaction();
 
     const [result] = await conn.query(getExiledFromRoomSQL, [roomId, userId]);
 
-    if (!result[0].affectedRows) {
-      conn.release();
+    if (!result.affectedRows) {
+      await conn.rollback();
       return -1;
     }
 

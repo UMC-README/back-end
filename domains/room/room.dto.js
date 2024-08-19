@@ -109,7 +109,13 @@ export const detailedPostDTO = (data) => {
 
   const imageURLs = data.postImages.map((result) => result.URL);
 
-  return { post, imageURLs };
+  return {
+    roomName: data.roomName,
+    isRoomAdmin: data.isRoomAdmin,
+    joinedRoomAt: formatDate(data.joinedRoomAt),
+    post,
+    imageURLs,
+  };
 };
 
 export const allCommentsInPostDTO = (data, userId) => {
