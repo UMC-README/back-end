@@ -31,7 +31,10 @@ import {
   userRequestRejectSQL,
   getRoomSQL,
   getAlluserRoomSQL,
+  decreaseUnreadCountOneBySubmitId,
 } from "./admin.sql.js";
+
+import { updateUnreadCountByRoom } from "../room/room.sql.js";
 
 import schedule from "node-schedule";
 
@@ -295,20 +298,25 @@ export const userInviteDao = async (roomId) => {
 };
 
 export const deleteUserDao = async (body) => {
+  const conn = await pool.getConnection();
   try {
-    const conn = await pool.getConnection();
+    await conn.beginTransaction();
 
     const [checkUser] = await conn.query(checkUserInRoomSQL, [body.nickname, body.room_id]);
     if (!checkUser.length) {
+      await conn.rollback();
       conn.release();
       return -1;
     }
     await conn.query(deleteUserSQL, [body.nickname, body.room_id]);
+    await conn.query(updateUnreadCountByRoom, body.room_id);
 
+    await conn.commit();
     conn.release();
     return "유저 강퇴에 성공하였습니다.";
   } catch (error) {
     console.log("유저 강퇴하기 에러");
+    await conn.rollback();
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };
@@ -406,18 +414,27 @@ export const userSubmitDao = async (roomId) => {
   }
 };
 
-export const userRequestDao = async (body) => {
+export const userRequestDao = async (submitId, body) => {
+  const conn = await pool.getConnection();
+
   try {
-    const conn = await pool.getConnection();
+    await conn.beginTransaction();
 
-    if (body.type === "accept") await conn.query(userRequestAcceptSQL, body.roomId);
-    else if (body.type === "reject") await conn.query(userRequestRejectSQL, body.roomId);
-    else throw new Error("유효하지 않은 type입니다.");
+    if (body.type === "accept") {
+      await conn.query(userRequestAcceptSQL, submitId);
+      await conn.query(decreaseUnreadCountOneBySubmitId, submitId);
+    } else if (body.type === "reject") await conn.query(userRequestRejectSQL, submitId);
+    else {
+      await conn.rollback();
+      throw new Error("유효하지 않은 type입니다.");
+    }
 
+    await conn.commit();
     conn.release();
     return "요청 수행에 성공하였습니다.";
   } catch (error) {
     console.log("수락/거절 요청 수행 error");
+    await conn.rollback();
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }
 };

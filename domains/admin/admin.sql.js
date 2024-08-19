@@ -77,8 +77,9 @@ export const unreadUserListSQL = `
 SELECT ur.profile_image, ur.nickname
 FROM \`user-room\` ur
 JOIN post p ON p.room_id = ur.room_id AND p.id = ?
+JOIN submit s ON s.post_id = p.id and s.user_id = ur.user_id
 WHERE ur.user_id NOT IN
-      (SELECT s.user_id FROM submit s WHERE s.submit_state = 'COMPLETE' AND s.post_id = p.id);
+      (SELECT s2.user_id FROM submit s2 WHERE s2.submit_state = 'COMPLETE' AND s2.post_id = p.id);
 `;
 
 // 유저 검색
@@ -225,19 +226,18 @@ export const getSubmitStateSQL = `
 export const userRequestAcceptSQL = `
   UPDATE submit
   SET submit_state = 'COMPLETE'
-  WHERE submit_state = 'PENDING' AND post_id IN (
-    SELECT p.id
-    FROM post p
-    WHERE p.room_id = ?
-  );
+  WHERE id = ? AND submit_state = 'PENDING'
 `;
 
 export const userRequestRejectSQL = ` 
   UPDATE submit
   SET submit_state = 'REJECT'
-  WHERE submit_state = 'PENDING' AND post_id IN (
-    SELECT p.id
-    FROM post p
-    WHERE p.room_id = ?
-  );
+  WHERE id = ? AND submit_state = 'PENDING'
+`;
+
+export const decreaseUnreadCountOneBySubmitId = `
+  UPDATE post p
+  JOIN submit s ON s.id = ?
+  SET p.unread_count = p.unread_count - 1
+  WHERE p.id = s.post_id
 `;
