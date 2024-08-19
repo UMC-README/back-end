@@ -199,10 +199,8 @@ paths:
                     type: string
                     example: "success!"
                   result:
-                    type: object
-                    properties:
-                      isFixed:
-                        type: boolean
+                    type: string
+                    example: "공지글 수정에 성공하였습니다."
     delete:
       tags:
         - admin
@@ -460,27 +458,27 @@ paths:
                 postData:
                   type: object
                   properties:
-                    title:
+                    postTitle:
                       type: string
                       description: 공지글 제목
-                    content:
+                    postContent:
                       type: string
                       description: 공지글 본문
-                    start_date:
-                      type: string
-                      description: 시작 기한
-                    end_date:
+                    endDate:
                       type: string
                       description: 마감 기한
                     question:
                       type: string
                       description: 퀴즈/미션 질문
-                imgURLs:
+                    quizAnswer:
+                      type: string
+                      description: 퀴즈/미션 질문                      
+                addImgURLs:
                   type: array
                   items:
                     type: string
                     description: 추가할 이미지 URL 배열
-                imgToDelete:
+                deleteImgURLs:
                   type: array
                   items:
                     type: string
@@ -505,27 +503,7 @@ paths:
                   result:
                     type: object
                     properties:
-                      postTitle:
-                        type: string
-                        description: 공지글 제목
-                      postContent:
-                        type: string
-                        description: 공지글 본문
-                      addimgURLs:
-                        type: string
-                        description: 추가할 공지글 이미지
-                      deleteimgURLs:
-                        type: string
-                        description: 삭제할 공지글 이미지
-                      startDate:
-                        type: string
-                        description: 시작 기한
-                      endDate:
-                        type: string
-                        description: 마감 기한
-                      question:
-                        type: string
-                        description: 퀴즈/미션 질문
+                      
     delete:
       tags:
         - admin

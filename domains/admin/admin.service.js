@@ -25,7 +25,6 @@ import { createShortUUID } from "./uuid.js";
 import {
   createRoomsDTO,
   createPostDTO,
-  updatePostDTO,
   getRoomsDTO,
   postListDTO,
   getPostDTO,
@@ -112,16 +111,13 @@ export const getPostService = async (postId, userId) => {
 };
 
 export const updatePostService = async (body, postId) => {
-  try {
-    const postData = await updatePostDao(body, postId);
-
-    if (postData == -1) throw new BaseError(status.WRONG_DATE_FORMAT);
-    if (postData == -2) throw new BaseError(status.WRONG_STARTDATE_COMPARE);
-    if (postData == -3) throw new BaseError(status.WRONG_ENDDATE_COMPARE);
+  try {    
+    if (!postId) throw new Error("수정할 공지방의 ID가 필요합니다.");
+    await updatePostDao(body, postId);
 
     await cancelImposePenaltyByPostDAO(postId);
-    await reserveImposePenaltyByPostDAO(postId, `20${postData.endDate}`);
-    return updatePostDTO(postData);
+    await reserveImposePenaltyByPostDAO(postId, `20${body.endDate}`);
+    return "공지글 수정에 성공하였습니다.";
   } catch (error) {
     console.error("공지글 수정하기 에러:", error);
     throw error;
