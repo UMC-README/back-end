@@ -202,12 +202,11 @@ export const userSubmitService = async (roomId) => {
   }
 };
 
-export const userRequestService = async (body) => {
+export const userRequestService = async (submitId, body) => {
   try {
     const validTypes = ["accept", "reject"];
     if (!validTypes.includes(body.type)) throw new Error("올바른 type을 입력하세요.");
-    if (!body.roomId) throw new Error("요청을 수행하기를 위한 roomId가 필요합니다.");
-    return await userRequestDao(body);
+    return await userRequestDao(submitId, body);
   } catch (error) {
     throw error;
   }

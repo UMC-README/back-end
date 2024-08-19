@@ -31,6 +31,7 @@ import {
   userRequestRejectSQL,
   getRoomSQL,
   getAlluserRoomSQL,
+  decreaseUnreadCountOneBySubmitId,
 } from "./admin.sql.js";
 
 import { updateUnreadCountByRoom } from "../room/room.sql.js";
@@ -413,12 +414,13 @@ export const userSubmitDao = async (roomId) => {
   }
 };
 
-export const userRequestDao = async (body) => {
+export const userRequestDao = async (submitId, body) => {
+  const conn = await pool.getConnection();
   try {
-    const conn = await pool.getConnection();
-
-    if (body.type === "accept") await conn.query(userRequestAcceptSQL, body.roomId);
-    else if (body.type === "reject") await conn.query(userRequestRejectSQL, body.roomId);
+    if (body.type === "accept") {
+      await conn.query(userRequestAcceptSQL, submitId);
+      await conn.query(decreaseUnreadCountOneBySubmitId, submitId);
+    } else if (body.type === "reject") await conn.query(userRequestRejectSQL, submitId);
     else throw new Error("유효하지 않은 type입니다.");
 
     conn.release();

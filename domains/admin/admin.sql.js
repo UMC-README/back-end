@@ -226,21 +226,20 @@ export const getSubmitStateSQL = `
 export const userRequestAcceptSQL = `
   UPDATE submit
   SET submit_state = 'COMPLETE'
-  WHERE submit_state = 'PENDING' AND post_id IN (
-    SELECT p.id
-    FROM post p
-    WHERE p.room_id = ?
-  );
+  WHERE id = ? AND submit_state = 'PENDING'
 `;
 
 export const userRequestRejectSQL = ` 
   UPDATE submit
   SET submit_state = 'REJECT'
-  WHERE submit_state = 'PENDING' AND post_id IN (
-    SELECT p.id
-    FROM post p
-    WHERE p.room_id = ?
-  );
+  WHERE id = ? AND submit_state = 'PENDING'
+`;
+
+export const decreaseUnreadCountOneBySubmitId = `
+  UPDATE post p
+  JOIN submit s ON s.id = ?
+  SET p.unread_count = p.unread_count - 1
+  WHERE p.id = s.post_id
 `;
 
 /*export const updateUnreadCountByPost = `

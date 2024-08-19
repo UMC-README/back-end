@@ -839,7 +839,7 @@ paths:
                             submit_state:
                               type: string
                               example: "COMPLETE"
-  /admin/submit/user-request:
+  /admin/submit/{submitId}:
     patch:
       tags:
         - admin
@@ -850,6 +850,12 @@ paths:
         - application/json
       security:
         - bearerAuth: []
+      parameters:
+        - name: submitId
+          in: path
+          schema:
+            type: integer
+          required: true
       requestBody:
         required: true
         content:
@@ -859,10 +865,8 @@ paths:
               properties:
                 type:
                   type: string
-                  description: 요청 수락/거절
-                roomId:
-                  type: integer
-                  description: 공지방 아이디
+                  example: accept
+                  description: 요청 수락/거절 (accpet/reject)
       responses:
         "200":
           description: 제출 요청 수행 성공!
