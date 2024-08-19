@@ -40,6 +40,9 @@ import {
 } from "./room.sql.js";
 import { getUserById } from "../user/user.sql.js";
 
+import dotenv from "dotenv";
+dotenv.config();
+
 export const fixPostDAO = async (data) => {
   try {
     const conn = await pool.getConnection();
@@ -443,7 +446,9 @@ export const postRoomEntranceDAO = async (roomId, userId, userNickname) => {
     }
     console.log(roomId, userId, userNickname);
 
-    await conn.query(createRoomEntranceSQL, [userId, roomId, userNickname]);
+    const defaultProfileImage = process.env.DEFAULT_PROFILE_IMAGE;
+
+    await conn.query(createRoomEntranceSQL, [userId, roomId, userNickname, defaultProfileImage]);
     await conn.query(initializeSubmitWhenUserJoinsRoomSQL, [userId, roomId]);
     await conn.query(updateUnreadCountByRoom, roomId);
 

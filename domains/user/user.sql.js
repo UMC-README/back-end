@@ -1,6 +1,6 @@
 // 회원가입
 export const userSignUpSQL = `
-    INSERT INTO user (name, nickname, email, password) VALUES (?, ?, ?, ?)
+    INSERT INTO user (name, nickname, email, password, profile_image) VALUES (?, ?, ?, ?, ?)
 `;
 
 // ID 값으로 User 찾기
