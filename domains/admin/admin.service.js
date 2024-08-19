@@ -21,8 +21,13 @@ import {
   getSubmitListDao,
 } from "./admin.dao.js";
 import { createShortUUID } from "./uuid.js";
-import { createRoomsDTO, createPostDTO, updatePostDTO, getRoomsDTO } from "./admin.dto.js";
-import { getYearMonthDayHourMinute } from "../../utils/timeChange.js";
+import {
+  createRoomsDTO,
+  createPostDTO,
+  updatePostDTO,
+  getRoomsDTO,
+  postListDTO,
+} from "./admin.dto.js";
 
 export const createRoomsService = async (body, userId) => {
   try {
@@ -195,19 +200,7 @@ export const getPostListService = async (roomId) => {
 
     const posts = await getPostListDao(roomId);
 
-    const postLists = posts.map((post) => {
-      const imagesArray = post.images ? post.images.split(",") : [];
-
-      return {
-        postId: post.id,
-        title: post.title,
-        content: post.content,
-        startDate: getYearMonthDayHourMinute(post.start_date),
-        endDate: getYearMonthDayHourMinute(post.end_date),
-        image: imagesArray[0] || null,
-        pendingCount: parseInt(post.pending_count, 10) || 0,
-      };
-    });
+    const postLists = posts.map(postListDTO);
 
     return postLists;
   } catch (error) {
