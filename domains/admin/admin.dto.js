@@ -12,12 +12,6 @@ export const createPostDTO = (createPostData) => {
   };
 };
 
-export const updatePostDTO = (updatePostData) => {
-  return {
-    ...updatePostData,
-  };
-};
-
 export const getRoomsDTO = (roomData) => ({
   roomImage: roomData.room_image,
   adminNickname: roomData.admin_nickname,
@@ -25,6 +19,12 @@ export const getRoomsDTO = (roomData) => ({
   roomPassword: roomData.room_password,
   maxPenalty: roomData.max_penalty,
 });
+
+export const getPostInfoDTO = (postData) => ({
+
+
+}); 
+
 
 export const userSubmitDTO = (userSubmissions, submitStates) => {
   const pendingStates = submitStates.filter((state) => state.submit_state === "PENDING");

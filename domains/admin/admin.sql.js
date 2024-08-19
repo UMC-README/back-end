@@ -60,7 +60,7 @@ export const createPostImgSQL = `
 // 공지글 수정 & 이미지 삭제
 export const updatePostSQL = ` 
   UPDATE post
-  SET title = ?, content = ?, start_date = ?, end_date = ?, question = ? 
+  SET title = ?, content = ?, end_date = ?, question = ? , quiz_answer = ?
   WHERE id = ?;  
 `;
 export const deletePostImgSQL = `
