@@ -58,8 +58,8 @@ export const userSubmitDTO = (userSubmissions, submitStates) => {
 
     return {
       ...submission,
-      start_date: formattedStartDate,
-      end_date: formattedEndDate,
+      startDate: formattedStartDate,
+      endDate: formattedEndDate,
       pendingStates: relatedPendingStates,
       completeStates: relatedCompleteStates,
     };
