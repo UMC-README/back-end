@@ -180,7 +180,7 @@ export const getSubmitListInRoom = `
 export const getSubmitImages = `
   SELECT si.URL
   FROM \`submit-image\` si
-  WHERE si.submit_id = ?
+  WHERE si.submit_id = ? AND si.state = 'EXIST'
 `;
 
 // 해당 공지방에 대한 내 페널티 개수 및 최대 페널티 개수 구하기
