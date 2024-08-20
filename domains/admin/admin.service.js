@@ -183,7 +183,7 @@ export const userInviteService = async (roomId) => {
 
 export const deleteUserService = async (body) => {
   try {
-    if(!body.userId) throw new Error("강퇴할 User의 ID가 필요합니다.");
+    if (!body.userId) throw new Error("강퇴할 User의 ID가 필요합니다.");
     const result = await deleteUserDao(body);
     if (result == -1) throw new Error("공지방에 유저가 없습니다.");
     return result;
@@ -213,11 +213,13 @@ export const getPostListService = async (roomId) => {
 export const getSubmitListService = async (roomId, postId, state) => {
   try {
     if (!roomId || !postId) throw new Error("요청 내역 조회를 위한 roomId와 postId가 필요합니다.");
-    if (state !== "pending" && state !== "complete") {
+
+    const normalizedState = state.toLowerCase();
+    if (normalizedState !== "pending" && normalizedState !== "complete") {
       throw new Error("pending 혹은 complete 중 하나의 값으로 요청해야합니다.");
     }
 
-    const submitList = await getSubmitListDao(roomId, postId, state.toUpperCase());
+    const submitList = await getSubmitListDao(roomId, postId, normalizedState.toUpperCase());
 
     return submitList;
   } catch (error) {

@@ -220,7 +220,7 @@ export const getSubmitStateSQL = `
   JOIN submit s ON p.id = s.post_id
   JOIN user u ON s.user_id = u.id
   LEFT JOIN \`submit-image\` si ON s.id = si.submit_id
-  WHERE p.room_id = ? AND p.id = ? AND s.submit_state = ?
+  WHERE p.room_id = ? AND p.id = ? AND s.submit_state = ? AND si.state = 'EXIST'
   GROUP BY s.id;
 `;
 
