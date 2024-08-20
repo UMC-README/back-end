@@ -224,11 +224,13 @@ export const getPostListService = async (roomId) => {
 export const getSubmitListService = async (roomId, postId, state) => {
   try {
     if (!roomId || !postId) throw new Error("요청 내역 조회를 위한 roomId와 postId가 필요합니다.");
-    if (state !== "pending" && state !== "complete") {
+
+    const normalizedState = state.toLowerCase();
+    if (normalizedState !== "pending" && normalizedState !== "complete") {
       throw new Error("pending 혹은 complete 중 하나의 값으로 요청해야합니다.");
     }
 
-    const submitList = await getSubmitListDao(roomId, postId, state.toUpperCase());
+    const submitList = await getSubmitListDao(roomId, postId, normalizedState.toUpperCase());
 
     return submitList;
   } catch (error) {
