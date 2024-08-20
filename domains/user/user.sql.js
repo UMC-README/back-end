@@ -74,6 +74,34 @@ export const getAllRoomsCount = `
   WHERE ur.user_id = ?
 `;
 
+// 공지글이 존재하는 모든 공지방 찾기
+export const getAllRoomsHavePost = `
+  SELECT DISTINCT ur.nickname, ur.profile_image, r.room_name, r.id, r.admin_id
+  FROM \`user-room\` ur 
+  JOIN room r ON r.id = ur.room_id
+  WHERE ur.user_id = ?
+  AND EXISTS (
+    SELECT 1
+    FROM post p
+    WHERE p.room_id = r.id
+  )
+  LIMIT ?
+  OFFSET ?;
+`;
+
+// 공지글이 존재하는 모든 공지방 개수 찾기
+export const getAllRoomsHavePostCount = `
+  SELECT COUNT(DISTINCT r.id) as count
+  FROM \`user-room\` ur
+  JOIN room r ON r.id = ur.room_id
+  WHERE ur.user_id = ?
+  AND EXISTS (
+    SELECT 1
+    FROM post p
+    WHERE p.room_id = r.id
+  );
+`;
+
 // 개설한 공지방 개수 구하기
 export const getCreateRoomCount = `
   SELECT COUNT(*) as count

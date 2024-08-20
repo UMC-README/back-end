@@ -25,6 +25,8 @@ import {
   getSubmitImages,
   getPenaltyPost,
   getPenaltyCount,
+  getAllRoomsHavePost,
+  getAllRoomsHavePostCount,
 } from "./user.sql.js";
 
 import dotenv from "dotenv";
@@ -181,6 +183,45 @@ export const findRoomByUserId = async (userId, page, pageSize) => {
   } catch (error) {
     console.log("내 공지방 찾기 에러", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const findHavePostRoomByUserId = async (userId, page, pageSize) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const offset = (page - 1) * pageSize;
+    const [rooms] = await conn.query(getAllRoomsHavePost, [userId, pageSize, offset]);
+
+    if (rooms.length === 0) {
+      return [];
+    }
+
+    return rooms.map((room) => ({
+      roomId: room.id,
+      roomName: room.room_name,
+      nickname: room.nickname,
+      profileImage: room.profile_image,
+    }));
+  } catch (error) {
+    console.log("공지글이 있는 내 공지방 찾기 에러", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  } finally {
+    if (conn) conn.release();
+  }
+};
+
+export const getHavePostRoomCount = async (userId) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const [[{ count }]] = await conn.query(getAllRoomsHavePostCount, [userId]);
+    return count;
+  } catch (error) {
+    console.log("공지글이 있는 공지방 개수 찾기 에러", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  } finally {
+    if (conn) conn.release();
   }
 };
 
