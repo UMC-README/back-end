@@ -37,6 +37,7 @@ import {
   initializeSubmitWhenUserJoinsRoomSQL,
   updateUnreadCountByRoom,
   getRoomInfoAndUserRoomInfoByUserIdAndPostId,
+  getIsJoinedBeforeStartDate,
 } from "./room.sql.js";
 import { getUserById } from "../user/user.sql.js";
 
@@ -193,10 +194,20 @@ export const getDetailedPostDAO = async (postId, userId) => {
     const roomName = info[0].room_name;
     const isRoomAdmin = userId === info[0].admin_id;
     const joinedRoomAt = info[0].created_at;
+    const [isJoinedBeforeStartDate] = await pool.query(getIsJoinedBeforeStartDate, [
+      userId,
+      postId,
+    ]);
 
     const [postImages] = await pool.query(getPostImagesByPostId, postId);
     conn.release();
-    return { roomName, isRoomAdmin, joinedRoomAt, post, postImages };
+    return {
+      roomName,
+      isRoomAdmin,
+      isJoinedBeforeStartDate: isJoinedBeforeStartDate[0].isTrue,
+      post,
+      postImages,
+    };
   } catch (err) {
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
   }

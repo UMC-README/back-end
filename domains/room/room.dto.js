@@ -112,7 +112,7 @@ export const detailedPostDTO = (data) => {
   return {
     roomName: data.roomName,
     isRoomAdmin: data.isRoomAdmin,
-    joinedRoomAt: formatDate(data.joinedRoomAt),
+    isJoinedBeforeStartDate: !!data.isJoinedBeforeStartDate,
     post,
     imageURLs,
   };

@@ -256,7 +256,7 @@ paths:
                       {
                         "roomName": "README",
                         "isRoomAdmin": false,
-                        "joinedRoomAt": "24. 06. 27. 16:53",
+                        "isJoinedBeforeStartDate": "true",
                         "post":
                           [
                             {
