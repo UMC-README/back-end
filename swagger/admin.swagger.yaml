@@ -542,9 +542,9 @@ paths:
                   result:
                     type: object
                     properties:
-                      isDeleted:
-                        type: boolean
-                        description: 공지글 삭제 여부
+                      deletedPostId:
+                        type: integer
+                        description: 삭제된 공지글 Id
   /admin/post/{postId}/unread:
     get:
       tags:
@@ -635,12 +635,12 @@ paths:
                     type: object
                     properties:
                       userId:
-                        type: number
+                        type: integer
                         description: 유저 아이디
                       nickname:
                         type: string
                         description: 유저 닉네임
-                      profile_image:
+                      profileImage:
                         type: string
                         description: 유저 프로필 사진
 
@@ -699,6 +699,9 @@ paths:
                       penalty_count:
                         type: integer
                         description: 패널티 개수
+                      max_penalty: 
+                        type: integer
+                        description: 최대 패널티 개수 
 
   /admin/invitation/{roomId}:
     get:
