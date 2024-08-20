@@ -432,6 +432,8 @@ export const getSubmitListDao = async (roomId, postId, state) => {
 
     const [submitList] = await conn.query(getSubmitStateSQL, [roomId, postId, state]);
 
+    console.log(submitList);
+
     conn.release();
 
     return submitList.map((submit) => ({
