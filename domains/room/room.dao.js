@@ -116,7 +116,7 @@ export const getAllPostInRoomDAO = async (roomId, userId, cursorId, size) => {
       roomId,
       userId,
     ]);
-    const joinedRoomAt = myUserRoomInfo[0].joinedRoomAt;
+
     const penaltyCount = myUserRoomInfo[0].penaltyCount;
     const maxPenalty = myUserRoomInfo[0].maxPenalty;
 
@@ -129,7 +129,6 @@ export const getAllPostInRoomDAO = async (roomId, userId, cursorId, size) => {
       return {
         roomName,
         isRoomAdmin,
-        joinedRoomAt,
         penaltyCount,
         maxPenalty,
         notCheckedPenalty,
@@ -147,7 +146,6 @@ export const getAllPostInRoomDAO = async (roomId, userId, cursorId, size) => {
       return {
         roomName,
         isRoomAdmin,
-        joinedRoomAt,
         penaltyCount,
         maxPenalty,
         notCheckedPenalty: [],
@@ -193,7 +191,6 @@ export const getDetailedPostDAO = async (postId, userId) => {
     const [info] = await pool.query(getRoomInfoAndUserRoomInfoByUserIdAndPostId, [userId, postId]);
     const roomName = info[0].room_name;
     const isRoomAdmin = userId === info[0].admin_id;
-    const joinedRoomAt = info[0].created_at;
     const [isJoinedBeforeStartDate] = await pool.query(getIsJoinedBeforeStartDate, [
       userId,
       postId,

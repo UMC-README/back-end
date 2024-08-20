@@ -1,7 +1,6 @@
 export const allPostInRoomDTO = ({
   roomName,
   isRoomAdmin,
-  joinedRoomAt,
   penaltyCount,
   maxPenalty,
   notCheckedPenalty,
@@ -11,7 +10,6 @@ export const allPostInRoomDTO = ({
     return {
       roomName,
       isRoomAdmin,
-      joinedRoomAt: formatDate(joinedRoomAt),
       penaltyCount,
       maxPenalty,
       notCheckedPenalty,
@@ -36,7 +34,6 @@ export const allPostInRoomDTO = ({
   return {
     roomName,
     isRoomAdmin,
-    joinedRoomAt: formatDate(joinedRoomAt),
     penaltyCount,
     maxPenalty,
     notCheckedPenalty,
