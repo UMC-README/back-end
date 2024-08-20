@@ -106,7 +106,6 @@ paths:
                       {
                         "roomName": "UMC 6기 공지방",
                         "isRoomAdmin": false,
-                        "joinedRoomAt": "24. 06. 27. 08:05",
                         "penaltyCount": 3,
                         "maxPenalty": 5,
                         "notCheckedPenalty":
@@ -256,7 +255,7 @@ paths:
                       {
                         "roomName": "README",
                         "isRoomAdmin": false,
-                        "joinedRoomAt": "24. 06. 27. 16:53",
+                        "isJoinedBeforeStartDate": "true",
                         "post":
                           [
                             {
