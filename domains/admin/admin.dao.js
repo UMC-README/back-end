@@ -245,7 +245,6 @@ export const unreadUserListDao = async (postId) => {
   try {
     const conn = await pool.getConnection();
     const [users] = await conn.query(unreadUserListSQL, [postId]);
-    console.log(users);
 
     if (users.length == 0) {
       conn.release();
