@@ -105,7 +105,7 @@ paths:
                     example:
                       {
                         "roomName": "UMC 6기 공지방",
-                        "isRoomAdmin": true,
+                        "isRoomAdmin": false,
                         "joinedRoomAt": "24. 06. 27. 08:05",
                         "penaltyCount": 3,
                         "maxPenalty": 5,
@@ -254,6 +254,9 @@ paths:
                     type: array
                     example:
                       {
+                        "roomName": "README",
+                        "isRoomAdmin": false,
+                        "joinedRoomAt": "24. 06. 27. 16:53",
                         "post":
                           [
                             {

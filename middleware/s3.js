@@ -36,8 +36,8 @@ export const imageUploader = multer({
     },
     acl: "public-read-write",
   }),
-  // 이미지 용량 제한 (5MB)
-  limits: { fileSize: 5 * 1024 * 1024 },
+  // 이미지 용량 제한 (100MB)
+  limits: { fileSize: 100 * 1024 * 1024 },
 });
 
 export const deleteS3 = async (url) => {
