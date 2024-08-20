@@ -18,6 +18,8 @@ import {
   findSubmitImages,
   findPenaltyPost,
   findPenaltyCount,
+  findHavePostRoomByUserId,
+  getHavePostRoomCount,
 } from "./user.dao.js";
 import { passwordHashing } from "../../utils/passwordHash.js";
 import { generateJWTToken } from "../../utils/generateToken.js";
@@ -245,31 +247,34 @@ export const checkRoomDuplicateNickname = async (roomId, nickname) => {
 };
 
 export const getLatestPostsInAllRooms = async (userId, page, pageSize) => {
-  const rooms = await findAllRooms(userId, page, pageSize);
-  const totalCount = await getRoomsCount(userId);
+  try {
+    const rooms = await findHavePostRoomByUserId(userId, page, pageSize);
+    const totalCount = await getHavePostRoomCount(userId);
 
-  const totalPages = Math.ceil(totalCount / pageSize);
+    const totalPages = Math.ceil(totalCount / pageSize);
 
-  const recentPostsPromises = rooms.map(async (room) => {
-    const recentPost = await findLatestPostInRoom(room.id);
+    const recentPostsPromises = rooms.map(async (room) => {
+      const recentPost = await findLatestPostInRoom(room.roomId);
 
-    if (recentPost) {
-      return {
-        roomId: room.id,
-        roomName: room.room_name,
-        postId: recentPost ? recentPost.post_id : null,
-        title: recentPost ? recentPost.title : null,
-        createdAt: recentPost ? getRelativeTime(recentPost.created_at) : null,
-      };
-    } else {
-      return null;
-    }
-  });
+      return recentPost
+        ? {
+            roomId: room.id,
+            roomName: room.room_name,
+            postId: recentPost.post_id,
+            title: recentPost.title,
+            createdAt: getRelativeTime(recentPost.created_at),
+          }
+        : null;
+    });
 
-  const recentPostList = (await Promise.all(recentPostsPromises)).filter((post) => post !== null);
-  const isNext = page * pageSize < totalCount;
+    const recentPostList = (await Promise.all(recentPostsPromises)).filter((post) => post !== null);
+    const isNext = page * pageSize < totalCount;
 
-  return { recentPostList, isNext, totalPages };
+    return { recentPostList, isNext, totalPages };
+  } catch (error) {
+    console.log("오류 발생: 최근 공지글 목록 조회", error);
+    throw new BaseError(status.INTERNAL_SERVER_ERROR);
+  }
 };
 
 export const getSubmitList = async (userId, roomId) => {
