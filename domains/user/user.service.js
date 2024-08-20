@@ -258,8 +258,8 @@ export const getLatestPostsInAllRooms = async (userId, page, pageSize) => {
 
       return recentPost
         ? {
-            roomId: room.id,
-            roomName: room.room_name,
+            roomId: room.roomId,
+            roomName: room.roomName,
             postId: recentPost.post_id,
             title: recentPost.title,
             createdAt: getRelativeTime(recentPost.created_at),

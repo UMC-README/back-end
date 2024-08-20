@@ -295,3 +295,10 @@ export const getRoomInfoAndUserRoomInfoByUserIdAndPostId = `
   JOIN \`user-room\` ur ON r.id = ur.room_id AND ur.user_id = ?
   JOIN post p ON p.id = ? AND p.room_id = r.id
 `;
+
+export const getIsJoinedBeforeStartDate = `
+  SELECT (p.start_date >= ur.created_at) AS isTrue
+  FROM post p
+  JOIN \`user-room\` ur ON ur.user_id = ? AND p.room_id = ur.room_id
+  WHERE p.id = ?
+`;
