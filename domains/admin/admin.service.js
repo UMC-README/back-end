@@ -88,7 +88,7 @@ export const createPostService = async (body, userId) => {
     if (postData == -1) throw new BaseError(status.WRONG_DATE_FORMAT);
     if (postData == -2) throw new BaseError(status.WRONG_STARTDATE_COMPARE);
     if (postData == -3) throw new BaseError(status.WRONG_ENDDATE_COMPARE);
-
+    console.log(postData);
     await initializeSubmitByPostDAO(postData.newPostId);
     await reserveImposePenaltyByPostDAO(postData.newPostId, `20${postData.endDate}`);
     return createPostDTO(postData);
@@ -154,8 +154,8 @@ export const unreadUserListService = async (postId) => {
 export const userListService = async (nickname, roomId, userId) => {
   try {
     if (!roomId) throw new Error("조회할 공지방의 ID가 필요합니다.");
-  
-    const {adminData, userData} = await userListDao(nickname, roomId, userId);
+
+    const { adminData, userData } = await userListDao(nickname, roomId, userId);
 
     return userListDTO(adminData, userData, nickname) || [];
   } catch (error) {
