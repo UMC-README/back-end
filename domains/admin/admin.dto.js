@@ -76,3 +76,17 @@ export const postListDTO = (post) => ({
   image: post.images ? post.images.split(",")[0] : null,
   pendingCount: parseInt(post.pending_count, 10) || 0,
 });
+
+export const userListDTO = (adminData, userData) => { 
+  return {
+    adminProfile: { 
+      nickname: adminData[0].nickname, 
+      profileImage: adminData[0].profile_image 
+    }, 
+    userProfile: userData.map(row => ({
+      userId: row.user_id,
+      nickname: row.nickname, 
+      profileImage: row.profile_image 
+    }))
+  };
+}; 

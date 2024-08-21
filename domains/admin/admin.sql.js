@@ -92,6 +92,9 @@ WHERE ur.user_id NOT IN
 `;
 
 // 유저 검색
+export const getAdminInfoSQL =  `
+  SELECT nickname, profile_image FROM \`user-room\` WHERE room_id =? AND user_id = ?;
+`;
 export const userListNameSQL = ` 
   SELECT user_id, nickname, profile_image FROM \`user-room\` WHERE nickname LIKE ? AND room_id = ?; 
 `;
