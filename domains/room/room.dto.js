@@ -48,7 +48,7 @@ const formatSubmitState = (data) => {
   } else return data;
 };
 
-const formatDate = (date) => {
+export const formatDate = (date) => {
   const options = {
     year: "2-digit",
     month: "2-digit",

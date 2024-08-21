@@ -38,6 +38,8 @@ import {
 
 import { updateUnreadCountByRoom } from "../room/room.sql.js";
 
+import { formatDate } from "../room/room.dto.js";
+
 import schedule from "node-schedule";
 
 export const createRoomsDao = async (body, userId, roomInviteUrl) => {
@@ -134,12 +136,16 @@ export const createPostDao = async (body, userId) => {
 
     const quizAnswer = body.type === "QUIZ" ? body.quiz_answer : null;
 
-    const startDate = `${body.start_date} 00:00`;
+    var startDate = `${body.start_date} 00:00`;
     const endDate = `${body.end_date} 23:59`;
 
     if (isInvalidDate(body.start_date, body.end_date)) return -1;
     if (getDate(startDate) < getToday()) return -2;
     if (getDate(endDate) <= getDate(startDate)) return -3;
+
+    if (getDate(startDate) == getToday()) {
+      startDate = getNow();
+    }
 
     const [postResult] = await conn.query(createPostSQL, [
       body.room_id,
@@ -171,7 +177,7 @@ export const createPostDao = async (body, userId) => {
       postTitle: body.title,
       postContent: body.content,
       imgURLs: body.imgURLs,
-      startDate,
+      startDate: formatDate(startDate),
       endDate,
       question: body.question,
       quizAnswer: body.quiz_answer,
@@ -263,9 +269,10 @@ export const userListDao = async (nickname, roomId, userId) => {
   try {
     const conn = await pool.getConnection();
 
-    const [adminData] = await conn.query(getAdminInfoSQL, [roomId, userId]); 
+    const [adminData] = await conn.query(getAdminInfoSQL, [roomId, userId]);
 
-    let userListSQLQuery, params = [];
+    let userListSQLQuery,
+      params = [];
     if (nickname && nickname.trim() !== "") {
       // nickname 유효성 검사
       userListSQLQuery = userListNameSQL;
@@ -277,7 +284,7 @@ export const userListDao = async (nickname, roomId, userId) => {
     const [userData] = await conn.query(userListSQLQuery, params);
 
     conn.release();
-    return {adminData, userData};
+    return { adminData, userData };
   } catch (error) {
     console.log("User 검색 에러:", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
