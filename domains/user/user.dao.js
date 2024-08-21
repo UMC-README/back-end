@@ -231,10 +231,7 @@ export const findCreateRoomByUserId = async (userId, page, pageSize) => {
     const offset = (page - 1) * pageSize;
 
     const [[{ count }]] = await conn.query(getCreateRoomCount, [userId]);
-    console.log(count);
-
     const [rooms] = await conn.query(getCreateRoom, [userId, pageSize, offset]);
-    console.log(rooms);
 
     const isNext = offset + pageSize < count;
 
