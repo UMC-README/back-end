@@ -224,12 +224,14 @@ export const userSubmitSQL = `
 
 // 하나의 공지글에 대한 확인 요청 내역 (대기 or 승인 완료) 조회
 export const getSubmitStateSQL = `
-  SELECT s.id AS submit_id, ur.profile_image, ur.nickname, GROUP_CONCAT(si.URL ORDER BY si.created_at SEPARATOR ',') AS images, s.content, s.submit_state
+  SELECT s.id AS submit_id, ur.profile_image, ur.nickname, 
+         GROUP_CONCAT(DISTINCT CASE WHEN si.state = 'EXIST' THEN si.URL END ORDER BY si.created_at ASC) AS images, 
+         s.content, s.submit_state
   FROM post p
   JOIN submit s ON p.id = s.post_id
   JOIN \`user-room\` ur ON s.user_id = ur.user_id
   LEFT JOIN \`submit-image\` si ON s.id = si.submit_id
-  WHERE p.room_id = ? AND p.id = ? AND s.submit_state = ? AND si.state = 'EXIST'
+  WHERE p.room_id = ? AND p.id = ? AND s.submit_state = ?
   GROUP BY s.id;
 `;
 

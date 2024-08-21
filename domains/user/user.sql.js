@@ -118,6 +118,7 @@ export const getCreateRoom = `
   LEFT JOIN post ON r.id = post.room_id
   WHERE  r.admin_id = ?
   GROUP BY r.id
+  ORDER BY r.created_at DESC
   LIMIT ?
   OFFSET ?
 `;
@@ -139,6 +140,7 @@ export const getJoinRoom = `
   LEFT JOIN post ON room.id = post.room_id
   WHERE ur.user_id = ? AND room.admin_id <> ?
   GROUP BY room.id, ur.nickname
+  ORDER BY ur.created_at DESC
   LIMIT ?
   OFFSET ?
 `;
@@ -180,7 +182,7 @@ export const getSubmitListInRoom = `
 export const getSubmitImages = `
   SELECT si.URL
   FROM \`submit-image\` si
-  WHERE si.submit_id = ?
+  WHERE si.submit_id = ? AND si.state = 'EXIST'
 `;
 
 // 해당 공지방에 대한 내 페널티 개수 및 최대 페널티 개수 구하기
