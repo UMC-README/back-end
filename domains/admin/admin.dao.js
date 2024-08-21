@@ -136,20 +136,12 @@ export const createPostDao = async (body, userId) => {
 
     const quizAnswer = body.type === "QUIZ" ? body.quiz_answer : null;
 
-    var startDate = `${body.start_date} 00:00`;
+    const startDate = `${body.start_date} 00:00`;
     const endDate = `${body.end_date} 23:59`;
 
     if (isInvalidDate(body.start_date, body.end_date)) return -1;
     if (getDate(startDate) < getToday()) return -2;
     if (getDate(endDate) <= getDate(startDate)) return -3;
-
-    if (getDate(startDate) == getToday()) {
-      startDate = getNow();
-    }
-
-    console.log("startDate가 오늘 날짜인지:", getDate(startDate) == getToday());
-    console.log("현재시각: ", getNow());
-    console.log("시작날짜시각: ", startDate);
 
     const [postResult] = await conn.query(createPostSQL, [
       body.room_id,
@@ -181,7 +173,7 @@ export const createPostDao = async (body, userId) => {
       postTitle: body.title,
       postContent: body.content,
       imgURLs: body.imgURLs,
-      startDate: formatDate(startDate),
+      startDate,
       endDate,
       question: body.question,
       quizAnswer: body.quiz_answer,
