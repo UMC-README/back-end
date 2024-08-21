@@ -269,10 +269,10 @@ export const userListDao = async (nickname, roomId, userId) => {
     if (nickname && nickname.trim() !== "") {
       // nickname 유효성 검사
       userListSQLQuery = userListNameSQL;
-      params = [nickname, roomId, userId];
+      params = [nickname, roomId];
     } else {
       userListSQLQuery = userListSQL; // 모든 유저 조회 쿼리
-      params = [roomId, userId];
+      params = [roomId];
     }
     const [userData] = await conn.query(userListSQLQuery, params);
 
