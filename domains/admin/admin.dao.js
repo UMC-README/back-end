@@ -147,6 +147,10 @@ export const createPostDao = async (body, userId) => {
       startDate = getNow();
     }
 
+    console.log("startDate가 오늘 날짜인지:", getDate(startDate) == getToday());
+    console.log("현재시각: ", getNow());
+    console.log("시작날짜시각: ", startDate);
+
     const [postResult] = await conn.query(createPostSQL, [
       body.room_id,
       body.type,

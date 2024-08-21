@@ -92,7 +92,7 @@ WHERE ur.user_id NOT IN
 `;
 
 // 유저 검색
-export const getAdminInfoSQL =  `
+export const getAdminInfoSQL = `
   SELECT nickname, profile_image FROM \`user-room\` WHERE room_id =? AND user_id = ?;
 `;
 export const userListNameSQL = ` 
@@ -130,7 +130,7 @@ export const checkUserInRoomSQL = `
 `;
 
 export const deleteUserSQL = ` 
-  DELETE FROM  \`user-room\` WHERE user_id = ? AND room_id;
+  DELETE FROM  \`user-room\` WHERE user_id = ? AND room_id = ?;
 `;
 
 // 패널티 부여하기 (제출 이력 유무 고려 / 중복 부과 x)
