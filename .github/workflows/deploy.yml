@@ -25,16 +25,19 @@ jobs:
           script: |
             cd ~
             cd back-end
-            npx pm2 stop back-end
+            npx pm2 stop back-end > /dev/null 2>&1
             echo stop server
             git pull origin main
+            echo git pull
             if ! command -v node &> /dev/null; then
+              echo node install
               curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
               sudo apt install -y nodejs
             fi
             if ! command -v npm &> /dev/null; then
+              echo npm install
               sudo apt install -y npm
             fi
             npm ci
-            npx pm2 start npm --name back-end -- start
+            npx pm2 start npm --name back-end -- start > /dev/null 2>&1
             echo start server
