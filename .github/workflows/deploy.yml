@@ -42,6 +42,7 @@ jobs:
               echo npm install
               sudo apt install -y npm
             fi
+            node -v
             npm ci
             npx pm2 start npm --name back-end -- start > /dev/null 2>&1
             echo start server
