@@ -173,7 +173,7 @@ export const getUserRoomProfiles = async (req, res, next) => {
 
     const userId = req.user.userId;
     const page = parseInt(req.query.page, 10) || 1;
-    const pageSize = parseInt(req.query.pageSize, 10) || 6;
+    const pageSize = parseInt(req.query.pageSize, 10) || 999;
 
     const result = await getMyRoomProfiles(userId, page, pageSize);
     res.status(200).json(response(status.SUCCESS, result));

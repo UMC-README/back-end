@@ -15,6 +15,7 @@ import {
   deletePostImgSQL,
   deletePostSQL,
   unreadUserListSQL,
+  getAdminInfoSQL,
   userListNameSQL,
   userListSQL,
   userProfileSQL,
@@ -258,12 +259,13 @@ export const unreadUserListDao = async (postId) => {
   }
 };
 
-export const userListDao = async (nickname, roomId) => {
+export const userListDao = async (nickname, roomId, userId) => {
   try {
     const conn = await pool.getConnection();
-    let userListSQLQuery,
-      params = [];
 
+    const [adminData] = await conn.query(getAdminInfoSQL, [roomId, userId]); 
+
+    let userListSQLQuery, params = [];
     if (nickname && nickname.trim() !== "") {
       // nickname 유효성 검사
       userListSQLQuery = userListNameSQL;
@@ -272,10 +274,10 @@ export const userListDao = async (nickname, roomId) => {
       userListSQLQuery = userListSQL; // 모든 유저 조회 쿼리
       params = [roomId];
     }
+    const [userData] = await conn.query(userListSQLQuery, params);
 
-    const [result] = await conn.query(userListSQLQuery, params);
     conn.release();
-    return result;
+    return {adminData, userData};
   } catch (error) {
     console.log("User 검색 에러:", error);
     throw new BaseError(status.INTERNAL_SERVER_ERROR);
