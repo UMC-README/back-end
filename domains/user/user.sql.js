@@ -118,6 +118,7 @@ export const getCreateRoom = `
   LEFT JOIN post ON r.id = post.room_id
   WHERE  r.admin_id = ?
   GROUP BY r.id
+  ORDER BY r.created_at DESC
   LIMIT ?
   OFFSET ?
 `;
@@ -139,6 +140,7 @@ export const getJoinRoom = `
   LEFT JOIN post ON room.id = post.room_id
   WHERE ur.user_id = ? AND room.admin_id <> ?
   GROUP BY room.id, ur.nickname
+  ORDER BY ur.created_at DESC
   LIMIT ?
   OFFSET ?
 `;
