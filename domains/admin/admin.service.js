@@ -155,7 +155,7 @@ export const userListService = async (nickname, roomId, userId) => {
   try {
     if (!roomId) throw new Error("조회할 공지방의 ID가 필요합니다.");
   
-    const {adminData = null, userData} = await userListDao(nickname, roomId, userId);
+    const {adminData, userData} = await userListDao(nickname, roomId, userId);
 
     return userListDTO(adminData, userData, nickname) || [];
   } catch (error) {
