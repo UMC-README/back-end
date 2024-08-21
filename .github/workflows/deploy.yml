@@ -25,7 +25,7 @@ jobs:
           script: |
             cd ~
             cd back-end
-            npx pm2 stop back-end > /dev/null 2>&1
+            npx pm2 stop back-end
             echo stop server
             git pull origin main
             echo git pull
@@ -40,5 +40,5 @@ jobs:
             fi
             node -v
             npm ci
-            npx pm2 start npm --name back-end -- start > /dev/null 2>&1
+            npx pm2 start npm --name back-end -- start
             echo start server
