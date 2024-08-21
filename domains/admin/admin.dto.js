@@ -77,9 +77,9 @@ export const postListDTO = (post) => ({
   pendingCount: parseInt(post.pending_count, 10) || 0,
 });
 
-export const userListDTO = (adminData, userData) => { 
+export const userListDTO = (adminData, userData, nickname) => { 
   return {
-    adminProfile: { 
+    adminProfile: nickname ? {} : { 
       nickname: adminData[0].nickname, 
       profileImage: adminData[0].profile_image 
     }, 
