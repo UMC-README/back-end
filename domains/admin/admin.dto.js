@@ -12,6 +12,20 @@ export const createPostDTO = (createPostData) => {
   };
 };
 
+export const profileDTO = (adminData, userData) => {
+  return {
+    adminProfile: adminData.map(row => ({ 
+      nickname: row.nickname, 
+      profileImage: row.profile_image 
+    })),
+    userProfile: userData.map(row => ({
+      userId: row.user_id,
+      nickname: row.nickname, 
+      profileImage: row.profile_image 
+    }))
+  };
+};
+
 export const getPostDTO = (postData) => ({
   type: postData.type,
   title: postData.title,
@@ -22,12 +36,6 @@ export const getPostDTO = (postData) => ({
   question: postData.question,
   quizAnswer: postData.quiz_answer,
 });
-
-export const updatePostDTO = (updatePostData) => {
-  return {
-    ...updatePostData,
-  };
-};
 
 export const getRoomsDTO = (roomData) => ({
   roomImage: roomData.room_image,
