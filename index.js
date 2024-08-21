@@ -37,7 +37,6 @@ app.listen(app.get("port"), () => {
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
-  console.log("Hello World!");
 });
 
 app.use("/user", userRouter);
