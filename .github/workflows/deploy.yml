@@ -25,7 +25,11 @@ jobs:
           script: |
             cd ~
             cd back-end
-            fuser -k 8000/tcp || true
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            nvm use 20
+            node -v
+            npx pm2 stop back-end > /dev/null 2>&1
             echo stop server
             git pull origin main
             echo git pull
@@ -38,7 +42,6 @@ jobs:
               echo npm install
               sudo apt install -y npm
             fi
-            node -v
             npm ci
-            npm start
+            npx pm2 start npm --name back-end -- start > /dev/null 2>&1
             echo start server
