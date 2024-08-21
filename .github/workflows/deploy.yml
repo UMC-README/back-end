@@ -10,10 +10,6 @@ jobs:
   deploy:
     runs-on: ubuntu-latest # 우분투 최신 버전으로 실행
 
-    strategy:
-      matrix:
-        node-version: ["20.x"] # 노드 버전 지정
-
     steps:
       # Checkout the code
       - name: Checkout
@@ -33,10 +29,10 @@ jobs:
             echo stop server
             git pull origin main
             echo git pull
-            if ! command -v node &> /dev/null; then
+            if ! command -v node &> /dev/null || [[ $(node -v | cut -d'.' -f1 | cut -dv -f2) -lt 20 ]]; then
               echo node install
-              curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
-              sudo apt install -y nodejs
+              curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+              sudo apt-get install -y nodejs
             fi
             if ! command -v npm &> /dev/null; then
               echo npm install
