@@ -92,11 +92,20 @@ WHERE ur.user_id NOT IN
 `;
 
 // 유저 검색
+export const getAdminInfoSQL =  `
+  SELECT nickname, profile_image FROM \`user-room\` WHERE room_id =? AND user_id = ?;
+`;
 export const userListNameSQL = ` 
-  SELECT user_id, nickname, profile_image FROM \`user-room\` WHERE nickname LIKE ? AND room_id = ?; 
+  SELECT ur.user_id, ur.nickname, ur.profile_image 
+  FROM \`user-room\` ur
+  JOIN room r ON ur.room_id = r.id
+  WHERE nickname LIKE ? AND ur.room_id = ? AND ur.user_id != r.admin_id; 
 `;
 export const userListSQL = ` 
-  SELECT user_id, nickname, profile_image FROM \`user-room\` WHERE room_id = ?;
+  SELECT ur.user_id, ur.nickname, ur.profile_image 
+  FROM \`user-room\` ur 
+  JOIN room r ON ur.room_id = r.id 
+  WHERE ur.room_id = ? AND ur.user_id != r.admin_id;
 `;
 
 // 유저 프로필 조회
