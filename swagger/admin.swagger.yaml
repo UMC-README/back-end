@@ -542,9 +542,9 @@ paths:
                   result:
                     type: object
                     properties:
-                      deletedPostId:
-                        type: integer
-                        description: 삭제된 공지글 Id
+                      isDeleted:
+                        type: boolean
+                        description: 공지글 삭제 여부
   /admin/post/{postId}/unread:
     get:
       tags:
@@ -613,7 +613,7 @@ paths:
           description: 사용자가 속한 room의 ID
           schema:
             type: integer
-            example: 1
+            example: 85
       responses:
         "200":
           description: 유저 검색 성공!
@@ -634,15 +634,24 @@ paths:
                   result:
                     type: object
                     properties:
-                      userId:
-                        type: integer
-                        description: 유저 아이디
-                      nickname:
-                        type: string
-                        description: 유저 닉네임
-                      profileImage:
-                        type: string
-                        description: 유저 프로필 사진
+                      adminProfile:
+                        type: object
+                        properties: 
+                          nickname:
+                            type: string
+                          profileImage:
+                            type: string
+                      userProfile:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            userId:
+                              type: integer
+                            nickname:
+                              type: string
+                            profileImage:
+                              type: string
 
   /admin/profile:
     get:
@@ -699,9 +708,6 @@ paths:
                       penalty_count:
                         type: integer
                         description: 패널티 개수
-                      max_penalty: 
-                        type: integer
-                        description: 최대 패널티 개수 
 
   /admin/invitation/{roomId}:
     get:
