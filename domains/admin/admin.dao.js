@@ -17,7 +17,6 @@ import {
   unreadUserListSQL,
   userListNameSQL,
   userListSQL,
-  adminProfileSQL,
   userProfileSQL,
   userInviteSQL,
   checkUserInRoomSQL,
@@ -286,10 +285,9 @@ export const userListDao = async (nickname, roomId) => {
 export const userProfileDao = async (roomId, userId) => {
   try {
     const conn = await pool.getConnection();
-    const [adminData] = await conn.query(adminProfileSQL, [roomId, userId]); 
-    const [userData] = await conn.query(userProfileSQL, [roomId]);
+    const [result] = await conn.query(userProfileSQL, [userId, roomId]);
     conn.release();
-    return {adminData, userData};
+    return result[0];
   } catch (error) {
     console.log("User 프로필 조회 에러");
     throw new BaseError(status.INTERNAL_SERVER_ERROR);

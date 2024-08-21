@@ -100,20 +100,12 @@ export const userListSQL = `
 `;
 
 // 유저 프로필 조회
-export const adminProfileSQL = `
-  SELECT ur.nickname, ur.profile_image
-  FROM \`user-room\` ur
-  JOIN user u ON u.id = ur.user_id
-  JOIN room r ON r.id = ur.room_id  
-  WHERE ur.room_id = ? AND ur.user_id = ?
-`;
-
 export const userProfileSQL = `
-  SELECT ur.user_id, ur.nickname, ur.profile_image
+  SELECT ur.nickname, ur.profile_image, ur.penalty_count, r.max_penalty
   FROM \`user-room\` ur
   JOIN user u ON u.id = ur.user_id
   JOIN room r ON r.id = ur.room_id  
-  WHERE ur.room_id = ?
+  WHERE u.id = ? AND ur.room_id = ?
 `;
 
 // 유저 초대하기 (=공지방 조회)

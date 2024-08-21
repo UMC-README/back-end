@@ -32,7 +32,7 @@ adminRouter.patch("/post/:postId", tokenAuth, expressAsyncHandler(updatePostCont
 adminRouter.delete("/post/:postId", tokenAuth, expressAsyncHandler(deletePostController));
 adminRouter.get("/post/:postId/unread", tokenAuth, expressAsyncHandler(unreadUserListController));
 adminRouter.get("/users", tokenAuth, expressAsyncHandler(userListController));
-adminRouter.get("/profile/:roomId", tokenAuth, expressAsyncHandler(userProfileController));
+adminRouter.get("/profile", tokenAuth, expressAsyncHandler(userProfileController));
 adminRouter.get("/invitation/:roomId", tokenAuth, expressAsyncHandler(userInviteController));
 adminRouter.delete("/user-ban", tokenAuth, expressAsyncHandler(deleteUserController));
 

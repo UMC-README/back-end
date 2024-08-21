@@ -120,7 +120,7 @@ export const userListController = async (req, res, next) => {
 
 export const userProfileController = async (req, res, next) => {
   try {
-    const result = await userProfileService(req.params.roomId, req.user.userId);
+    const result = await userProfileService(req.query.roomId, req.query.userId);
     res.status(200).json(response(status.SUCCESS, result));
   } catch (error) {
     next(error);

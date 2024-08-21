@@ -26,7 +26,6 @@ import {
   createRoomsDTO,
   createPostDTO,
   getRoomsDTO,
-  profileDTO,
   postListDTO,
   getPostDTO,
 } from "./admin.dto.js";
@@ -172,10 +171,11 @@ export const userListService = async (nickname, roomId) => {
 
 export const userProfileService = async (roomId, userId) => {
   try {
-    if (!roomId) throw new Error("프로필 조회를 위한 공지방 ID가 필요합니다.");
-    
-    const {adminData, userData} = await userProfileDao(roomId, userId);
-    return profileDTO(adminData, userData) || [];
+    if (!roomId || !userId) {
+      throw new Error("공지방 혹은 사용자 ID가 필요합니다.");
+    }
+    const userProfileData = await userProfileDao(roomId, userId);
+    return userProfileData || [];
   } catch (error) {
     throw error;
   }
