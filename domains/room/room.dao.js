@@ -343,7 +343,8 @@ export const postSubmitDAO = async (postId, userId, content, imageURLs) => {
           content,
           "COMPLETE",
         ]);
-        await conn.query(decreaseUnreadCountOneByPostId, postId);
+        // await conn.query(decreaseUnreadCountOneByPostId, postId);
+        await conn.query(updateUnreadCountByRoom, post[0].room_id);
 
         await conn.commit();
         conn.release();

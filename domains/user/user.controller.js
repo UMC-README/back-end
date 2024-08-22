@@ -68,7 +68,7 @@ export const userKakaoLogin = async (req, res) => {
       await signupUser(
         {
           nickname: userResponse.kakao_account.profile.nickname,
-          name: userResponse.kakao_account.name,
+          name: userResponse.kakao_account.nickname,
           email: userResponse.kakao_account.email,
           password: userResponse.id,
         },
